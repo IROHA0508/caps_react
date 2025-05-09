@@ -1,0 +1,43 @@
+/* Liapage.css */
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.button {
+  background-color: #1B687D;
+  color: white;
+  padding: clamp(0.5rem, 2vw, 1rem) clamp(1.5rem, 5vw, 3rem);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  /* transition: background-color 0.3s ease; */
+}
+
+.button:hover {
+  background-color: #145061; /* hover 시 색상 */
+}
+
+.button:active {
+  background-color: #0e3a46; /* 클릭 시 색상 */
+}
+
+.result-text {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  text-align: left;
+  width: clamp(250px, 50%, 600px);
+  background: #f8f8f8;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.result-text ul {
+  padding-left: 1.2rem;
+}
+

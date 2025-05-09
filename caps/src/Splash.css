@@ -1,0 +1,48 @@
+/* Splash.css */
+.Splash {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.Splash__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Splash__title {
+  font-size: clamp(3rem, 8vw, 9rem);
+  margin: 0;
+  font-weight: 500;
+}
+
+.Splash__subtitle {
+  font-size: clamp(2rem, 4vw, 4rem);
+  margin: 0.5rem 0 0 0;
+  font-weight: 300;
+  color: #555;
+}
+
+.Splash__guide {
+  margin-bottom: 15vh;
+  font-size: clamp(0.8rem, 5vw, 2rem);
+  color: #787878;
+  animation: fadeBlink 3s infinite ease-in-out;
+}
+
+@keyframes fadeBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #fff;
+}
