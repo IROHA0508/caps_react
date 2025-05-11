@@ -12,6 +12,7 @@ run_all.bat
 /node_modules
 /.pnp
 .pnp.js
+/caps/node_modules
 
 # ✅ 테스트 & 빌드
 /coverage

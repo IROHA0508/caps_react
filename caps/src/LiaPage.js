@@ -44,23 +44,39 @@ function LiaPage() {
           <p>This is the second screen.</p>
 
           <div className="button-container">
-          {!userInfo ? (
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                const decoded = jwtDecode(credentialResponse.credential);
-                setUserInfo(decoded);
-                console.log('로그인 성공:', decoded);
-              }}
-              onError={() => {
-                console.log('로그인 실패');
-              }}
-            />
-          ) : (
-            <div style={{ marginTop: '1rem' }}>
-              <p><strong>환영합니다, {userInfo.name}님!</strong></p>
-              <img src={userInfo.picture} alt="프로필" style={{ borderRadius: '50%', width: '50px' }} />
-            </div>
-          )}
+            {!userInfo ? (
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  const decoded = jwtDecode(credentialResponse.credential);
+                  setUserInfo(decoded);
+                  console.log('로그인 성공:', decoded);
+
+                  // 사용자 정보 백엔드 전송
+                  try {
+                    await fetch('http://localhost:5000/users/google_login', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        created_at: new Date().toISOString()
+                      })
+                    });
+                    console.log('사용자 정보 전송 완료');
+                  } catch (error) {
+                    console.error('사용자 정보 전송 실패:', error);
+                  }
+                }}
+                onError={() => {
+                  console.log('로그인 실패');
+                }}
+              />
+            ) : (
+              <div style={{ marginTop: '1rem' }}>
+                <p><strong>환영합니다, {userInfo.name}님!</strong></p>
+                <img src={userInfo.picture} alt="프로필" style={{ borderRadius: '50%', width: '50px' }} />
+              </div>
+            )}
           </div>
         </div>
 
