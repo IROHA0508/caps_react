@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 from api import api_bp
-from data import data_bp  # 🔽 추가
+from data import data_bp
 from users import users_bp
 from db import db
 
@@ -21,7 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 app.register_blueprint(api_bp)
-app.register_blueprint(data_bp)  # 🔽 추가
+app.register_blueprint(data_bp)
 app.register_blueprint(users_bp)   
 
 

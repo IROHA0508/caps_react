@@ -38,6 +38,5 @@ caps/api/venv/
 .idea/
 
 # ✅ 무시할 폴더
-/아바타/
-/코드 테스트/
+/caps/api/temp_data
 /structure.txt
