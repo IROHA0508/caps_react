@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './LiaPage.css';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
+import api from './Api';
 
 function LiaPage() {
   // 감정 분석
@@ -15,7 +16,7 @@ function LiaPage() {
   const [userInfo, setUserInfo] = useState(null);
 
   const handleTestClick = () => {
-    setShowAnalysis(true);
+    setShowAnalysis(true)
   };
 
   const handleAnalyze = async () => {
@@ -36,6 +37,24 @@ function LiaPage() {
     }
   };
 
+
+  const fetchHealthData = async () => {
+    try {
+      const response = await api.get('/data', {
+        message: "건강 데이터를 요청합니다"
+      });
+
+      console.log('서버 응답:', response.data);
+
+      localStorage.setItem('healthData', JSON.stringify(response.data));
+      console.log('✅ 로컬에 healthData 저장 완료');
+    } catch (error) {
+      console.error('건강 정보 전송 실패:', error);
+    }
+  };
+
+
+
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
       <div>
@@ -45,31 +64,40 @@ function LiaPage() {
 
           <div className="button-container">
             {!userInfo ? (
-              <GoogleLogin
+                <GoogleLogin
+                useOneTap={false}
                 onSuccess={async (credentialResponse) => {
-                  const decoded = jwtDecode(credentialResponse.credential);
-                  setUserInfo(decoded);
-                  console.log('로그인 성공:', decoded);
+                const decoded = jwtDecode(credentialResponse.credential);
+                setUserInfo(decoded);
+                console.log('로그인 성공:', decoded);
 
-                  // 사용자 정보 백엔드 전송
-                  try {
-                    await fetch('http://localhost:5000/users/google_login', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        created_at: new Date().toISOString()
-                      })
-                    });
-                    console.log('사용자 정보 전송 완료');
-                  } catch (error) {
-                    console.error('사용자 정보 전송 실패:', error);
+                try {
+                  const res = await fetch('http://15.165.19.114:3000/users/google', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      credential: credentialResponse.credential
+                    })
+                  });
+
+                  const result = await res.json();
+                  console.log('✅ 서버 응답:', result);
+
+                  const token = result?.data?.token;
+                  if (token) {
+                    console.log('✅ JWT 토큰:', token);
+                    // 필요 시 localStorage 등에 저장
+                    localStorage.setItem('jwt_token', token);
+
+                  } else {
+                    console.warn('⚠️ 서버 응답에 토큰이 없습니다.');
                   }
-                }}
-                onError={() => {
-                  console.log('로그인 실패');
-                }}
+                } catch (error) {
+                  console.error('❌ 사용자 정보 전송 실패:', error);
+                }
+              }}
               />
             ) : (
               <div style={{ marginTop: '1rem' }}>
@@ -78,6 +106,10 @@ function LiaPage() {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="button-container">
+          <button className="button" onClick={fetchHealthData}>건강 데이터 가져오기</button>
         </div>
 
         <div className="button-container">
