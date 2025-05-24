@@ -1,6 +1,8 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import './Onboarding.css';
+import onboard_picture from './pic/onboard_pic.png'; // 온보딩 이미지 경로
+
 
 function Onboarding({ onComplete }) {
   const handleLoginSuccess = (credentialResponse) => {
@@ -16,7 +18,10 @@ function Onboarding({ onComplete }) {
 
   return (
     <div className="Onboarding">
-      <h2>온보딩 페이지</h2>
+      {/* <h2>온보딩 페이지</h2> */}
+      <div className ="onboard-image-wrapper"> 
+        <img src={onboard_picture} alt="온보딩 이미지" className="onboard-image" />
+      </div>
       <p>
         실패도 응원해주는 인공지능 코치<br />
         <strong>LIA</strong>와 함께 루틴을 만들어보세요

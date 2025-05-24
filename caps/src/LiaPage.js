@@ -3,7 +3,9 @@ import { useState } from 'react';
 import './LiaPage.css';
 import { GoogleOAuthProvider} from '@react-oauth/google';
 import api from './Api';
-import GoogleLoginButton from './GoogleLoginButton';
+// import GoogleLoginButton from './GoogleLoginButton';
+import LogoutButton from './LogoutButton';
+
 
 function LiaPage() {
   // 감정 분석
@@ -73,6 +75,8 @@ function LiaPage() {
               alt="프로필"
               style={{ borderRadius: '50%', width: '50px' }}
             />
+
+            <LogoutButton />
           </div>
         ) : (
           <p>로그인 정보를 불러올 수 없습니다.</p>
