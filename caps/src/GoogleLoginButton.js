@@ -1,0 +1,58 @@
+// GoogleLoginButton.js
+import { useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
+
+const GoogleLoginButton = ({ onLoginSuccess }) => {
+  const [userInfo, setUserInfo] = useState(null);
+
+  return (
+    <div className="button-container">
+      {!userInfo ? (
+        <GoogleLogin
+          useOneTap={false}
+          onSuccess={async (credentialResponse) => {
+            const decoded = jwtDecode(credentialResponse.credential);
+            setUserInfo(decoded);
+            console.log('로그인 성공:', decoded);
+
+            try {
+              const res = await fetch('http://15.165.19.114:3000/users/google', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  credential: credentialResponse.credential,
+                }),
+              });
+
+              const result = await res.json();
+              console.log('✅ 서버 응답:', result);
+
+              const token = result?.data?.token;
+              if (token) {
+                console.log('✅ JWT 토큰:', token);
+                // 필요 시 localStorage 등에 저장
+                localStorage.setItem('jwt_token', token);
+              } else {
+                console.warn('⚠️ 서버 응답에 토큰이 없습니다.');
+              }
+
+              onLoginSuccess(decoded);
+            } catch (error) {
+              console.error('❌ 사용자 정보 전송 실패:', error);
+            }
+          }}
+        />
+      ) : (
+        <div style={{ marginTop: '1rem' }}>
+          <p><strong>환영합니다, {userInfo.name}님!</strong></p>
+          <img src={userInfo.picture} alt="프로필" style={{ borderRadius: '50%', width: '50px' }} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default GoogleLoginButton;
