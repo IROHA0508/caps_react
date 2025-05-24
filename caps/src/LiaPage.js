@@ -1,11 +1,9 @@
 // LiaPage.js
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import './LiaPage.css';
 import { GoogleOAuthProvider} from '@react-oauth/google';
 import api from './Api';
-// import GoogleLoginButton from './GoogleLoginButton';
 import LogoutButton from './LogoutButton';
-
 
 function LiaPage() {
   // 감정 분석
@@ -14,9 +12,21 @@ function LiaPage() {
   const [translatedText, setTranslatedText] = useState('');
   const [topEmotions, setTopEmotions] = useState([]);
 
-  // 로그인
-  // const [userInfo, setUserInfo] = useState(null);
+  // 로그인한 사용자의 정보 가져오기
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+  const interval = setInterval(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, 500); // 0.5초마다 체크
+
+  return () => clearInterval(interval);
+}, []);
+
+  
   const handleTestClick = () => {
     setShowAnalysis(true)
   };
@@ -55,9 +65,6 @@ function LiaPage() {
     }
   };
 
-  // 로그인한 사용자 정보 가져오기
-  const user = JSON.parse(localStorage.getItem('user'));
-
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
       <div>
@@ -75,8 +82,9 @@ function LiaPage() {
               alt="프로필"
               style={{ borderRadius: '50%', width: '50px' }}
             />
+          
+          <LogoutButton onLogout={() => setUser(null)} />
 
-            <LogoutButton />
           </div>
         ) : (
           <p>로그인 정보를 불러올 수 없습니다.</p>

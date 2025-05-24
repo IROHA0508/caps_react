@@ -14,6 +14,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
           onSuccess={async (credentialResponse) => {
             const decoded = jwtDecode(credentialResponse.credential);
             setUserInfo(decoded);
+            // alert('로그인 성공');
             console.log('로그인 성공:', decoded);
 
             try {
@@ -34,13 +35,14 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
               if (token) {
                 console.log('✅ JWT 토큰:', token);
                 // 필요 시 localStorage 등에 저장
-                localStorage.setItem('jwt_token', token);
+
+                localStorage.setItem('user', JSON.stringify(decoded));
+                if (onLoginSuccess) onLoginSuccess(decoded); // 또는 그냥 onLoginSuccess();
               } else {
                 console.warn('⚠️ 서버 응답에 토큰이 없습니다.');
               }
-
-              onLoginSuccess(decoded);
             } catch (error) {
+              alert('사용자 정보 전송 실패');
               console.error('❌ 사용자 정보 전송 실패:', error);
             }
           }}
