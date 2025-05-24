@@ -53,7 +53,8 @@ function LiaPage() {
     }
   };
 
-
+  // 로그인한 사용자 정보 가져오기
+  const user = JSON.parse(localStorage.getItem('user'));
 
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
@@ -63,8 +64,21 @@ function LiaPage() {
           <p>This is the second screen.</p>
         </div>
 
-        <GoogleLoginButton />
-        
+        {/* <GoogleLoginButton /> */}
+        {user ? (
+          <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <p>{user.name}님, 환영합니다!</p>
+            <img
+              src={user.picture}
+              alt="프로필"
+              style={{ borderRadius: '50%', width: '50px' }}
+            />
+          </div>
+        ) : (
+          <p>로그인 정보를 불러올 수 없습니다.</p>
+        )}
+
+
         <div className="button-container">
           <button className="button" onClick={fetchHealthData}>건강 데이터 가져오기</button>
         </div>
