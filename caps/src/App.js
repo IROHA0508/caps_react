@@ -1,8 +1,8 @@
 // App.js
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Splash from './Splash';
-import Onboarding from './Onboarding';
-import LiaPage from './LiaPage';
+import Splash from './pages/Splash/Splash';
+import Onboarding from './pages/Onboarding';
+import LiaPage from './pages/LiaPage';
 
 function App() {
   const user = localStorage.getItem('user');
