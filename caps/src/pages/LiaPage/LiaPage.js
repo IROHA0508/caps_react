@@ -10,6 +10,9 @@ import menu_dot from '../../pic/menu_dots.svg'
 import report_button from '../../pic/report_button.svg'
 import routine_button from '../../pic/routine_button.svg'
 import logout_button from '../../pic/logout_button.svg'
+import report_button_select from '../../pic/report_button_select.svg'
+import routine_button_select from '../../pic/routine_button_select.svg'
+import logout_button_select from '../../pic/logout_button_select.svg'
 
 function LiaPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
@@ -19,6 +22,7 @@ function LiaPage() {
 
   // 메뉴 상태 관리
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null); // 예: 'routine', 'report', 'logout'
 
   useEffect(() => {
   const interval = setInterval(() => {
@@ -46,18 +50,63 @@ function LiaPage() {
         {/* 메뉴 드롭다운 */}
         {menuOpen && (
           <div className="dropdown-menu">
-            <div className="menu-item" onClick={() => alert("루틴 보기 선택됨")}>
-              <img src={routine_button} alt="루틴" />
-              <span>일정/루틴 보기</span>
-            </div>
-            <div className="menu-item" onClick={() => alert("리포트 보기 선택됨")}>
-              <img src={report_button} alt="리포트" />
-              <span>통계 리포트</span>
-            </div>
-            <div className="menu-item" onClick={() => setUser(null)}>
-              <img src={logout_button} alt="로그아웃" />
-              <span>로그아웃</span>
-            </div>
+            <div
+                className="menu-item"
+                onClick={() => setSelectedMenu('routine')}
+              >
+                <img
+                  src={
+                    selectedMenu === 'routine'
+                      ? routine_button_select
+                      : routine_button
+                  }
+                  alt="루틴"
+                />
+                <span
+                  style={{ color: selectedMenu === 'routine' ? '#000000' : '#83858A' }}
+                >
+                  일정/루틴 보기
+                </span>
+              </div>
+
+            <div
+                className="menu-item"
+                onClick={() => setSelectedMenu('report')}
+              >
+                <img
+                  src={
+                    selectedMenu === 'report'
+                      ? report_button_select
+                      : report_button
+                  }
+                  alt="리포트"
+                />
+                <span
+                  style={{ color: selectedMenu === 'report' ? '#000000' : '#83858A' }}
+                >
+                  통계 리포트
+                </span>
+              </div>
+
+              <div
+                className="menu-item"
+                onClick={() => setSelectedMenu('logout')}
+              >
+                <img
+                  src={
+                    selectedMenu === 'logout'
+                      ? logout_button_select
+                      : logout_button
+                  }
+                  alt="로그아웃"
+                />
+                <span
+                  style={{ color: selectedMenu === 'logout' ? '#000000' : '#83858A' }}
+                >
+                  로그아웃
+                </span>
+              </div>
+
           </div>
         )}
 
