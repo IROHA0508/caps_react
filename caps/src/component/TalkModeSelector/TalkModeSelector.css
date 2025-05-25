@@ -13,11 +13,10 @@
   background: white;
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
-  margin-top: 0px;;
-  padding: 24px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  animation: slideUp 0.3s ease-out;
+  margin-top: 0px;
+  padding: 24px 24px 12px 24px;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
 }
 
 .sheet-title {
@@ -77,11 +76,28 @@
   margin: 0;
 }
 
+.slide-up {
+  animation-name: slideUp;
+}
+
+.slide-down {
+  animation-name: slideDown;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(100%);
   }
   to {
     transform: translateY(0%);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(100%);
   }
 }
