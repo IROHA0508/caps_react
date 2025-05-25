@@ -1,12 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-
 
 from api import api_bp
 from data import data_bp
-from users import users_bp
-from db import db
 
 app = Flask(__name__)
 CORS(app)
@@ -18,12 +14,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
-
 app.register_blueprint(api_bp)
-app.register_blueprint(data_bp)
-app.register_blueprint(users_bp)   
-
+app.register_blueprint(data_bp) 
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

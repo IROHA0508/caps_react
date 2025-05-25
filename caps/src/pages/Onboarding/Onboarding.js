@@ -1,7 +1,7 @@
 // Onboarding.js
 import './Onboarding.css';
-import onboard_picture from './pic/onboard_pic.png';
-import GoogleLoginButton from '../component/GoogleLoginButton/GoogleLoginButton';
+import onboard_picture from '../../pic/onboard_pic.png';
+import GoogleLoginButton from '../../component/GoogleLoginButton/GoogleLoginButton';
 import { useNavigate } from 'react-router-dom';
 
 function Onboarding({ onComplete }) {

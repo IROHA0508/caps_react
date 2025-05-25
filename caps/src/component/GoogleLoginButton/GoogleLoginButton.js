@@ -6,6 +6,9 @@ import { jwtDecode } from 'jwt-decode';
 const GoogleLoginButton = ({ onLoginSuccess }) => {
   const [userInfo, setUserInfo] = useState(null);
 
+  const serverIP = process.env.REACT_APP_IP_PORT;
+  console.log(process.env.REACT_APP_IP_PORT);
+  
   return (
     <div className="button-container">
       {!userInfo ? (
@@ -18,7 +21,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
             console.log('로그인 성공:', decoded);
 
             try {
-              const res = await fetch('http://15.165.19.114:3000/users/google', {
+              const res = await fetch(`http://${serverIP}:3000/users/google`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

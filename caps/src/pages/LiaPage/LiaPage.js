@@ -1,11 +1,12 @@
 // LiaPage.js
 import { useEffect,useState } from 'react';
-import './LiaPage.css';
 import { GoogleOAuthProvider} from '@react-oauth/google';
 
-import api from '../Api';
-import LogoutButton from '../component/LogoutButton/LogoutButton';
-import TalkModeSelector from '../component/TalkModeSelector/TalkModeSelector';
+import LogoutButton from '../../component/LogoutButton/LogoutButton';
+import TalkModeSelector from '../../component/TalkModeSelector/TalkModeSelector';
+
+import './LiaPage.css';
+import api from '../../api/Api';
 
 function LiaPage() {
   const [showAnalysis, setShowAnalysis] = useState(false);
