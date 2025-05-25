@@ -10,12 +10,13 @@ import report_button_select from '../../pictures/report_button_select.svg';
 import routine_button_select from '../../pictures/routine_button_select.svg';
 import logout_button_select from '../../pictures/logout_button_select.svg';
 
-function OptionMenu({ visible, selectedMenu, onSelect, onClose }) {
+function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
   if (!visible) return null;
 
   return (
     <div className="overlay" onClick={onClose}>
       <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
+
         <div
           className="menu-item"
           onClick={() => onSelect('routine')}
@@ -44,7 +45,10 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose }) {
 
         <div
           className="menu-item"
-          onClick={() => onSelect('logout')}
+          onClick={() => {
+            onLogout();
+            onClose();
+          }}
         >
           <img
             src={selectedMenu === 'logout' ? logout_button_select : logout_button}
@@ -54,6 +58,7 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose }) {
             로그아웃
           </span>
         </div>
+
       </div>
     </div>
   );
