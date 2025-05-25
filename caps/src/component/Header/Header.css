@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: flex-end;
   padding: 0.6rem 0.8rem; /* ✅ 더 작고 균형 잡힌 여백 */
-  gap: 0.4rem; /* 요소 간 거리도 살짝 줄이기 */
+  gap: 0.6rem; /* 요소 간 거리도 살짝 줄이기 */
 }
 
 .header-profile {

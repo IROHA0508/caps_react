@@ -16,6 +16,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+  padding-bottom: 0; /* 버튼 영역을 위해 여유 공간 추가 */
   box-sizing: border-box;
 }
 
@@ -29,7 +30,7 @@
   font-weight: 500;
   line-height: 1.6;
   white-space: pre-line;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
 }
 
 /* 캐릭터 영역 */
@@ -48,9 +49,11 @@
 
 /* 버튼을 캐릭터 하단에 위치 */
 .lia-button-wrapper {
-  padding-bottom: 1.2rem;
+  position: absolute;
+  bottom: 12%;  /* 조정 가능 */
   z-index: 2;
 }
+
 
 /* 버튼 스타일 */
 .button {
