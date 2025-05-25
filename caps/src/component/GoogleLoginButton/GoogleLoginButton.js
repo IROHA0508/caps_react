@@ -7,7 +7,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
   const [userInfo, setUserInfo] = useState(null);
 
   const serverIP = process.env.REACT_APP_IP_PORT;
-  console.log(process.env.REACT_APP_IP_PORT);
+  console.log('✅ 서버 IP:', serverIP);
 
   return (
     <div className="button-container">
