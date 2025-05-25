@@ -3,7 +3,6 @@ import { useEffect,useState } from 'react';
 import { GoogleOAuthProvider} from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 
-import LogoutButton from '../../component/LogoutButton/LogoutButton';
 import TalkModeSelector from '../../component/TalkModeSelector/TalkModeSelector';
 import OptionMenu from '../../component/OptionMenu/OptionMenu';
 
@@ -21,7 +20,7 @@ function LiaPage() {
 
   // 메뉴 상태 관리
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState(null); // 예: 'routine', 'report', 'logout'
+  const [selectedMenu, setSelectedMenu] = useState(null); 
 
   useEffect(() => {
     const interval = setInterval(() => {

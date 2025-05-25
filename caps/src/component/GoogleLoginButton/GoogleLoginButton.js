@@ -27,7 +27,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
             setUserInfo(decoded); // 이건 UI 변화용
 
             try {
-              const res = await fetch(`http://${serverIP}/users/google`, {
+              const res = await fetch(`https://${serverIP}/users/google`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
