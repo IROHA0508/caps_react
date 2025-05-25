@@ -2,6 +2,7 @@
 
 .main-page-container {
   height: 100vh;
+  height: 100dvh;
   background-color: #f9fbfc;
   display: flex;
   flex-direction: column;
@@ -21,7 +22,7 @@
 /* 인삿말 텍스트 */
 .lia-text-box {
   text-align: center;
-  background: rgba(255, 255, 255, 0.9);
+  /* background: rgba(255, 255, 255, 0.9); */
   padding: 0.8rem 1.2rem;
   border-radius: 12px;
   font-size: clamp(1rem, 2.5vw, 1.2rem);
