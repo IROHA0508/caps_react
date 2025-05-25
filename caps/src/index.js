@@ -1,4 +1,6 @@
 // index.js
+import './index.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -7,9 +9,12 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Splash from './pages/Splash/Splash';
 import Onboarding from './pages/Onboarding/Onboarding';
 import MainPage from './pages/MainPage/MainPage';
-import ProtectedRoute from './component/ProtectedRoute'; // ⬅️ 추가
+import RoutinePage from './pages/RoutinePage/RoutinePage';
+import ReportPage from './pages/ReportPage/ReportPage';
 
-import './index.css';
+import ProtectedRoute from './component/ProtectedRoute';
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -27,6 +32,10 @@ root.render(
               </ProtectedRoute>
             }
           />
+
+          <Route path="/main/routine" element={<RoutinePage />} />
+          <Route path="/main/report" element={<ReportPage />} />
+
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
