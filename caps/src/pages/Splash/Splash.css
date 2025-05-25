@@ -19,6 +19,7 @@
   font-size: clamp(3rem, 8vw, 9rem);
   margin: 0;
   font-weight: 500;
+  font-family: 'SCoreDream', sans-serif;
 }
 
 .Splash__subtitle {
@@ -26,7 +27,9 @@
   margin: 0.5rem 0 0 0;
   font-weight: 300;
   color: #555;
+  font-family: 'SCoreDream', sans-serif;
 }
+
 
 .Splash__guide {
   margin-bottom: 15vh;
