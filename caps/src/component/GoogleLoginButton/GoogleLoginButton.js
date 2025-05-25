@@ -8,7 +8,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
 
   const serverIP = process.env.REACT_APP_IP_PORT;
   console.log(process.env.REACT_APP_IP_PORT);
-  
+
   return (
     <div className="button-container">
       {!userInfo ? (
@@ -16,9 +16,15 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
           useOneTap={false}
           onSuccess={async (credentialResponse) => {
             const decoded = jwtDecode(credentialResponse.credential);
-            setUserInfo(decoded);
-            // alert('로그인 성공');
-            console.log('로그인 성공:', decoded);
+
+            // ✅ 먼저 로그인 콜백부터 실행
+            localStorage.setItem('user', JSON.stringify(decoded));
+            if (onLoginSuccess) {
+              console.log('✅ onLoginSuccess 호출됨');
+              onLoginSuccess(decoded);
+            }
+
+            setUserInfo(decoded); // 이건 UI 변화용
 
             try {
               const res = await fetch(`http://${serverIP}:3000/users/google`, {
@@ -36,11 +42,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
 
               const token = result?.data?.token;
               if (token) {
-                console.log('✅ JWT 토큰:', token);
-                // 필요 시 localStorage 등에 저장
-
-                localStorage.setItem('user', JSON.stringify(decoded));
-                if (onLoginSuccess) onLoginSuccess(decoded); // 또는 그냥 onLoginSuccess();
+                localStorage.setItem('jwt_token', token);
               } else {
                 console.warn('⚠️ 서버 응답에 토큰이 없습니다.');
               }

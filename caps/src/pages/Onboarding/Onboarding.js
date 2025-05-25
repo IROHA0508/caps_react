@@ -8,7 +8,8 @@ function Onboarding({ onComplete }) {
   const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
-    navigate('/main'); // 로그인 완료 시 메인 페이지로 이동
+    console.log('✅ handleLoginSuccess 실행');
+    navigate('/main');
   };
 
   return (
