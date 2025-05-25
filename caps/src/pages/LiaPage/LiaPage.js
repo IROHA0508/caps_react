@@ -83,9 +83,6 @@ function LiaPage() {
               alt="프로필"
               style={{ borderRadius: '50%', width: '50px' }}
             />
-          
-          <LogoutButton onLogout={() => setUser(null)} />
-
           </div>
         ) : (
           <p>로그인 정보를 불러올 수 없습니다.</p>

@@ -27,7 +27,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
             setUserInfo(decoded); // 이건 UI 변화용
 
             try {
-              const res = await fetch(`http://${serverIP}:3000/users/google`, {
+              const res = await fetch(`http://${serverIP}/users/google`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -43,6 +43,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
               const token = result?.data?.token;
               if (token) {
                 localStorage.setItem('jwt_token', token);
+                console.log('✅ 토큰 저장 완료:', token);
               } else {
                 console.warn('⚠️ 서버 응답에 토큰이 없습니다.');
               }
