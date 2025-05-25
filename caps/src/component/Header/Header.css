@@ -3,11 +3,13 @@
 .header-container {
   position: relative;
   display: flex;
+  height: 2rem;
   align-items: center;
   padding: 0.6rem 0.8rem;
   background-color: #ffffff;
   border-bottom: 1px solid #eee;
   gap: 0.6rem;
+  
 }
 
 /* 오른쪽 정렬 (메인 페이지용) */
