@@ -17,7 +17,7 @@
 .button {
   background-color: #1B687D;
   color: white;
-  padding: clamp(0.5rem, 2vw, 1rem) clamp(1.5rem, 5vw, 3rem);
+  padding: clamp(0.6rem, 2vw, 1rem) clamp(3rem, 8vw, 5rem);
   font-size: clamp(1rem, 3vw, 1.5rem);
   border: none;
   border-radius: 8px;
@@ -35,29 +35,30 @@
 
 .lia-background-area {
   flex: 1;
+  min-height: 500px;
+  max-height: 100vh;
   background-image: url('../../pictures/LIA_testpic.svg');
-  background-size: contain; /* cover → contain */
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: center bottom; /* 캐릭터를 아래쪽으로 */
+  background-position: center bottom;
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-between; /* 텍스트 + 버튼을 위아래로 배치 */
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 }
 
+
 .lia-text {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-weight: 500;
+  padding: 0.6rem 1rem;
+  /* background: rgba(156, 57, 57, 0.9); */
+  border-radius: 10px;
   text-align: center;
-  color: #000;
   white-space: pre-line;
-  margin-bottom: 1rem;
-  z-index: 2;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  margin-bottom: 0.5rem;
 }
 
 .lia-overlay {
