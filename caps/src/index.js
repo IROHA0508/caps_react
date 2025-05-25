@@ -6,7 +6,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import Splash from './pages/Splash/Splash';
 import Onboarding from './pages/Onboarding/Onboarding';
-import LiaPage from './pages/LiaPage/LiaPage';
+import MainPage from './pages/MainPage/MainPage';
 import ProtectedRoute from './component/ProtectedRoute'; // ⬅️ 추가
 
 import './index.css';
@@ -23,7 +23,7 @@ root.render(
             path="/main"
             element={
               <ProtectedRoute>
-                <LiaPage />
+                <MainPage />
               </ProtectedRoute>
             }
           />

@@ -8,9 +8,9 @@ import OptionMenu from '../../component/OptionMenu/OptionMenu';
 
 import menu_dot from '../../pictures/menu_dots.svg';
 
-import './LiaPage.css';
+import './MainPage.css';
 
-function LiaPage() {
+function MainPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
   
   const navigate = useNavigate();
@@ -98,4 +98,4 @@ function LiaPage() {
   );
 }
 
-export default LiaPage;
+export default MainPage;
