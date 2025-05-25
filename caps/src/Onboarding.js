@@ -2,8 +2,15 @@
 import './Onboarding.css';
 import onboard_picture from './pic/onboard_pic.png';
 import GoogleLoginButton from './GoogleLoginButton';
+import { useNavigate } from 'react-router-dom';
 
 function Onboarding({ onComplete }) {
+  const navigate = useNavigate();
+
+  const handleLoginSuccess = () => {
+    navigate('/main'); // 로그인 완료 시 메인 페이지로 이동
+  };
+
   return (
     <div className="Onboarding">
       <div className="onboard-image-wrapper">
@@ -16,7 +23,7 @@ function Onboarding({ onComplete }) {
       </p>
 
       <div className="google-login-wrapper">
-        <GoogleLoginButton onLoginSuccess={onComplete} />
+        <GoogleLoginButton onLoginSuccess={handleLoginSuccess} />
       </div>
     </div>
   );

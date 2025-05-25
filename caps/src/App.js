@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
+// App.js
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Splash from './Splash';
 import Onboarding from './Onboarding';
 import LiaPage from './LiaPage';
 
 function App() {
-  const [step, setStep] = useState('splash'); // splash, onboarding, main
+  const user = localStorage.getItem('user');
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const user = localStorage.getItem('user');
-      setStep(user ? 'main' : 'onboarding');
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (step === 'splash') return <Splash />;
-  if (step === 'onboarding') return <Onboarding onComplete={() => setStep('main')} />;
-  return <LiaPage />;
+  return (
+    <Routes>
+      <Route path="/" element={<Splash />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route
+        path="/main"
+        element={user ? <LiaPage /> : <Navigate to="/onboarding" />}
+      />
+    </Routes>
+  );
 }
 
 export default App;

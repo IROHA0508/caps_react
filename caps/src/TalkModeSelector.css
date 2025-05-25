@@ -1,0 +1,41 @@
+/* TalkModeSelector.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px;
+  animation: slideUp 0.3s ease-out;
+}
+
+.option {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.option:hover {
+  background: #f2f2f2;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}

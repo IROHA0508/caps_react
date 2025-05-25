@@ -1,12 +1,12 @@
-// LogoutButton.js
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LogoutButton = ({ onLogout }) => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem('user');
-    if (onLogout) {
-      onLogout();  // 상태 초기화
-    }
+    if (onLogout) onLogout();
+    navigate('/onboarding'); // 로그아웃 후 온보딩 페이지로 이동
   };
 
   return (
