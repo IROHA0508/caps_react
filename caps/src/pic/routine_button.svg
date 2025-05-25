@@ -1,25 +1,5 @@
-<svg width="28" height="30" viewBox="0 0 28 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_dd_212_82)">
-<path d="M9.3772 10.3771L14.2511 14.8871L21.7417 7.20178" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M22.2005 14.3303C21.2105 18.6189 17.0827 21.4207 12.7313 20.757C8.38033 20.0938 5.27466 16.1897 5.60741 11.8012C5.94016 7.41172 9.59812 4.02051 13.9995 4.02051" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M14.0825 1.14587L17.1753 4.04025M17.1753 4.04025L14 7.13171M17.1753 4.04025L14 4.02054" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<defs>
-<filter id="filter0_dd_212_82" x="-1" y="0" width="30" height="30" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_212_82"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="effect1_dropShadow_212_82" result="effect2_dropShadow_212_82"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_212_82" result="shape"/>
-</filter>
-</defs>
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6.3772 10.3771L11.2511 14.8871L18.7417 7.20178" stroke="#83858A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19.2005 14.3303C18.2105 18.6189 14.0827 21.4207 9.73129 20.757C5.38033 20.0938 2.27466 16.1897 2.60741 11.8012C2.94016 7.41172 6.59812 4.02051 10.9995 4.02051" stroke="#83858A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.0825 1.14587L14.1753 4.04025M14.1753 4.04025L11 7.13171M14.1753 4.04025L11 4.02054" stroke="#83858A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

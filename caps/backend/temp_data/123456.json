@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "message": "data send to server api test",
+  "data": {
+    "biometrics": [
+      {
+        "id": 4,
+        "data_type": "step",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "2035",
+        "created_at": "2025-05-24T09:15:02.000Z"
+      }
+    ]
+  }
+}

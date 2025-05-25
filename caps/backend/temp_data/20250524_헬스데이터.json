@@ -1,0 +1,80 @@
+{
+  "success": true,
+  "message": "Biometrics data retrieved successfully",
+  "data": {
+    "biometrics": [
+      {
+        "id": 4,
+        "data_type": "step",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "1odsOMpSZHoTj+QdyO2uEg==",
+        "created_at": "2025-05-24T09:15:02.000Z"
+      },
+      {
+        "id": 6,
+        "data_type": "step",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 7,
+        "data_type": "calories",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 8,
+        "data_type": "distance",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 9,
+        "data_type": "deep_sleep",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 10,
+        "data_type": "light_sleep",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 11,
+        "data_type": "rem_sleep",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 12,
+        "data_type": "heart_rate",
+        "date": "2025-05-24T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:19:07.000Z"
+      },
+      {
+        "id": 3,
+        "data_type": "step",
+        "date": "2025-05-23T00:00:00.000Z",
+        "time": "00:00:00",
+        "value": "mH/Y8I/6ORFUrhzBjEG5Ug==",
+        "created_at": "2025-05-24T09:15:02.000Z"
+      }
+    ]
+  }
+}

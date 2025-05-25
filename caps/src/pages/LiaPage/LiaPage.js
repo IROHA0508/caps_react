@@ -6,12 +6,19 @@ import LogoutButton from '../../component/LogoutButton/LogoutButton';
 import TalkModeSelector from '../../component/TalkModeSelector/TalkModeSelector';
 
 import './LiaPage.css';
+import menu_dot from '../../pic/menu_dots.svg'
+import report_button from '../../pic/report_button.svg'
+import routine_button from '../../pic/routine_button.svg'
+import logout_button from '../../pic/logout_button.svg'
 
 function LiaPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
   
   // 로그인한 사용자의 정보 가져오기
   const [user, setUser] = useState(null);
+
+  // 메뉴 상태 관리
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
   const interval = setInterval(() => {
@@ -26,7 +33,34 @@ function LiaPage() {
 
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
-      <div>
+      <div className="lia-page-container">
+
+        {/* 좌측 상단 메뉴 버튼 */}
+        <img
+          src={menu_dot}
+          alt="메뉴"
+          className="menu-icon"
+          onClick={() => setMenuOpen(!menuOpen)}
+        />
+
+        {/* 메뉴 드롭다운 */}
+        {menuOpen && (
+          <div className="dropdown-menu">
+            <div className="menu-item" onClick={() => alert("루틴 보기 선택됨")}>
+              <img src={routine_button} alt="루틴" />
+              <span>일정/루틴 보기</span>
+            </div>
+            <div className="menu-item" onClick={() => alert("리포트 보기 선택됨")}>
+              <img src={report_button} alt="리포트" />
+              <span>통계 리포트</span>
+            </div>
+            <div className="menu-item" onClick={() => setUser(null)}>
+              <img src={logout_button} alt="로그아웃" />
+              <span>로그아웃</span>
+            </div>
+          </div>
+        )}
+
         <div style={{ textAlign: 'center', marginTop: '10vh' }}>
           <p>This is LIA page</p>
         </div>
