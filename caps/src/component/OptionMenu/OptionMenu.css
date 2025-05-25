@@ -1,0 +1,32 @@
+/* component/OptionMenu/OptionMenu.css */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  z-index: 1100;
+  width: 200px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}

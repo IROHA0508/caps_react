@@ -1,22 +1,21 @@
 // LiaPage.js
 import { useEffect,useState } from 'react';
 import { GoogleOAuthProvider} from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
 
 import LogoutButton from '../../component/LogoutButton/LogoutButton';
 import TalkModeSelector from '../../component/TalkModeSelector/TalkModeSelector';
+import OptionMenu from '../../component/OptionMenu/OptionMenu';
+
+import menu_dot from '../../pic/menu_dots.svg';
 
 import './LiaPage.css';
-import menu_dot from '../../pic/menu_dots.svg'
-import report_button from '../../pic/report_button.svg'
-import routine_button from '../../pic/routine_button.svg'
-import logout_button from '../../pic/logout_button.svg'
-import report_button_select from '../../pic/report_button_select.svg'
-import routine_button_select from '../../pic/routine_button_select.svg'
-import logout_button_select from '../../pic/logout_button_select.svg'
 
 function LiaPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
   
+  const navigate = useNavigate();
+
   // 로그인한 사용자의 정보 가져오기
   const [user, setUser] = useState(null);
 
@@ -25,90 +24,52 @@ function LiaPage() {
   const [selectedMenu, setSelectedMenu] = useState(null); // 예: 'routine', 'report', 'logout'
 
   useEffect(() => {
-  const interval = setInterval(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, 500); // 0.5초마다 체크
+    const interval = setInterval(() => {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }, 500); // 0.5초마다 체크
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    setMenuOpen(false);
+    navigate('/onboarding');
+  };
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
       <div className="lia-page-container">
 
-        {/* 좌측 상단 메뉴 버튼 */}
         <img
           src={menu_dot}
           alt="메뉴"
           className="menu-icon"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => {
+            setMenuOpen((prev) => {
+              if (!prev) setSelectedMenu(null); // 열 때만 초기화
+              return !prev;
+            });
+          }}
         />
 
-        {/* 메뉴 드롭다운 */}
-        {menuOpen && (
-          <div className="dropdown-menu">
-            <div
-                className="menu-item"
-                onClick={() => setSelectedMenu('routine')}
-              >
-                <img
-                  src={
-                    selectedMenu === 'routine'
-                      ? routine_button_select
-                      : routine_button
-                  }
-                  alt="루틴"
-                />
-                <span
-                  style={{ color: selectedMenu === 'routine' ? '#000000' : '#83858A' }}
-                >
-                  일정/루틴 보기
-                </span>
-              </div>
+        <OptionMenu
+          visible={menuOpen}
+          selectedMenu={selectedMenu}
+          onSelect={(item) => {
+            if (item === 'logout') {
+              handleLogout();          // ✅ LogoutButton 방식 사용
+            } else {
+              setSelectedMenu(item);  // routine/report 선택 처리
+            }
+            setMenuOpen(false);
+          }}
+          onClose={() => setMenuOpen(false)}
+        />
 
-            <div
-                className="menu-item"
-                onClick={() => setSelectedMenu('report')}
-              >
-                <img
-                  src={
-                    selectedMenu === 'report'
-                      ? report_button_select
-                      : report_button
-                  }
-                  alt="리포트"
-                />
-                <span
-                  style={{ color: selectedMenu === 'report' ? '#000000' : '#83858A' }}
-                >
-                  통계 리포트
-                </span>
-              </div>
-
-              <div
-                className="menu-item"
-                onClick={() => setSelectedMenu('logout')}
-              >
-                <img
-                  src={
-                    selectedMenu === 'logout'
-                      ? logout_button_select
-                      : logout_button
-                  }
-                  alt="로그아웃"
-                />
-                <span
-                  style={{ color: selectedMenu === 'logout' ? '#000000' : '#83858A' }}
-                >
-                  로그아웃
-                </span>
-              </div>
-
-          </div>
-        )}
 
         <div style={{ textAlign: 'center', marginTop: '10vh' }}>
           <p>This is LIA page</p>
