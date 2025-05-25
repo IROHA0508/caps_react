@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,19 +9,14 @@ import './MainPage.css';
 
 function MainPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
-  const [user, setUser] = useState(null);
+
+  // ✅ user를 초기 렌더링 시 localStorage에서 바로 불러옴
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -31,8 +26,9 @@ function MainPage() {
 
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
-     <div className="main-page-container">
-        {user && <Header user={user} onLogout={handleLogout} />}
+      <div className="main-page-container">
+        {/* ✅ Header는 항상 렌더링되며 user를 props로 전달 */}
+        <Header user={user} onLogout={handleLogout} />
 
         <div className="lia-wrapper">
           <div className="lia-text-box">
@@ -58,7 +54,6 @@ function MainPage() {
           onClose={() => setShowTalkOptions(false)}
         />
       </div>
-
     </GoogleOAuthProvider>
   );
 }
