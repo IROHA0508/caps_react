@@ -5,15 +5,53 @@
   background-color: #f9fbfc;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* 모바일 스크롤 방지 */
 }
 
-.button-container {
+.lia-wrapper {
+  flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
+/* 인삿말 텍스트 */
+.lia-text-box {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.6;
+  white-space: pre-line;
+  margin-top: 1rem;
+}
+
+/* 캐릭터 영역 */
+.lia-character-area {
+  flex: 1;
+  width: 100%;
+  background-image: url('../../pictures/LIA_testpic.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* 버튼을 캐릭터 하단에 위치 */
+.lia-button-wrapper {
+  padding-bottom: 1.2rem;
+  z-index: 2;
+}
+
+/* 버튼 스타일 */
 .button {
   background-color: #1B687D;
   color: white;
@@ -22,55 +60,19 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  min-width: 220px;
+  text-align: center;
 }
 
 .button:hover {
-  background-color: #145061; /* hover 시 색상 */
+  background-color: #145061;
 }
 
 .button:active {
-  background-color: #0e3a46; /* 클릭 시 색상 */
+  background-color: #0e3a46;
 }
 
-
-.lia-background-area {
-  flex: 1;
-  min-height: 500px;
-  max-height: 100vh;
-  background-image: url('../../pictures/LIA_testpic.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 1rem;
-}
-
-
-.lia-text {
-  font-size: clamp(1rem, 2.5vw, 1.2rem);
-  font-weight: 500;
-  padding: 0.6rem 1rem;
-  /* background: rgba(156, 57, 57, 0.9); */
-  border-radius: 10px;
-  text-align: center;
-  white-space: pre-line;
-  margin-bottom: 0.5rem;
-}
-
-.lia-overlay {
-  z-index: 1;
-
-  width: 100%;
-  padding-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-
+/* 선택 결과 영역 */
 .result-text {
   margin-top: 2rem;
   font-size: 1.1rem;
