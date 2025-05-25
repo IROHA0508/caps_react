@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import TalkModeSelector from '../../component/TalkModeSelector/TalkModeSelector';
 import OptionMenu from '../../component/OptionMenu/OptionMenu';
 
-import menu_dot from '../../pic/menu_dots.svg';
+import menu_dot from '../../pictures/menu_dots.svg';
 
 import './LiaPage.css';
 

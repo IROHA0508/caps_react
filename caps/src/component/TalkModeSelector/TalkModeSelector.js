@@ -1,8 +1,8 @@
 // TalkModeSelector.js
 import React, { useEffect } from 'react';
 import './TalkModeSelector.css';
-import talkmode1 from '../../pic/talkmode_1.svg';
-import talkmode2 from '../../pic/talkmode_2.svg';
+import talkmode1 from '../../pictures/talkmode_1.svg';
+import talkmode2 from '../../pictures/talkmode_2.svg';
 
 function TalkModeSelector({ visible, onClose }) {
   useEffect(() => {

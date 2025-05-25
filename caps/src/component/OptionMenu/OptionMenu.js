@@ -2,13 +2,13 @@
 import React from 'react';
 import './OptionMenu.css';
 
-import report_button from '../../pic/report_button.svg';
-import routine_button from '../../pic/routine_button.svg';
-import logout_button from '../../pic/logout_button.svg';
+import report_button from '../../pictures/report_button.svg';
+import routine_button from '../../pictures/routine_button.svg';
+import logout_button from '../../pictures/logout_button.svg';
 
-import report_button_select from '../../pic/report_button_select.svg';
-import routine_button_select from '../../pic/routine_button_select.svg';
-import logout_button_select from '../../pic/logout_button_select.svg';
+import report_button_select from '../../pictures/report_button_select.svg';
+import routine_button_select from '../../pictures/routine_button_select.svg';
+import logout_button_select from '../../pictures/logout_button_select.svg';
 
 function OptionMenu({ visible, selectedMenu, onSelect, onClose }) {
   if (!visible) return null;
