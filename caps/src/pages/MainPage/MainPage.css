@@ -22,7 +22,6 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  /* transition: background-color 0.3s ease; */
 }
 
 .button:hover {
@@ -32,6 +31,44 @@
 .button:active {
   background-color: #0e3a46; /* 클릭 시 색상 */
 }
+
+
+.lia-background-area {
+  flex: 1;
+  background-image: url('../../pictures/LIA_testpic.svg');
+  background-size: contain; /* cover → contain */
+  background-repeat: no-repeat;
+  background-position: center bottom; /* 캐릭터를 아래쪽으로 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* 텍스트 + 버튼을 위아래로 배치 */
+  padding: 2rem 1rem;
+}
+
+.lia-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  color: #000;
+  white-space: pre-line;
+  margin-bottom: 1rem;
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.lia-overlay {
+  z-index: 1;
+
+  width: 100%;
+  padding-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
 
 .result-text {
   margin-top: 2rem;

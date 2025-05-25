@@ -35,10 +35,19 @@ function MainPage() {
 
         {user && <Header user={user} onLogout={handleLogout} />}
 
-        <div className="button-container">
-          <button className="button" onClick={() => setShowTalkOptions(true)}>
-            LIA와 이야기하기
-          </button>
+        <div className="lia-background-area">
+          <div className="lia-text">
+            안녕하세요<br />
+            저는 LIA예요<br />
+            당신을 위해 디지털 세계에서 왔어요.<br />
+            말 걸어주시면 언제든 함께할게요!
+          </div>
+
+          <div className="lia-overlay">
+            <button className="button" onClick={() => setShowTalkOptions(true)}>
+              LIA와 이야기하기
+            </button>
+          </div>
         </div>
 
         <TalkModeSelector
