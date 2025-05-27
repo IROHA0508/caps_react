@@ -20,7 +20,7 @@ function Header({ user, onLogout }) {
     location.pathname === '/main/routine' || location.pathname === '/main/report';
 
   const getTitle = () => {
-    if (location.pathname === '/main/routine') return '루틴 페이지';
+    if (location.pathname === '/main/routine') return '일정 / 루틴';
     if (location.pathname === '/main/report') return '통계 리포트';
     return '';
   };

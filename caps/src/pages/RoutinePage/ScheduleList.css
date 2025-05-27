@@ -1,0 +1,50 @@
+.no-schedule {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.no-schedule-icon {
+  width: 48px;
+  margin-bottom: 1rem;
+}
+
+.no-schedule-text {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.no-schedule-subtext {
+  color: #999;
+  margin: 0.5rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+.add-schedule-btn {
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.schedule-list {
+  padding: 1rem;
+}
+
+.schedule-item {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-time {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.schedule-title {
+  font-weight: bold;
+  font-size: 1rem;
+}

@@ -1,0 +1,83 @@
+/* RoutineCalendar.css */
+
+.calendar-container {
+  padding: 1rem;
+}
+
+/* 월 + 드롭다운 */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.7rem;
+
+}
+
+.month-text {
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin-left: 0.8rem; /* ✅ 왼쪽 여백 추가 */
+}
+
+.under-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+}
+
+/* 요일 라벨 */
+.day-labels {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.day-label {
+  width: 30px;
+  text-align: center;
+}
+
+.day-label:nth-child(1) {
+  color: #FF4D4F; /* 일요일 */
+}
+
+.day-label:nth-child(7) {
+  color: #4D6FFF; /* 토요일 */
+}
+
+/* 날짜 숫자 */
+.date-row {
+  display: flex;
+  justify-content: space-around;
+  /* margin-bottom: 1rem;
+  padding-bottom: 1.2rem; */
+
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  padding-bottom: clamp(1.2rem, 2.5vw, 2rem);  
+  border-bottom: 1px solid #D9D9D9; /* 구분선 */
+}
+
+.date-circle {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: black;
+  font-weight: 500;
+}
+
+.date-circle.today {
+  border: 1px solid black;
+}
+
+.date-circle.selected {
+  background-color: black;
+  color: white;
+}
