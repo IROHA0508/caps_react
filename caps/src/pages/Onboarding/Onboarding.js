@@ -25,6 +25,15 @@ function Onboarding({ onComplete }) {
 
       <div className="google-login-wrapper">
         <GoogleLoginButton onLoginSuccess={handleLoginSuccess} />
+        {/* <GoogleLoginButton
+          useOneTap={false}
+          onSuccess={handleLoginSuccess}
+          onError={() => {
+            console.error('❌ Google 로그인 실패');
+            alert('Google 로그인에 실패했습니다.');
+          }}
+        /> */}
+
       </div>
     </div>
   );
