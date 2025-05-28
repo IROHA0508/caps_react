@@ -21,7 +21,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       //   discoveryDocs: [
       //     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
       //   ],
-      //   scope: 'https://www.googleapis.com/auth/calendar.events',
+      //   scope: 'https://www.googleapis.com/auth/calendar.readonly',
       // });
 
       // // 3. 이미 로그인 상태가 아니면 signIn 진행
