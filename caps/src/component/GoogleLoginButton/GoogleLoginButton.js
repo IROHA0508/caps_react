@@ -12,34 +12,6 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       const decoded = jwtDecode(credentialResponse.credential);
       localStorage.setItem('user', JSON.stringify(decoded));
 
-      // // 2. gapi 초기화 + calendar.events 권한 설정
-      // await new Promise((resolve) => gapi.load('client:auth2', resolve));
-
-      // await gapi.client.init({
-      //   apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
-      //   clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      //   discoveryDocs: [
-      //     'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
-      //   ],
-      //   scope: 'https://www.googleapis.com/auth/calendar.readonly',
-      // });
-
-      // // 3. 이미 로그인 상태가 아니면 signIn 진행
-      // const authInstance = gapi.auth2.getAuthInstance();
-      // if (!authInstance.isSignedIn.get()) {
-      //   await authInstance.signIn();
-      // }
-
-      // const googleUser = authInstance.currentUser.get();
-      // const authResponse = googleUser.getAuthResponse();
-
-      // if (!authResponse?.access_token) {
-      //   throw new Error('Google Access Token을 가져올 수 없습니다.');
-      // }
-
-      // localStorage.setItem('google_access_token', authResponse.access_token);
-      // console.log('✅ Google Access Token 저장 완료:', authResponse.access_token);
-
       // 4. 로그인 콜백 실행
       if (onLoginSuccess) {
         onLoginSuccess(decoded);
