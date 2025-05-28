@@ -91,3 +91,14 @@
 .result-text ul {
   padding-left: 1.2rem;
 }
+
+.calendar-status-message {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #1b5e20;
+  background-color: #e8f5e9;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+}

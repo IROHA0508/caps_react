@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,9 +21,31 @@ function MainPage() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    setUser(null);
-    navigate('/onboarding');
+    setUser(null); // navigate는 useEffect에서 처리됨
+
+    console.log("🗑️ 로그아웃 수행, 현재 localStorage.getItem('user'):", localStorage.getItem('user'));
   };
+
+  useEffect(() => {
+    if (user === null) {
+      navigate('/onboarding');
+    }
+  }, [user, navigate]);
+
+  const [calendarLinked, setCalendarLinked] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const linked = urlParams.get('calendarLinked');
+    if (linked === 'true') {
+      localStorage.setItem('calendarLinked', 'true');
+      setCalendarLinked(true);
+    } else {
+      const stored = localStorage.getItem('calendarLinked');
+      setCalendarLinked(stored === 'true');
+    }
+  }, []);
+
 
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
@@ -53,6 +76,13 @@ function MainPage() {
           visible={showTalkOptions}
           onClose={() => setShowTalkOptions(false)}
         />
+
+        {calendarLinked && (
+          <div className="calendar-status-message">
+            📅 Google 캘린더 연동이 완료되었습니다!
+          </div>
+        )}
+        
       </div>
     </GoogleOAuthProvider>
   );

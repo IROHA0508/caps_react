@@ -1,40 +1,50 @@
+# calender.py
 from flask import Blueprint, request, jsonify
-from google.oauth2 import id_token
-from google.auth.transport import requests as grequests
 from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
+from dotenv import load_dotenv
+from datetime import datetime, timedelta
 import os
+
+load_dotenv()
 
 calender_bp = Blueprint('calender', __name__)
 
 @calender_bp.route('/calendar/events', methods=['POST'])
 def get_calendar_events():
     try:
-        print("📥 [요청 수신] /calendar/events 엔드포인트 호출됨")
-        print("📦 요청 JSON 데이터:", request.json)
+        print("📥 [요청 수신] /calendar/events")
+        access_token = request.json.get('access_token')
+        if not access_token:
+            return jsonify({'error': 'No access token provided'}), 400
 
-        # 프론트에서 보낸 ID 토큰 (credential)
-        token = request.json.get('credential')
-        if not token:
-            print("⚠️ credential 누락됨")
-            return jsonify({'error': 'No credential token provided'}), 400
+        creds = Credentials(token=access_token)
+        service = build('calendar', 'v3', credentials=creds)
 
-        # ID 토큰 검증 및 사용자 정보 추출
-        idinfo = id_token.verify_oauth2_token(token, grequests.Request(), os.environ['GOOGLE_CLIENT_ID'])
-        print("✅ ID 토큰 검증 성공:", idinfo)
+        now = datetime.utcnow().isoformat() + 'Z'
+        max_time = (datetime.utcnow() + timedelta(days=7)).isoformat() + 'Z'
 
-        # 예시: 유저 이메일
-        user_email = idinfo.get('email', 'Unknown')
+        events_result = service.events().list(
+            calendarId='primary',
+            timeMin=now,
+            timeMax=max_time,
+            maxResults=10,
+            singleEvents=True,
+            orderBy='startTime'
+        ).execute()
 
-        # 응답 mock 데이터
-        response = {
-            'user': user_email,
+        events = events_result.get('items', [])
+        print("📆 일정 불러오기 완료:", events)
+
+        return jsonify({
             'events': [
-                {'summary': '테스트 일정', 'start': '2025-06-01T10:00:00', 'end': '2025-06-01T11:00:00'}
+                {
+                    'summary': e.get('summary'),
+                    'start': e['start'].get('dateTime') or e['start'].get('date'),
+                    'end': e['end'].get('dateTime') or e['end'].get('date')
+                } for e in events
             ]
-        }
-
-        print("📤 응답 데이터:", response)
-        return jsonify(response)
+        })
 
     except Exception as e:
         print("❌ 예외 발생:", str(e))

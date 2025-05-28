@@ -41,7 +41,7 @@ function Header({ user, onLogout }) {
     <div
       className={`header-container ${isMain ? 'header-main' : 'header-sub'}`}
     >
-      {isMain && (
+      {isMain && user &&(
         <>
           <img src={user.picture} alt="프로필" className="header-profile" />
           <span className="header-username">{user.name}님!</span>

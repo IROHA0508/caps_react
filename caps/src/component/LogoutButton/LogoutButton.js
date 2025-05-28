@@ -6,7 +6,7 @@ const LogoutButton = ({ onLogout }) => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     if (onLogout) onLogout();
-    navigate('/onboarding'); // 로그아웃 후 온보딩 페이지로 이동
+    // navigate('/onboarding'); // 로그아웃 후 온보딩 페이지로 이동
   };
 
   return (

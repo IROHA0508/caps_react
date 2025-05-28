@@ -1,58 +1,61 @@
-// RoutinePage.js
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../component/Header/Header';
-
 import RoutineCalendar from '../../component/Calendar/RoutineCalendar';
 import ScheduleList from './ScheduleList';
-import { gapi } from 'gapi-script';
+import GoogleCalendarConnectButton from '../../component/GoogleCalendarConnectButton/GoogleCalendarConnectButton';
 import dayjs from 'dayjs';
-
 
 function RoutinePage() {
   const [selectedDate, setSelectedDate] = useState(dayjs());
-  const [googleEvents, setGoogleEvents] = useState([]);
+  const [events, setEvents] = useState([]);
 
-  // TODO: 토큰 값은 로그인 시 localStorage 또는 props에서 받아오도록 조정
-  const jwtToken = localStorage.getItem('jwt');
+  // ✅ access_token으로 일정 가져오기
+  const fetchCalendarEvents = async () => {
+    const accessToken = localStorage.getItem('google_access_token');
+    if (!accessToken) return;
+
+    try {
+      const res = await fetch('http://localhost:5000/calendar/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ access_token: accessToken }),
+      });
+
+      const data = await res.json();
+      if (data.events) {
+        setEvents(data.events);
+        console.log('📆 받아온 일정:', data.events);
+      } else {
+        console.warn('⚠️ 일정 응답 없음:', data);
+      }
+    } catch (err) {
+      console.error('❌ 일정 불러오기 실패:', err);
+    }
+  };
 
   useEffect(() => {
-    const initClient = () => {
-      gapi.client.init({
-        apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
-        clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-        discoveryDocs: [
-          'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
-        ],
-        scope: 'https://www.googleapis.com/auth/calendar.readonly',
-      }).then(() => {
-        return gapi.client.calendar.events.list({
-          calendarId: 'primary',
-          timeMin: new Date().toISOString(),
-          showDeleted: false,
-          singleEvents: true,
-          orderBy: 'startTime',
-        });
-      }).then((response) => {
-        setGoogleEvents(response.result.items || []);
-      });
-    };
-
-    gapi.load('client:auth2', initClient);
-  }, [jwtToken]);
+    fetchCalendarEvents();
+  }, []);
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
 
-      <div style={{ flex: 1, overflowY: 'auto' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
         <RoutineCalendar
           selectedDate={selectedDate}
           onDateSelect={setSelectedDate}
         />
 
+        <div style={{ margin: '1rem 0', textAlign: 'center' }}>
+          <GoogleCalendarConnectButton />
+        </div>
+
         <ScheduleList
           selectedDate={selectedDate}
-          events={googleEvents}
+          events={events} // ✅ 받아온 일정 전달
         />
       </div>
     </div>

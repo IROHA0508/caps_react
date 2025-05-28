@@ -4,20 +4,14 @@ from flask_cors import CORS
 from api import api_bp
 from data import data_bp
 from calender import calender_bp
-
+from auth import auth_bp
 app = Flask(__name__)
 CORS(app)
-
-# PostgreSQL 연결 정보 (예시)
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'postgresql://dbmasteruser:4x8PNC8DN1Au*KR..Fj1OAcuacVaw%26%3C%5Db@'
-    'ls-deddfce058ae2787e4c921866cdbb65701d29146.c9a8k0w88jzk.ap-northeast-2.rds.amazonaws.com:5432/LIA-DATABASE'
-)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.register_blueprint(api_bp)
 app.register_blueprint(data_bp) 
 app.register_blueprint(calender_bp)
+app.register_blueprint(auth_bp)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

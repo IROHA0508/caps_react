@@ -1,5 +1,5 @@
 # ✅ 배치 파일
-# run_all.bat
+run_all.bat
 
 # ✅ 환경 변수
 *.env
@@ -17,7 +17,7 @@
 # ✅ 테스트 & 빌드
 /coverage
 /build
-
+``
 # ✅ 로그 파일
 npm-debug.log*
 yarn-debug.log*
@@ -40,3 +40,4 @@ caps/api/venv/
 # ✅ 무시할 폴더
 /caps/api/temp_data
 /structure.txt
+.vscode/

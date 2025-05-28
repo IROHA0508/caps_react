@@ -1,46 +1,53 @@
-// src/component/GoogleLoginButton.js
+// src/component/GoogleLoginButton/GoogleLoginButton.js
+
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
 const GoogleLoginButton = ({ onLoginSuccess }) => {
   const serverIP = process.env.REACT_APP_IP_PORT;
 
+  // 🔐 Google 로그인 성공 핸들러
   const handleLogin = async (credentialResponse) => {
     try {
-      // 1. ID 토큰 디코딩 → 사용자 정보 저장
-      const decoded = jwtDecode(credentialResponse.credential);
+      const googleToken = credentialResponse.credential;
+      const decoded = jwtDecode(googleToken);
+
+      // ✅ 유저 정보 저장
+      localStorage.setItem('google_token', googleToken);
       localStorage.setItem('user', JSON.stringify(decoded));
-      localStorage.setItem('credential', credentialResponse.credential); // 추가
+      console.log('✅ Google 로그인 성공:', decoded);
 
-      // 2. 로그인 콜백 실행
-      if (onLoginSuccess) {
-        onLoginSuccess(decoded);
-      }
 
-      // 3. 서버에 ID 토큰 전송하여 JWT 토큰 발급
-      const res = await fetch(`https://${serverIP}/users/google`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          credential: credentialResponse.credential,
-        }),
-      });
+      // ✅ 프로젝트 서버에 JWT 토큰 요청 -> 서버 키면 주석 해제
+      // const res = await fetch(`https://${serverIP}/users/google`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     credential: credentialResponse.credential,
+      //   }),
+      // });
 
-      const result = await res.json();
-      const serverToken = result?.data?.token;
-      if (serverToken) {
-        localStorage.setItem('jwt_token', serverToken);
-        console.log('✅ 서버용 JWT 토큰 저장 완료:', serverToken);
-      } else {
-        console.warn('⚠️ 서버 응답에 토큰이 없습니다.');
-      }
+      // const result = await res.json();
+      // const token = result?.data?.token;
+      // if (token) {
+      //   localStorage.setItem('server_jwt_token', token);
+      //   console.log('✅프로젝트 서버용 JWT 토큰 저장 완료:', token);
+      // } else {
+      //   console.warn('⚠️프로젝트 서버 응답에 토큰이 없습니다.');
+      // }
 
-    } catch (err) {
-      console.error('❌ 로그인 또는 토큰 처리 중 에러:', err);
-      alert('Google 로그인 중 문제가 발생했습니다.');
+    // ✅ 서버 JWT 토큰 요청이 성공했을 경우에만 메인 페이지로 이동
+    // if (res.ok && onLoginSuccess)
+    if (onLoginSuccess) {
+      console.log("✅ onLoginSuccess 콜백 호출됨");
+      onLoginSuccess(decoded);
     }
+  } catch (err) {
+    console.error('❌ 로그인 실패:', err);
+    alert('Google 로그인 중 오류가 발생했습니다.');
+  }
   };
 
   return (
@@ -52,7 +59,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
           console.error('❌ Google 로그인 실패');
           alert('Google 로그인에 실패했습니다.');
         }}
-        scope="https://www.googleapis.com/auth/calendar.readonly"
+        scope="openid email profile"
       />
     </div>
   );
