@@ -10,7 +10,7 @@ CORS(app)
 
 # PostgreSQL 연결 정보 (예시)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'postgresql://dbmasteruser:4x8PNC8DN1Au*KR..Fj1OAuacVaw%26%3C%5Db@'
+    'postgresql://dbmasteruser:4x8PNC8DN1Au*KR..Fj1OAcuacVaw%26%3C%5Db@'
     'ls-deddfce058ae2787e4c921866cdbb65701d29146.c9a8k0w88jzk.ap-northeast-2.rds.amazonaws.com:5432/LIA-DATABASE'
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
