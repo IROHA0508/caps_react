@@ -49,6 +49,7 @@ def callback():
         # ✅ React로 access_token 포함한 리다이렉트
         main_uri = os.environ.get('MAIN_URI')
         redirect_url = urljoin(main_uri, '/main/routine')
+        print("🔗 Redirecting to:", redirect_url)
         return redirect(f'{redirect_url}?access_token={access_token}')
 
     except Exception as e:
