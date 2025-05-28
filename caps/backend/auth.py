@@ -3,6 +3,8 @@ from flask import Blueprint, redirect, request, jsonify
 import os
 import requests
 from dotenv import load_dotenv
+from urllib.parse import urljoin
+
 
 load_dotenv()
 
@@ -45,7 +47,9 @@ def callback():
             return 'Failed to get access token', 400
 
         # ✅ React로 access_token 포함한 리다이렉트
-        return redirect(f'http://localhost:3000/main/routine?access_token={access_token}')
+        main_uri = os.environ.get('MAIN_URI')
+        redirect_url = urljoin(main_uri, '/main/routine')
+        return redirect(f'{redirect_url}?access_token={access_token}')
 
     except Exception as e:
         print("❌ Error:", e)
