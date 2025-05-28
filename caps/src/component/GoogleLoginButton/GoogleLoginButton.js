@@ -1,7 +1,6 @@
 // src/component/GoogleLoginButton.js
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import { gapi } from 'gapi-script';
 
 const GoogleLoginButton = ({ onLoginSuccess }) => {
   const serverIP = process.env.REACT_APP_IP_PORT;
@@ -11,13 +10,14 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       // 1. ID 토큰 디코딩 → 사용자 정보 저장
       const decoded = jwtDecode(credentialResponse.credential);
       localStorage.setItem('user', JSON.stringify(decoded));
+      localStorage.setItem('credential', credentialResponse.credential); // 추가
 
-      // 4. 로그인 콜백 실행
+      // 2. 로그인 콜백 실행
       if (onLoginSuccess) {
         onLoginSuccess(decoded);
       }
 
-      // 5. 서버에 ID 토큰 전송하여 JWT 토큰 발급
+      // 3. 서버에 ID 토큰 전송하여 JWT 토큰 발급
       const res = await fetch(`https://${serverIP}/users/google`, {
         method: 'POST',
         headers: {
@@ -39,7 +39,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
 
     } catch (err) {
       console.error('❌ 로그인 또는 토큰 처리 중 에러:', err);
-      alert('Google 로그인으로 서버에 접속 중 문제가 발생했습니다.');
+      alert('Google 로그인 중 문제가 발생했습니다.');
     }
   };
 
@@ -52,6 +52,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
           console.error('❌ Google 로그인 실패');
           alert('Google 로그인에 실패했습니다.');
         }}
+        scope="https://www.googleapis.com/auth/calendar.readonly"
       />
     </div>
   );

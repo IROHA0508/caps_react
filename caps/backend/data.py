@@ -10,7 +10,6 @@ data_bp = Blueprint('data', __name__)
 
 @data_bp.route('/data/receive', methods=['POST'])
 def receive_health_data():
-
     data = request.get_json()
      # 받은 데이터 출력 (디버그용)
     print("받은 데이터:", json.dumps(data, indent=2, ensure_ascii=False))

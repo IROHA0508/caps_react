@@ -4,9 +4,13 @@ platformdirs==4.3.7
 virtualenv==20.30.0
 
 flask==2.3.3
-transformers==4.40.1
-torch==2.3.0
+# transformers==4.40.1
+# torch==2.3.0
 python-dotenv==1.0.1
 requests==2.31.0
 openai
 flask_cors
+
+google-auth
+google-auth-oauthlib
+google-api-python-client

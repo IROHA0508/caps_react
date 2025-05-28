@@ -81,3 +81,8 @@
   background-color: black;
   color: white;
 }
+
+.has-event {
+  border: 2px solid #1B687D;
+  background-color: #E0F7FA;
+}
