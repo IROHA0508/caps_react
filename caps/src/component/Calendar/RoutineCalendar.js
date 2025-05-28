@@ -37,7 +37,7 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
       }
 
       try {
-        const res = await fetch(`https://${process.env.REACT_APP_IP_PORT}/calendar/events`, {
+        const res = await fetch(`http://localhost:5000/calendar/events`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
