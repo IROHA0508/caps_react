@@ -11,10 +11,9 @@ import Onboarding from './pages/Onboarding/Onboarding';
 import MainPage from './pages/MainPage/MainPage';
 import RoutinePage from './pages/RoutinePage/RoutinePage';
 import ReportPage from './pages/ReportPage/ReportPage';
+import PopupCallback from './pages/PopupCallback';
 
 import ProtectedRoute from './component/ProtectedRoute';
-
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -39,6 +38,7 @@ root.render(
           <Route path="/main/routine" element={<RoutinePage />} />
           <Route path="/main/report" element={<ReportPage />} />
 
+          <Route path="/popup/callback" element={<PopupCallback />} />
         </Routes>
       </BrowserRouter>
     </React.StrictMode>
