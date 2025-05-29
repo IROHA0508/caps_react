@@ -42,6 +42,7 @@ function RoutinePage() {
 
     if (data.events) {
       setEvents(data.events);
+      console.log('📆 받아온 일정:', data.events);
     } else {
       setEvents([]);
     }
