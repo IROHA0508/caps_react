@@ -52,7 +52,7 @@
 .date-row {
   display: flex;
   justify-content: space-around;
-  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
   padding-bottom: clamp(1.2rem, 2.5vw, 2rem);
 }
 
