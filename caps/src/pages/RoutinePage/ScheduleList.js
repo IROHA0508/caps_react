@@ -17,7 +17,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
     );
   }
 
-  // ✅ 날짜 필터링 + 로그 출력
+  // ✅ 날짜 필터링 + 로그 출력 (최종)
   const filteredEvents = events.filter((event) => {
     const selected = selectedDate.startOf('day');
 
