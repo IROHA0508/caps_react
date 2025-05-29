@@ -4,7 +4,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from urllib.parse import urljoin
-
+from urllib.parse import urlencode
 
 load_dotenv()
 
@@ -40,17 +40,23 @@ def callback():
         token_res = requests.post(token_url, data=data)
         token_json = token_res.json()
 
-        print("🪪 Access Token Info:", token_json)
+        print("🪪 Access Token 전공:", token_json)
 
         access_token = token_json.get('access_token')
+        refresh_token = token_json.get('refresh_token')
+
         if not access_token:
             return 'Failed to get access token', 400
 
-        # ✅ React로 access_token 포함한 리다이렉트
+        # ✅ React로 access_token, refresh_token 포함 리다이렉트
         main_uri = os.environ.get('MAIN_URI')
-        redirect_url = urljoin(main_uri, '/popup/callback')
+        params = urlencode({
+            'access_token': access_token,
+            'refresh_token': refresh_token or ''
+        })
+        redirect_url = urljoin(main_uri, f'/popup/callback?{params}')
         print("🔗 Redirecting to:", redirect_url)
-        return redirect(f'{redirect_url}?access_token={access_token}')
+        return redirect(redirect_url)
 
     except Exception as e:
         print("❌ Error:", e)

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../component/Header/Header';
 import RoutineCalendar from '../../component/Calendar/RoutineCalendar';
 import ScheduleList from './ScheduleList';
-import GoogleCalendarConnectButton from '../../component/GoogleCalendarConnectButton/GoogleCalendarConnectButton';
+// import GoogleCalendarConnectButton from '../../component/GoogleCalendarConnectButton/GoogleCalendarConnectButton';
 import dayjs from 'dayjs';
 
 function RoutinePage() {
@@ -21,13 +21,19 @@ function RoutinePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_token: accessToken,
+          access_token: localStorage.getItem('google_access_token'),
+          refresh_token: localStorage.getItem('google_refresh_token'),
           timeMin: startDate.toISOString(),
           timeMax: endDate.toISOString(),
         }),
       });
 
       const data = await res.json();
+      if (data.new_access_token) {
+        localStorage.setItem('google_access_token', data.new_access_token);
+        console.log('🔧 새로운 access_token 저장:', data.new_access_token);
+      }
+
       if (data.events) {
         setEvents(data.events);
         console.log('📆 받아온 일정:', data.events);

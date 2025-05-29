@@ -5,14 +5,26 @@ import React from 'react';
 export const openAuthPopup = (onSuccessNavigate) => {
   const accessToken = localStorage.getItem('google_access_token');
 
-  if (accessToken) {
+  // ✅ 유효한 access_token만 허용 (예: 30자 이상, "ya29."로 시작 등)
+  const isValidAccessToken = accessToken && accessToken.startsWith('ya29.');
+
+  if (isValidAccessToken) {
     console.log('🔧 access_token:', accessToken);
-    console.log('✅ 이미 access_token 존재, 팝업 없이 진행');
+    console.log('✅ access_token 유효, 팝업 생략');
     if (typeof onSuccessNavigate === 'function') {
-      onSuccessNavigate(); // 바로 navigate 실행
+      onSuccessNavigate();
     }
     return;
   }
+
+  // if (accessToken) {
+  //   console.log('🔧 access_token:', accessToken);
+  //   console.log('✅ 이미 access_token 존재, 팝업 없이 진행');
+  //   if (typeof onSuccessNavigate === 'function') {
+  //     onSuccessNavigate(); // 바로 navigate 실행
+  //   }
+  //   return;
+  // }
 
   // 🔽 기존 인증 팝업 로직
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -36,6 +48,7 @@ export const openAuthPopup = (onSuccessNavigate) => {
       clearInterval(interval);
       const newToken = localStorage.getItem('google_access_token');
       if (newToken) {
+        console.log('🔧 access_token:', accessToken);
         console.log('✅ 팝업 인증 후 access_token 저장됨');
         if (typeof onSuccessNavigate === 'function') {
           onSuccessNavigate();
