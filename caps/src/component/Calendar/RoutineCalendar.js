@@ -1,17 +1,16 @@
-// src/component/Calendar/RoutineCalendar.js
-
 import React, { useState, useEffect } from 'react';
 import './RoutineCalendar.css';
 import dayjs from 'dayjs';
 import { useSwipeable } from 'react-swipeable';
 import underIcon from '../../pictures/underIcon.svg';
+import MonthPicker from './MonthPicker/MonthPicker';
 
 function RoutineCalendar({ selectedDate, onDateSelect }) {
   const today = dayjs();
   const [currentWeekStart, setCurrentWeekStart] = useState(today.startOf('week'));
   const [swipeDirection, setSwipeDirection] = useState('');
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
 
-  // 선택된 날짜가 변경되면 주간 동기화
   useEffect(() => {
     const startOfWeek = selectedDate.startOf('week');
     if (!startOfWeek.isSame(currentWeekStart, 'date')) {
@@ -19,7 +18,6 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
     }
   }, [selectedDate]);
 
-  // 애니메이션 클래스 초기화
   useEffect(() => {
     if (swipeDirection) {
       const timeout = setTimeout(() => setSwipeDirection(''), 300);
@@ -49,6 +47,13 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
     onDateSelect(date);
   };
 
+  const handleMonthSelect = (monthStart) => {
+    const weekStart = monthStart.startOf('week');
+    setCurrentWeekStart(weekStart);
+    onDateSelect(monthStart); // 날짜 선택도 업데이트
+    setShowMonthPicker(false); // 모달 닫기
+  };
+
   const swipeHandlers = useSwipeable({
     onSwipedLeft: goToNextWeek,
     onSwipedRight: goToPrevWeek,
@@ -58,16 +63,20 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   return (
     <div className="calendar-container" {...swipeHandlers}>
       <div className="calendar-header">
-        <span className="month-text">
+        <span className="month-text" onClick={() => setShowMonthPicker(!showMonthPicker)}>
           {currentWeekStart.format('M월')}
-          <img
-            src={underIcon}
-            alt="드롭다운"
-            className="under-icon"
-            onClick={() => alert("드롭 다운 눌림")}
-          />
+          <img src={underIcon} alt="드롭다운" className="under-icon" />
         </span>
       </div>
+
+      {/* 🔽 월 선택 모달 */}
+      {showMonthPicker && (
+        <MonthPicker
+          currentDate={currentWeekStart}
+          onMonthSelect={handleMonthSelect}
+          onClose={() => setShowMonthPicker(false)}
+        />
+      )}
 
       {/* ✅ 날짜 영역 전체에 애니메이션 적용 */}
       <div className={`calendar-body ${swipeDirection}`}>
@@ -95,7 +104,6 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
         </div>
       </div>
 
-      {/* ✅ 구분선은 별도 고정 */}
       <div className="calendar-divider" />
     </div>
   );
