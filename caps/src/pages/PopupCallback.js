@@ -1,6 +1,5 @@
 // src/pages/PopupCallback.js
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function PopupCallback() {
   useEffect(() => {
