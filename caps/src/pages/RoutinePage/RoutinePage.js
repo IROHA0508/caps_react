@@ -1,3 +1,5 @@
+// RoutinePage.js
+
 import React, { useState, useEffect } from 'react';
 import Header from '../../component/Header/Header';
 import RoutineCalendar from '../../component/Calendar/RoutineCalendar';
@@ -10,17 +12,19 @@ function RoutinePage() {
   const [events, setEvents] = useState([]);
 
   // ✅ access_token으로 일정 가져오기
-  const fetchCalendarEvents = async () => {
+  const fetchCalendarEvents = async (startDate, endDate) => {
     const accessToken = localStorage.getItem('google_access_token');
     if (!accessToken) return;
 
     try {
       const res = await fetch('http://localhost:5000/calendar/events', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ access_token: accessToken }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: accessToken,
+          timeMin: startDate.toISOString(),
+          timeMax: endDate.toISOString(),
+        }),
       });
 
       const data = await res.json();
@@ -36,8 +40,11 @@ function RoutinePage() {
   };
 
   useEffect(() => {
-    fetchCalendarEvents();
-  }, []);
+    const startOfMonth = selectedDate.startOf('month');
+    const endOfMonth = selectedDate.endOf('month');
+    fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
+  }, [selectedDate.format('YYYY-MM')]);
+
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
