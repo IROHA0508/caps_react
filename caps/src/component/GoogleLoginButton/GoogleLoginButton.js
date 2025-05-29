@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const GoogleLoginButton = ({ onLoginSuccess }) => {
   const serverIP = process.env.REACT_APP_IP_PORT;
+  console.log("🔧 서버 IP:", serverIP);
 
   // 🔐 Google 로그인 성공 핸들러
   const handleLogin = async (credentialResponse) => {

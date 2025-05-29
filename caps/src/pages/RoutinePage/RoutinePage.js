@@ -39,11 +39,18 @@ function RoutinePage() {
     }
   };
 
+  // useEffect(() => {
+  //   const startOfMonth = selectedDate.startOf('month');
+  //   const endOfMonth = selectedDate.endOf('month');
+  //   fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
+  // }, [selectedDate.format('YYYY-MM')]);
+
   useEffect(() => {
     const startOfMonth = selectedDate.startOf('month');
     const endOfMonth = selectedDate.endOf('month');
     fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
-  }, [selectedDate.format('YYYY-MM')]);
+  }, [selectedDate]);
+
 
 
   return (
