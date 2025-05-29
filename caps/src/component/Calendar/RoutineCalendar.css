@@ -2,7 +2,7 @@
 
 .calendar-container {
   padding: 1rem;
-  transition: transform 0.3s ease-in-out;
+  /* transition: transform 0.3s ease-in-out; */
 }
 
 /* 월 + 드롭다운 */
@@ -50,16 +50,23 @@
   color: #4D6FFF; /* 토요일 */
 }
 
-/* 날짜 숫자 */
+/* ✅ 날짜 부분만 애니메이션 적용할 수 있도록 */
 .date-row {
   display: flex;
   justify-content: space-around;
-  /* margin-bottom: 1rem;
-  padding-bottom: 1.2rem; */
-
   margin-bottom: clamp(1rem, 2vw, 1.5rem);
-  padding-bottom: clamp(1.2rem, 2.5vw, 2rem);  
-  border-bottom: 1px solid #D9D9D9; /* 구분선 */
+  padding-bottom: clamp(1.2rem, 2.5vw, 2rem);
+  border-bottom: 1px solid #D9D9D9;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ✅ 날짜 숫자에만 적용될 애니메이션 */
+.date-row.swipe-left {
+  animation: swipeLeft 0.3s ease-in-out;
+}
+
+.date-row.swipe-right {
+  animation: swipeRight 0.3s ease-in-out;
 }
 
 .date-circle {
