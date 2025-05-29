@@ -12,6 +12,8 @@ import MainPage from './pages/MainPage/MainPage';
 import RoutinePage from './pages/RoutinePage/RoutinePage';
 import ReportPage from './pages/ReportPage/ReportPage';
 import PopupCallback from './pages/PopupCallback';
+import Live2DPage from './pages/Live2DPage/Live2DPage';
+import HologramPage from './pages/HologramPage/HologramPage';
 
 import ProtectedRoute from './component/ProtectedRoute';
 
@@ -37,6 +39,8 @@ root.render(
 
           <Route path="/main/routine" element={<RoutinePage />} />
           <Route path="/main/report" element={<ReportPage />} />
+          <Route path="/live2d" element={<Live2DPage />} />
+          <Route path="/hologram" element={<HologramPage />} />
 
           <Route path="/popup/callback" element={<PopupCallback />} />
         </Routes>

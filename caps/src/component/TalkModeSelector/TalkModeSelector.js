@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './TalkModeSelector.css';
 import talkmode1 from '../../pictures/talkmode_1.svg';
 import talkmode2 from '../../pictures/talkmode_2.svg';
@@ -6,6 +7,7 @@ import talkmode2 from '../../pictures/talkmode_2.svg';
 function TalkModeSelector({ visible, onClose }) {
   const [show, setShow] = useState(visible);
   const [animatingOut, setAnimatingOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (visible) {
@@ -38,7 +40,11 @@ function TalkModeSelector({ visible, onClose }) {
       >
         <h3 className="sheet-title">어떤 방식으로 이야기할까요?</h3>
 
-        <div className="option" onClick={() => alert("Live 2D 모드 시작")}>
+        <div className="option"
+          onClick={() => {onClose();  
+            navigate('/live2d');
+          }}
+        >
           <img src={talkmode1} alt="Live2D" className="option-icon" />
           <div className="option-text">
             <p className="option-title">Live 2D 모드로 이야기하기</p>
@@ -48,7 +54,11 @@ function TalkModeSelector({ visible, onClose }) {
 
         <hr className="divider" />
 
-        <div className="option" onClick={() => alert("홀로그램 모드 시작")}>
+        <div className="option"
+          onClick={() => {onClose();  
+            navigate('/hologram');
+          }}
+        >
           <img src={talkmode2} alt="홀로그램" className="option-icon" />
           <div className="option-text">
             <p className="option-title">홀로그램 모드로 이야기하기</p>

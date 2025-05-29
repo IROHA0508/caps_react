@@ -16,8 +16,7 @@ function Header({ user, onLogout }) {
   const [selectedMenu, setSelectedMenu] = useState(null);
 
   const isMain = location.pathname === '/main';
-  const isSubPage =
-    location.pathname === '/main/routine' || location.pathname === '/main/report';
+  const isNotMain = !isMain;
 
   const getTitle = () => {
     if (location.pathname === '/main/routine') return '일정 / 루틴';
@@ -61,11 +60,11 @@ function Header({ user, onLogout }) {
         </>
       )}
 
-      {isSubPage && (
+      {isNotMain && (
         <>
           <button
             className="back-button"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/main')}
             aria-label="뒤로가기"
           >
             <img src={backIcon} alt="뒤로가기" />

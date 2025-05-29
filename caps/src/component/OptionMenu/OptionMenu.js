@@ -20,6 +20,7 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
       <div className="dropdown-menu" onClick={(e) => e.stopPropagation()}>
 
         <button className="menu-item" onClick={() => {
+          onSelect('routine'); // 클릭 시 선택 상태 갱신
           navigate('/main/routine');
           onClose();
         }}>
@@ -33,6 +34,7 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
         </button>
 
         <button className="menu-item" onClick={() => {
+          onSelect('report');
           navigate('/main/report');
           onClose();
         }}>
@@ -46,6 +48,7 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
         </button>
 
         <button className="menu-item" onClick={() => {
+          onSelect('logout');
           onLogout();
           onClose();
         }}>
@@ -57,6 +60,7 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
             로그아웃
           </span>
         </button>
+
 
       </div>
     </div>
