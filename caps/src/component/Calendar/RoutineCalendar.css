@@ -53,7 +53,7 @@
   display: flex;
   justify-content: space-around;
   margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
-  padding-bottom: clamp(1.2rem, 2.5vw, 2rem);
+  padding-bottom: clamp(0.6rem, 1.25vw, 1rem);
 }
 
 /* 날짜 애니메이션 포함한 전체 영역 */
