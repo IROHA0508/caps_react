@@ -2,16 +2,14 @@
 
 .calendar-container {
   padding: 1rem;
-  /* transition: transform 0.3s ease-in-out; */
 }
 
-/* 월 + 드롭다운 */
+/* 상단: 월 텍스트 + 드롭다운 */
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.7rem;
-
 }
 
 .month-text {
@@ -19,7 +17,7 @@
   font-weight: 700;
   display: flex;
   align-items: center;
-  margin-left: 0.8rem; /* ✅ 왼쪽 여백 추가 */
+  margin-left: 0.8rem;
 }
 
 .under-icon {
@@ -50,25 +48,28 @@
   color: #4D6FFF; /* 토요일 */
 }
 
-/* ✅ 날짜 부분만 애니메이션 적용할 수 있도록 */
+/* 날짜 숫자 */
 .date-row {
   display: flex;
   justify-content: space-around;
   margin-bottom: clamp(1rem, 2vw, 1.5rem);
   padding-bottom: clamp(1.2rem, 2.5vw, 2rem);
-  border-bottom: 1px solid #D9D9D9;
+}
+
+/* 날짜 애니메이션 포함한 전체 영역 */
+.calendar-body {
   transition: transform 0.3s ease-in-out;
 }
 
-/* ✅ 날짜 숫자에만 적용될 애니메이션 */
-.date-row.swipe-left {
+.calendar-body.swipe-left {
   animation: swipeLeft 0.3s ease-in-out;
 }
 
-.date-row.swipe-right {
+.calendar-body.swipe-right {
   animation: swipeRight 0.3s ease-in-out;
 }
 
+/* 날짜 원 */
 .date-circle {
   width: 32px;
   height: 32px;
@@ -90,28 +91,14 @@
   color: white;
 }
 
-.has-event {
-  border: 2px solid #1B687D;
-  background-color: #E0F7FA;
+/* 구분선 (고정된 하단 선) */
+.calendar-divider {
+  height: 1px;
+  background-color: #D9D9D9;
+  width: 100%;
 }
 
-.week-nav {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  padding: 0 0.5rem;
-  cursor: pointer;
-}
-
-/* 선택적으로, 애니메이션 방향에 따라 class로 구분해 줄 수 있음 */
-.calendar-container.swipe-left {
-  animation: swipeLeft 0.3s ease-in-out;
-}
-
-.calendar-container.swipe-right {
-  animation: swipeRight 0.3s ease-in-out;
-}
-
+/* 슬라이드 애니메이션 */
 @keyframes swipeLeft {
   from {
     transform: translateX(100%);
