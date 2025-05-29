@@ -19,23 +19,21 @@ function ScheduleList({ selectedDate, events, isLoading }) {
 
   // ✅ 날짜 필터링 + 로그 출력
   const filteredEvents = events.filter((event) => {
+    const selected = selectedDate.startOf('day');
+
     const rawStart = event.start.dateTime || event.start.date;
     const rawEnd = event.end.dateTime || event.end.date;
 
     const eventStart = dayjs(rawStart);
     const eventEnd = dayjs(rawEnd);
 
-    const dayStart = selectedDate.startOf('day');
-    const dayEnd = selectedDate.add(1, 'day').startOf('day');
-
-    // 선택한 날짜 범위(dayStart ~ dayEnd)와 일정 범위(eventStart ~ eventEnd)가 겹치면 포함
-    const isInRange = eventStart.isBefore(dayEnd) && eventEnd.isAfter(dayStart);
+    const isInRange = selected.isSame(eventStart, 'day') || 
+                      (selected.isAfter(eventStart) && selected.isBefore(eventEnd));
 
     console.log(
       '📌 일정:', event.summary,
-      '| 일정 범위:', eventStart.format(),
-      '~', eventEnd.format(),
-      '| 지금금 선택한 날짜:', selectedDate.format('YYYY-MM-DD'),
+      '| 일정 범위:', eventStart.format(),'~', eventEnd.format(),
+      '| 지금 선택한 날짜:', selectedDate.format('YYYY-MM-DD'),
       '| 포함 여부:', isInRange
     );
 
