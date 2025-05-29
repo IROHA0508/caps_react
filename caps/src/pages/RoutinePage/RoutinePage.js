@@ -17,7 +17,7 @@ function RoutinePage() {
     if (!accessToken) return;
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
+    console.log('🔗 백엔드 URL:', BACKEND_URL);
     try {
       const res = await fetch(`${BACKEND_URL}/calendar/events`, {
         method: 'POST',
