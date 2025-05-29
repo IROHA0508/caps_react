@@ -16,8 +16,10 @@ function RoutinePage() {
     const accessToken = localStorage.getItem('google_access_token');
     if (!accessToken) return;
 
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
     try {
-      const res = await fetch('http://localhost:5000/calendar/events', {
+      const res = await fetch(`${BACKEND_URL}/calendar/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
