@@ -19,6 +19,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
     return eventDate.isSame(selectedDate, 'day');
   });
 
+  // 여기 수정 해야함
   if (filteredEvents.length === 0) {
     return (
       <div className="no-schedule">
