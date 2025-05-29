@@ -5,6 +5,9 @@ import './ScheduleList.css';
 import dayjs from 'dayjs';
 import calendarIcon from '../../pictures/calendarIcon.svg';
 
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
+
 function ScheduleList({ selectedDate, events, isLoading }) {
   if (isLoading) {
     return (
