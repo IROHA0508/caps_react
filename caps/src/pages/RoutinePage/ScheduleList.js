@@ -3,7 +3,7 @@
 import React from 'react';
 import './ScheduleList.css';
 import dayjs from 'dayjs';
-import calendarIcon from '../../pictures/calendarIcon.svg'
+import calendarIcon from '../../pictures/calendarIcon.svg';
 
 function ScheduleList({ selectedDate, events, isLoading }) {
   if (isLoading) {
@@ -14,19 +14,40 @@ function ScheduleList({ selectedDate, events, isLoading }) {
     );
   }
 
+  // ✅ 날짜 필터링 + 로그 출력
   const filteredEvents = events.filter((event) => {
-    const eventDate = dayjs(event.start.dateTime || event.start.date);
-    return eventDate.isSame(selectedDate, 'day');
+    const start = dayjs(event.start.dateTime || event.start.date);
+    const end = dayjs(event.end.dateTime || event.end.date);
+
+    const isInRange = selectedDate.isBetween(start, end, 'day', '[)');
+    console.log('📌 일정:', event.summary, '| 범위:', start.format(), '~', end.format(), '| 선택:', selectedDate.format(), '| 포함 여부:', isInRange);
+
+    return isInRange;
   });
 
-  // 여기 수정 해야함
-  if (filteredEvents.length === 0) {
+  // ✅ 시간 순 정렬 (종일 먼저, 이후 시간 순)
+  const sortedEvents = [...filteredEvents].sort((a, b) => {
+    const aAllDay = !a.start.dateTime;
+    const bAllDay = !b.start.dateTime;
+
+    if (aAllDay && !bAllDay) return -1;
+    if (!aAllDay && bAllDay) return 1;
+
+    const aStart = dayjs(a.start.dateTime || a.start.date);
+    const bStart = dayjs(b.start.dateTime || b.start.date);
+    return aStart - bStart;
+  });
+
+  if (sortedEvents.length === 0) {
     return (
       <div className="no-schedule">
         <img src={calendarIcon} alt="일정 없음" className="no-schedule-icon" />
         <p className="no-schedule-text">일정이 없어요</p>
-        <p className="no-schedule-subtext">일정을 등록하고 시간을 효율적으로 <br />관리해 보세요.</p>
-        <button className="add-schedule-btn" onClick={() => alert("새 일정 버튼 눌림")}>
+        <p className="no-schedule-subtext">
+          일정을 등록하고 시간을 효율적으로 <br />
+          관리해 보세요.
+        </p>
+        <button className="add-schedule-btn" onClick={() => alert('새 일정 버튼 눌림')}>
           + 새 일정
         </button>
       </div>
@@ -35,11 +56,15 @@ function ScheduleList({ selectedDate, events, isLoading }) {
 
   return (
     <ul className="schedule-list">
-      {filteredEvents.map((event) => {
+      {sortedEvents.map((event) => {
         const start = dayjs(event.start.dateTime || event.start.date);
+        const isAllDay = !event.start.dateTime;
+
         return (
           <li key={event.id} className="schedule-item">
-            <span className="schedule-time">{start.format('A h시 mm분')}</span>
+            <span className="schedule-time">
+              {isAllDay ? '하루 종일' : start.format('A h시 mm분')}
+            </span>
             <span className="schedule-title">{event.summary}</span>
           </li>
         );
