@@ -63,9 +63,9 @@ function RoutinePage() {
           onDateSelect={setSelectedDate}
         />
 
-        <div style={{ margin: '1rem 0', textAlign: 'center' }}>
+        {/* <div style={{ margin: '1rem 0', textAlign: 'center' }}>
           <GoogleCalendarConnectButton />
-        </div>
+        </div> */}
 
         <ScheduleList
           selectedDate={selectedDate}

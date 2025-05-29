@@ -10,6 +10,9 @@ import report_button_select from '../../pictures/report_button_select.svg';
 import routine_button_select from '../../pictures/routine_button_select.svg';
 import logout_button_select from '../../pictures/logout_button_select.svg';
 
+import { openAuthPopup } from '../GoogleCalendarConnectButton/GoogleCalendarConnectButton';
+
+
 function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
   const navigate = useNavigate();
 
@@ -21,8 +24,9 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
 
         <button className="menu-item" onClick={() => {
           onSelect('routine'); // 클릭 시 선택 상태 갱신
-          navigate('/main/routine');
+          // navigate('/main/routine');
           onClose();
+          openAuthPopup(() => navigate('/main/routine'));
         }}>
           <img
             src={selectedMenu === 'routine' ? routine_button_select : routine_button}
