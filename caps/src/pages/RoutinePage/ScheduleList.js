@@ -21,8 +21,8 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   const filteredEvents = events.filter((event) => {
     const selected = selectedDate.startOf('day');
 
-    const rawStart = event.start.dateTime || event.start.date;
-    const rawEnd = event.end.dateTime || event.end.date;
+    const rawStart = event.start;
+    const rawEnd = event.end;
 
     const eventStart = dayjs(rawStart);
     const eventEnd = dayjs(rawEnd);
