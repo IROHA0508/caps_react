@@ -14,7 +14,9 @@ auth_bp = Blueprint('auth', __name__)
 def login():
     client_id = os.environ['GOOGLE_CLIENT_ID']
     redirect_uri = os.environ['REDIRECT_URI']
-    scope = 'https://www.googleapis.com/auth/calendar.readonly'
+    scope = 'https://www.googleapis.com/auth/calendar.readonly',
+    access_type = 'offline',
+    prompt = 'consent'
     return redirect(
         f"https://accounts.google.com/o/oauth2/v2/auth?"
         f"client_id={client_id}&redirect_uri={redirect_uri}"

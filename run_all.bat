@@ -1,18 +1,20 @@
 @echo off
 chcp 65001 > nul
 
-echo [1] 백엔드 서버 시작 중...
-cd caps\backend
-start "flask" cmd /k "call venv\Scripts\activate && flask run --host=0.0.0.0 --port=5000"
-set BACKEND_TITLE=flask
-cd ..
+@REM echo [1] 백엔드 서버 시작 중...
+@REM cd caps\backend
+@REM start "flask" cmd /k "call venv\Scripts\activate && flask run --host=0.0.0.0 --port=5000"
+@REM set BACKEND_TITLE=flask
+@REM cd ..
 
 echo [2] 프론트엔드 React 앱 시작 중...
+cd caps
 start "react" cmd /k "npm start"
 set FRONTEND_TITLE=react
 
 echo --------------------------------------
-echo [✅] 백엔드와 프론트엔드가 실행되었습니다.
+echo [✅] 프론트엔드가 실행되었습니다.
+echo --------------------------------------
 
 :wait_input
 set /p user_input=종료하려면 [q]를 누르세요: 
