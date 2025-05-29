@@ -11,6 +11,7 @@ function RoutinePage() {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // 추가
+  const [currentMonth, setCurrentMonth] = useState(''); // 현재 받아온 달
   
   // ✅ access_token으로 일정 가져오기
   const fetchCalendarEvents = async (startDate, endDate) => {
@@ -60,13 +61,16 @@ function RoutinePage() {
   //   fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
   // }, [selectedDate.format('YYYY-MM')]);
 
+  // ✅ 달 변경 감지하여 일정 요청
   useEffect(() => {
-    const startOfMonth = selectedDate.startOf('month');
-    const endOfMonth = selectedDate.endOf('month');
-    fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
-  }, [selectedDate]);
-
-
+    const newMonth = selectedDate.format('YYYY-MM');
+    if (newMonth !== currentMonth) {
+      const startOfMonth = selectedDate.startOf('month');
+      const endOfMonth = selectedDate.endOf('month');
+      fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
+      setCurrentMonth(newMonth); // ✅ 현재 달 업데이트
+    }
+  }, [selectedDate, currentMonth]);
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
