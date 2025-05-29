@@ -61,7 +61,7 @@ function RoutinePage() {
   //   fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
   // }, [selectedDate.format('YYYY-MM')]);
 
-  // ✅ 달 변경 감지하여 일정 요청
+  // ✅ 달 변경 감지하여 일정 요청 (최종)
   useEffect(() => {
     const newMonth = selectedDate.format('YYYY-MM');
     if (newMonth !== currentMonth) {
