@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../component/Header/Header';
 import RoutineCalendar from '../../component/Calendar/RoutineCalendar';
 import ScheduleList from './ScheduleList';
-// import GoogleCalendarConnectButton from '../../component/GoogleCalendarConnectButton/GoogleCalendarConnectButton';
 import dayjs from 'dayjs';
 
 function RoutinePage() {
@@ -55,12 +54,6 @@ function RoutinePage() {
   setIsLoading(false); // 마지막에 로딩 false
 };
 
-  // useEffect(() => {
-  //   const startOfMonth = selectedDate.startOf('month');
-  //   const endOfMonth = selectedDate.endOf('month');
-  //   fetchCalendarEvents(startOfMonth.toDate(), endOfMonth.toDate());
-  // }, [selectedDate.format('YYYY-MM')]);
-
   // ✅ 달 변경 감지하여 일정 요청 (최종)
   useEffect(() => {
     const newMonth = selectedDate.format('YYYY-MM');
@@ -81,10 +74,6 @@ function RoutinePage() {
           selectedDate={selectedDate}
           onDateSelect={setSelectedDate}
         />
-
-        {/* <div style={{ margin: '1rem 0', textAlign: 'center' }}>
-          <GoogleCalendarConnectButton />
-        </div> */}
 
         <ScheduleList
           selectedDate={selectedDate}
