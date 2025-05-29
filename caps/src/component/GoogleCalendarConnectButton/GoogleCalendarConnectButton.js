@@ -17,14 +17,6 @@ export const openAuthPopup = (onSuccessNavigate) => {
     return;
   }
 
-  // if (accessToken) {
-  //   console.log('🔧 access_token:', accessToken);
-  //   console.log('✅ 이미 access_token 존재, 팝업 없이 진행');
-  //   if (typeof onSuccessNavigate === 'function') {
-  //     onSuccessNavigate(); // 바로 navigate 실행
-  //   }
-  //   return;
-  // }
 
   // 🔽 기존 인증 팝업 로직
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -44,11 +36,11 @@ export const openAuthPopup = (onSuccessNavigate) => {
   );
 
   const interval = setInterval(() => {
-    if (!popup || popup.closed) {
+   if (!popup || popup.closed) {
       clearInterval(interval);
       const newToken = localStorage.getItem('google_access_token');
-      if (newToken) {
-        console.log('🔧 access_token:', accessToken);
+      if (newToken && newToken.startsWith('ya29.')) {
+        console.log('🔧 새로운 access_token 저장:', newToken);  // ✅ 최신 토큰을 직접 불러와 출력
         console.log('✅ 팝업 인증 후 access_token 저장됨');
         if (typeof onSuccessNavigate === 'function') {
           onSuccessNavigate();
