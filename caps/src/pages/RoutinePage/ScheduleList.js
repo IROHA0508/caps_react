@@ -19,11 +19,16 @@ function ScheduleList({ selectedDate, events, isLoading }) {
 
   // ✅ 날짜 필터링 + 로그 출력
   const filteredEvents = events.filter((event) => {
-    const start = dayjs(event.start.dateTime || event.start.date);
-    const end = dayjs(event.end.dateTime || event.end.date);
+    const eventStart = dayjs(event.start.dateTime || event.start.date);
+    const eventEnd = dayjs(event.end.dateTime || event.end.date);
 
-    const isInRange = selectedDate.isBetween(start, end, 'day', '[)');
-    console.log('📌 일정:', event.summary, '| 범위:', start.format(), '~', end.format(), '| 선택:', selectedDate.format(), '| 포함 여부:', isInRange);
+    const dayStart = selectedDate.startOf('day');
+    const dayEnd = selectedDate.add(1, 'day').startOf('day');
+
+    const isInRange =
+      (eventStart.isBefore(dayEnd) && eventEnd.isAfter(dayStart));
+
+    console.log('📌 일정:', event.summary, '| 일정 범위:', eventStart.format(), '~', eventEnd.format(), '| 날짜:', selectedDate.format('YYYY-MM-DD'), '| 포함 여부:', isInRange);
 
     return isInRange;
   });
