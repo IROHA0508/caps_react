@@ -2,6 +2,7 @@
 
 .calendar-container {
   padding: 1rem;
+  transition: transform 0.3s ease-in-out;
 }
 
 /* 월 + 드롭다운 */
@@ -93,4 +94,31 @@
   font-size: 1.2rem;
   padding: 0 0.5rem;
   cursor: pointer;
+}
+
+/* 선택적으로, 애니메이션 방향에 따라 class로 구분해 줄 수 있음 */
+.calendar-container.swipe-left {
+  animation: swipeLeft 0.3s ease-in-out;
+}
+
+.calendar-container.swipe-right {
+  animation: swipeRight 0.3s ease-in-out;
+}
+
+@keyframes swipeLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes swipeRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
 }
