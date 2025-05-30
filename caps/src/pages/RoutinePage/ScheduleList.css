@@ -37,8 +37,6 @@
 
 .schedule-item {
   margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
 }
 
 .schedule-inline {
@@ -47,9 +45,29 @@
   gap: 0.5rem;
 }
 
+.schedule-time-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.schedule-time-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-color-dot {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #33AAEE; /* JS에서 override됨 */
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
 .schedule-time {
   color: #666;
   font-size: 0.85rem;
+  margin-bottom: 0.2rem;
 }
 
 .schedule-title {
@@ -57,16 +75,8 @@
   font-size: 1rem;
 }
 
-.schedule-item-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.schedule-color-dot {
-  width: 12px;
-  height: 12px;
-  border: 2px solid #33AAEE; /* 기본색, JS에서 override */
-  border-radius: 50%;
-  flex-shrink: 0;
+.schedule-divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 1.5rem 0;
 }

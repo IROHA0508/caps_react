@@ -73,23 +73,45 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   // 일정 항목 렌더링 부분만 수정
   return (
     <ul className="schedule-list">
-      {sortedEvents.map((event) => {
-        const color = event.color || '#33AAEE';
+      {/* 🕐 하루 종일 일정 */}
+      {sortedEvents
+        .filter((event) => !event.start.dateTime)
+        .map((event) => {
+          const color = event.color || '#33AAEE';
+          return (
+            <li key={event.id} className="schedule-item">
+              <div className="schedule-inline">
+                <span className="schedule-color-dot" style={{ borderColor: color }} />
+                <span className="schedule-title">{event.summary}</span>
+              </div>
+            </li>
+          );
+        })}
 
-        return (
-          <li key={event.id} className="schedule-item">
-            <div className="schedule-inline">
-              <span
-                className="schedule-color-dot"
-                style={{ borderColor: color }}
-              />
-              <span className="schedule-title">{event.summary}</span>
-            </div>
-          </li>
-        );
-      })}
+      {/* 구분선 */}
+      <hr className="schedule-divider" />
+
+      {/* ⏰ 시간 있는 일정 */}
+      {sortedEvents
+        .filter((event) => event.start.dateTime)
+        .map((event) => {
+          const start = dayjs(event.start.dateTime);
+          const color = event.color || '#33AAEE';
+          return (
+            <li key={event.id} className="schedule-item">
+              <div className="schedule-time-item">
+                <span className="schedule-color-dot" style={{ borderColor: color }} />
+                <div className="schedule-time-content">
+                  <span className="schedule-time">{start.format('A h시 mm분')}</span>
+                  <span className="schedule-title">{event.summary}</span>
+                </div>
+              </div>
+            </li>
+          );
+        })}
     </ul>
   );
+
 }
 
 export default ScheduleList;
