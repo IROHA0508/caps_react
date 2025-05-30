@@ -31,12 +31,20 @@
 
 .schedule-list {
   padding: 1rem;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .schedule-item {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
+}
+
+.schedule-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .schedule-time {

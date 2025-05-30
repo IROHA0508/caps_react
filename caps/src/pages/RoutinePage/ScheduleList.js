@@ -70,29 +70,25 @@ function ScheduleList({ selectedDate, events, isLoading }) {
     );
   }
 
+  // 일정 항목 렌더링 부분만 수정
   return (
-  <ul className="schedule-list">
-    {sortedEvents.map((event) => {
-      const start = dayjs(event.start.dateTime || event.start.date);
-      const isAllDay = !event.start.dateTime;
-      const color = event.color || '#33AAEE';
+    <ul className="schedule-list">
+      {sortedEvents.map((event) => {
+        const color = event.color || '#33AAEE';
 
-      return (
-        <li key={event.id} className="schedule-item">
-          <div className="schedule-item-header">
-            <span
-              className="schedule-color-dot"
-              style={{ borderColor: color }}
-            />
-            <span className="schedule-time">
-              {isAllDay ? '하루 종일' : start.format('A h시 mm분')}
-            </span>
-          </div>
-          <span className="schedule-title">{event.summary}</span>
-        </li>
-      );
-    })}
-  </ul>
+        return (
+          <li key={event.id} className="schedule-item">
+            <div className="schedule-inline">
+              <span
+                className="schedule-color-dot"
+                style={{ borderColor: color }}
+              />
+              <span className="schedule-title">{event.summary}</span>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
