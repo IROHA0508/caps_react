@@ -71,21 +71,28 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   }
 
   return (
-    <ul className="schedule-list">
-      {sortedEvents.map((event) => {
-        const start = dayjs(event.start.dateTime || event.start.date);
-        const isAllDay = !event.start.dateTime;
+  <ul className="schedule-list">
+    {sortedEvents.map((event) => {
+      const start = dayjs(event.start.dateTime || event.start.date);
+      const isAllDay = !event.start.dateTime;
+      const color = event.color || '#33AAEE';
 
-        return (
-          <li key={event.id} className="schedule-item">
+      return (
+        <li key={event.id} className="schedule-item">
+          <div className="schedule-item-header">
+            <span
+              className="schedule-color-dot"
+              style={{ borderColor: color }}
+            />
             <span className="schedule-time">
               {isAllDay ? '하루 종일' : start.format('A h시 mm분')}
             </span>
-            <span className="schedule-title">{event.summary}</span>
-          </li>
-        );
-      })}
-    </ul>
+          </div>
+          <span className="schedule-title">{event.summary}</span>
+        </li>
+      );
+    })}
+  </ul>
   );
 }
 
