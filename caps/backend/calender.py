@@ -1,4 +1,3 @@
-# calender.py
 from flask import Blueprint, request, jsonify
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
@@ -41,31 +40,54 @@ def get_calendar_events():
         service = build('calendar', 'v3', credentials=creds)
 
         try:
-            events_result = service.events().list(
-                calendarId='primary',
-                timeMin=time_min,
-                timeMax=time_max,
-                maxResults=250,
-                singleEvents=True,
-                orderBy='startTime'
-            ).execute()
-        except RefreshError as e:
-            print("🔁 access_token 만료 → refresh_token으로 갱신 시도")
+            calendar_list = service.calendarList().list().execute()
+        except RefreshError:
+            print("🔁 access_token 만료 → refresh_token으로 갱신 시도 실패")
             return jsonify({'error': 'Token expired and refresh failed'}), 401
 
-        events = events_result.get('items', [])
-        print(f"📆 일정 개수: {len(events)}")
+        all_events = []
+        
+        colors = service.colors().get().execute()
+        event_color_map = colors.get('event', {})
+                
+        for calendar in calendar_list.get('items', []):
+            calendar_id = calendar.get('id')
+            calendar_name = calendar.get('summary', 'No Name')
+
+            try:
+                events_result = service.events().list(
+                    calendarId=calendar_id,
+                    timeMin=time_min,
+                    timeMax=time_max,
+                    maxResults=250,
+                    singleEvents=True,
+                    orderBy='startTime'
+                ).execute()
+
+                events = events_result.get('items', [])
+
+                
+                for e in events:
+                    color_id = e.get('colorId')
+                    color_info = event_color_map.get(color_id, {})
+                    all_events.append({
+                        'id': e.get('id'),
+                        'calendar': calendar_name,
+                        'summary': e.get('summary'),
+                        'start': e['start'].get('dateTime') or e['start'].get('date'),
+                        'end': e['end'].get('dateTime') or e['end'].get('date'),
+                        'color': color_info.get('background')  # ✅ 실제 색상 코드로 변환
+                    })
+
+            except Exception as e:
+                print(f"⚠️ {calendar_name} 캘린더에서 일정 가져오기 실패:", str(e))
+                continue
+
+        print(f"📆 총 일정 개수: {len(all_events)}")
 
         return jsonify({
-            'events': [
-                {
-                    'id': e.get('id'),
-                    'summary': e.get('summary'),
-                    'start': e['start'].get('dateTime') or e['start'].get('date'),
-                    'end': e['end'].get('dateTime') or e['end'].get('date')
-                } for e in events
-            ],
-            'new_access_token': creds.token  # 새 access_token 반환
+            'events': all_events,
+            'new_access_token': creds.token
         })
 
     except Exception as e:
