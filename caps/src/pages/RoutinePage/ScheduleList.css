@@ -52,6 +52,13 @@
   gap: 0.5rem;
 }
 
+.schedule-time-block {
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #ccc;
+  padding-left: 0.75rem;
+}
+
 .schedule-time-content {
   display: flex;
   flex-direction: column;
