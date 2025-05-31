@@ -61,14 +61,13 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   });
 
 
-  const allDayEvents = sortedEvents.filter((event) =>
-    typeof event.start === 'string' || (!!event.start.date && !event.start.dateTime)
-  );
+  const isAllDay = (event) =>
+    (typeof event.start === 'string' && !event.start.includes('T')) ||
+    (!!event.start?.date && !event.start?.dateTime);
 
-  const timedEvents = sortedEvents.filter((event) =>
-    !!event.start.dateTime
-  );
-
+  const allDayEvents = sortedEvents.filter(isAllDay);
+  const timedEvents = sortedEvents.filter((event) => !isAllDay(event));
+  
   if (sortedEvents.length === 0) {
     return (
       <div className="no-schedule">
