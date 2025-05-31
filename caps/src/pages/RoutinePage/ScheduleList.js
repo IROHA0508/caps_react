@@ -118,7 +118,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
             <div className="schedule-time-item">
               <span className="schedule-color-dot" style={{ borderColor: color }} />
               <div className="schedule-time-content">
-                <span className="schedule-time">{start.format('A h시 mm분')}</span>
+                <span className="schedule-time">{dayjs(event.start).format('A h시 mm분')}</span>
                 <span className="schedule-title">{event.summary}</span>
               </div>
             </div>
