@@ -30,9 +30,14 @@ function ScheduleList({ selectedDate, events, isLoading }) {
     const isInRange = selected.isSame(eventStart, 'day') || 
                       (selected.isAfter(eventStart) && selected.isBefore(eventEnd));
 
+    const isAllDay =
+      typeof event.start === 'string' ||
+      (!!event.start.date && !event.start.dateTime);
+
     console.log(
       '📌 일정:', event.summary,
       '| 일정 범위:', eventStart.format(),'~', eventEnd.format(),
+      '| 하루 종일:', isAllDay ? '✅' : '❌',
       '| 지금 선택한 날짜:', selectedDate.format('YYYY-MM-DD'),
       '| 포함 여부:', isInRange
     );
@@ -62,7 +67,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   const timedEvents = sortedEvents.filter((event) =>
     !!event.start.dateTime
   );
-  
+
   if (sortedEvents.length === 0) {
     return (
       <div className="no-schedule">
