@@ -101,7 +101,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
       })}
 
       {/* ⛔ 하루 종일 일정만 있는 경우는 구분선 생략 */}
-      {timedEvents.length > 0 && <hr className="schedule-divider" />}
+      {timedEvents.length > 0 && allDayEvents.length > 0 && <hr className="schedule-divider" />}
 
       {/* ⏰ 시간 포함 일정 */}
       {timedEvents.map((event) => {
