@@ -66,9 +66,16 @@
   gap: 0.5rem;
 }
 
+.dot-wrapper {
+  height: 1.5em; /* 부모 글자 크기에 비례 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .vertical-line {
   width: 2px;
-  height: 20px;
+  height: 1.5em; /* 동일하게 유지 */
   background-color: #ccc;
 }
 
