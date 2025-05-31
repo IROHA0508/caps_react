@@ -78,8 +78,8 @@
   width: 1.5em; /* 부모 글자 크기에 비례 */
   height: 1.5em; /* 부모 글자 크기에 비례 */
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .vertical-line {
