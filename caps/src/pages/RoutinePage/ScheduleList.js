@@ -30,9 +30,10 @@ function ScheduleList({ selectedDate, events, isLoading }) {
     const isInRange = selected.isSame(eventStart, 'day') || 
                       (selected.isAfter(eventStart) && selected.isBefore(eventEnd));
 
+    // ✅ 하루 종일 여부 판별 (start 문자열 기준)
     const isAllDay =
-      typeof event.start === 'string' ||
-      (!!event.start.date && !event.start.dateTime);
+      (typeof rawStart === 'string' && !rawStart.includes('T')) ||
+      (!!event.start?.date && !event.start?.dateTime);
 
     console.log(
       '📌 일정:', event.summary,
