@@ -93,7 +93,10 @@ function ScheduleList({ selectedDate, events, isLoading }) {
         return (
           <li key={event.id} className="schedule-item">
             <div className="schedule-inline">
-              <span className="schedule-color-dot" style={{ borderColor: color }} />
+              <div className="dot-wrapper">
+                <span className="schedule-color-dot" style={{ borderColor: color }} />
+              </div>
+              
               <span className="schedule-title">{event.summary}</span>
             </div>
           </li>
