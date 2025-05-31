@@ -108,6 +108,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
         const start = dayjs(event.start.dateTime);
 
         console.log('event:', event);
+        console.log('start:', event.start);
         console.log('⏰ 시간 일정:', event.summary, '| 시작:', start.format(), '| 색상:', event.color);
 
         const color = event.color || '#33AAEE';
