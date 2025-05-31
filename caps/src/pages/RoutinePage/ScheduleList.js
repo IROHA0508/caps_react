@@ -115,14 +115,20 @@ function ScheduleList({ selectedDate, events, isLoading }) {
         const color = event.color || '#33AAEE';
         return (
           <li key={event.id} className="schedule-item">
-            <div className="schedule-time-item">
-              <span className="schedule-color-dot" style={{ borderColor: color }} />
-              
-              <div className="schedule-time-block">
+            <div className="time-event-wrapper">
+              {/* ⬆️ 원 + 시간 */}
+              <div className="dot-time-group">
+                <span className="schedule-color-dot" style={{ borderColor: color }} />
                 <span className="schedule-time">{dayjs(event.start).format('A h시 mm분')}</span>
+              </div>
+
+              {/* ⬇️ 세로선 + 제목 */}
+              <div className="line-title-group">
+                <div className="vertical-line" />
                 <span className="schedule-title">{event.summary}</span>
               </div>
             </div>
+            
           </li>
         );
       })}

@@ -31,8 +31,7 @@
 
 .schedule-list {
   padding: 1rem;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
   list-style: none;
 }
 
@@ -40,21 +39,37 @@
   margin-bottom: 1rem;
 }
 
+/* 하루 종일 일정에 사용 */
 .schedule-inline {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.schedule-time-item {
+/* 시간 일정 레이아웃 */
+.time-event-wrapper {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.dot-time-group {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.schedule-time-content {
+.line-title-group {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vertical-line {
+  width: 2px;
+  height: 20px;
+  background-color: #ccc;
 }
 
 .schedule-color-dot {
