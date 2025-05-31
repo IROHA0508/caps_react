@@ -100,12 +100,15 @@ function ScheduleList({ selectedDate, events, isLoading }) {
         );
       })}
 
-      {/* ⛔ 하루 종일 일정만 있는 경우는 구분선 생략 */}
+      {/* 하루 종일 일정과 시간 일정이 있는 경우만 구분선 출력 */}
       {timedEvents.length > 0 && allDayEvents.length > 0 && <hr className="schedule-divider" />}
 
       {/* ⏰ 시간 포함 일정 */}
       {timedEvents.map((event) => {
         const start = dayjs(event.start.dateTime);
+
+        console.log('⏰ 시간 일정:', event.summary, '| 시작:', start.format(), '| 색상:', event.color);
+        
         const color = event.color || '#33AAEE';
         return (
           <li key={event.id} className="schedule-item">
