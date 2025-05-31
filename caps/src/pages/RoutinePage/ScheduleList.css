@@ -67,10 +67,19 @@
 }
 
 .dot-wrapper {
+  width: 1.5em; /* 부모 글자 크기에 비례 */
   height: 1.5em; /* 부모 글자 크기에 비례 */
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.vertical-line-wrapper {
+  width: 1.5em; /* 부모 글자 크기에 비례 */
+  height: 1.5em; /* 부모 글자 크기에 비례 */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .vertical-line {

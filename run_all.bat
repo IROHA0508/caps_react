@@ -1,11 +1,11 @@
 @echo off
 chcp 65001 > nul
 
-@REM echo [1] 백엔드 서버 시작 중...
-@REM cd caps\backend
-@REM start "flask" cmd /k "call venv\Scripts\activate && flask run --host=0.0.0.0 --port=5000"
-@REM set BACKEND_TITLE=flask
-@REM cd ..
+echo [1] 백엔드 서버 시작 중...
+cd caps\backend
+start "flask" cmd /k "call venv\Scripts\activate && flask run --host=0.0.0.0 --port=5000"
+set BACKEND_TITLE=flask
+cd ..
 
 echo [2] 프론트엔드 React 앱 시작 중...
 cd caps

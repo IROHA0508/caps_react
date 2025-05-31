@@ -126,7 +126,9 @@ function ScheduleList({ selectedDate, events, isLoading }) {
 
               {/* ⬇️ 세로선 + 제목 */}
               <div className="line-title-group">
-                <div className="vertical-line" />
+                <div className='vertical-line-wrapper'>
+                  <div className="vertical-line" />
+                </div>
                 <span className="schedule-title">{event.summary}</span>
               </div>
             </div>
