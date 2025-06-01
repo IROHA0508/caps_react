@@ -20,7 +20,8 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   // ✅ 날짜 필터링 + 로그 출력 (최종)
   const filteredEvents = events.filter((event) => {
     const selected = selectedDate.startOf('day');
-
+    console.log('🔍 선택한 날짜:', selected.format('YYYY-MM-DD'));
+    
     const rawStart = event.start;
     const rawEnd = event.end;
 
