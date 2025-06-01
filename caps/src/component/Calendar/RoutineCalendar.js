@@ -4,12 +4,19 @@ import dayjs from 'dayjs';
 import { useSwipeable } from 'react-swipeable';
 import underIcon from '../../pictures/underIcon.svg';
 import MonthPicker from './MonthPicker/MonthPicker';
+import WeekCalendarView from './WeekCalendarView';
 
 function RoutineCalendar({ selectedDate, onDateSelect }) {
   const today = dayjs();
   const [currentWeekStart, setCurrentWeekStart] = useState(today.startOf('week'));
   const [swipeDirection, setSwipeDirection] = useState('');
   const [showMonthPicker, setShowMonthPicker] = useState(false);
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleCalendar = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   useEffect(() => {
     const startOfWeek = selectedDate.startOf('week');
@@ -79,7 +86,13 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
       )}
 
       {/* ✅ 날짜 영역 전체에 애니메이션 적용 */}
-      <div className={`calendar-body ${swipeDirection}`}>
+      <WeekCalendarView
+        selectedDate={selectedDate}
+        onDateSelect={handleDateClick}
+        weekDates={weekDates}
+        swipeDirection={swipeDirection}
+      />
+      {/* <div className={`calendar-body ${swipeDirection}`}>
         <div className="day-labels">
           {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
             <div key={i} className="day-label">{day}</div>
@@ -102,7 +115,7 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       <div className="calendar-divider" />
     </div>

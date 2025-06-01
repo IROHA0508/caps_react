@@ -1,0 +1,84 @@
+/* src/component/Calendar/WeekCalendarView.css */
+
+.calendar-body {
+  transition: transform 0.3s ease-in-out;
+}
+
+.calendar-body.swipe-left {
+  animation: swipeLeft 0.3s ease-in-out;
+}
+
+.calendar-body.swipe-right {
+  animation: swipeRight 0.3s ease-in-out;
+}
+
+/* 요일 라벨 */
+.day-labels {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.day-label {
+  width: 30px;
+  text-align: center;
+}
+
+.day-label:nth-child(1) {
+  color: #FF4D4F;
+}
+
+.day-label:nth-child(7) {
+  color: #4D6FFF;
+}
+
+/* 날짜 숫자 */
+.date-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+  padding-bottom: clamp(0.6rem, 1.25vw, 1rem);
+}
+
+/* 날짜 원 */
+.date-circle {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: black;
+  font-weight: 500;
+}
+
+.date-circle.today {
+  border: 1px solid black;
+}
+
+.date-circle.selected {
+  background-color: black;
+  color: white;
+}
+
+/* 슬라이드 애니메이션 */
+@keyframes swipeLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes swipeRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
