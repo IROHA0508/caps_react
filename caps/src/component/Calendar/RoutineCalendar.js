@@ -71,11 +71,9 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   return (
     <div className="calendar-container" {...swipeHandlers}>
       <div className="calendar-header">
-        <span className="month-text" onClick={toggleCalendar}>
+        <span className={`month-text ${isExpanded ? 'active' : ''}`} onClick={toggleCalendar}>
           {currentWeekStart.format('M월')}
-          <img
-            src={underIcon}
-            alt="드롭다운"
+          <img src={underIcon} alt="드롭다운"
             className={`under-icon ${isExpanded ? 'rotated' : ''}`}
           />
         </span>

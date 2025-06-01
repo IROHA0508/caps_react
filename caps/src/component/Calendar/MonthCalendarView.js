@@ -1,10 +1,12 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import './WeekCalendarView.css'; // 동일한 스타일 사용
+import './MonthCalendarView.css'; // 동일한 스타일 사용
 
 function MonthCalendarView({ selectedDate, onDateSelect }) {
   const start = dayjs(selectedDate).startOf('month').startOf('week');
   const end = dayjs(selectedDate).endOf('month').endOf('week');
+
+  const isSameMonth = date.month() === selectedDate.month();
 
   const dates = [];
   let current = start;
@@ -30,7 +32,7 @@ function MonthCalendarView({ selectedDate, onDateSelect }) {
           return (
             <div
               key={date.format('YYYY-MM-DD')}
-              className={`date-circle ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+              className={`date-circle ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${isSameMonth ? 'dimmed' : ''}`}
               onClick={() => onDateSelect(date)} // 클릭해도 Month 뷰 유지
             >
               {date.date()}
