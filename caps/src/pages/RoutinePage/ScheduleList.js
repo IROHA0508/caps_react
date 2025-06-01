@@ -110,9 +110,9 @@ function ScheduleList({ selectedDate, events, isLoading }) {
       {timedEvents.map((event) => {
         const start = dayjs(event.start.dateTime);
 
-        console.log('event:', event);
-        console.log('start:', event.start);
-        console.log('start dateTime:', dayjs(event.start).format('HH:mm'));
+        // console.log('event:', event);
+        // console.log('start:', event.start);
+        // console.log('start dateTime:', dayjs(event.start).format('HH:mm'));
         console.log('⏰ 시간 일정:', event.summary, '| 시작:', start.format(), '| 색상:', event.color);
 
         const color = event.color || '#33AAEE';
