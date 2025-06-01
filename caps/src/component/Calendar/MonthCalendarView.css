@@ -12,7 +12,7 @@
   padding-bottom: 0.25rem;
   font-size: 0.9rem;
   color: #666;
-  border-bottom: 1px solid #ddd;
+  /* border-bottom: 1px solid #ddd; */
 }
 
 .day-label {
@@ -34,6 +34,7 @@
   justify-items: center;
   align-items: center;
   padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
   margin: 0; /* margin-top 제거 */
 }
 

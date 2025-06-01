@@ -13,12 +13,22 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   const [currentWeekStart, setCurrentWeekStart] = useState(today.startOf('week'));
   const [swipeDirection, setSwipeDirection] = useState('');
   // const [showMonthPicker, setShowMonthPicker] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);     // 확장 여부
+  const [showMonth, setShowMonth] = useState(false);       // DOM 표시 여부
   const [expandTransition, setExpandTransition] = useState('');
 
   const toggleCalendar = () => {
-    setExpandTransition(isExpanded ? 'collapse' : 'expand'); // 애니메이션 방향 저장
-    setIsExpanded(!isExpanded);
+    if (!isExpanded) {
+      setExpandTransition('expand');
+      setShowMonth(true);           // 먼저 표시
+      setIsExpanded(true);
+    } else {
+      setExpandTransition('collapse');
+      setIsExpanded(false);
+      setTimeout(() => {
+        setShowMonth(false);        // collapse 애니메이션 후 숨김
+      }, 300);
+    }
   };
 
   useEffect(() => {
@@ -91,13 +101,12 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
       )} */}
 
       {/* ✅ 월간/주간 달력 전환 */}
-      {isExpanded ? (
+      {showMonth ? (
         <MonthCalendarView
           selectedDate={selectedDate}
           onDateSelect={handleDateClick}
           swipeDirection={expandTransition}
         />
-
       ) : (
         <WeekCalendarView
           selectedDate={selectedDate}
