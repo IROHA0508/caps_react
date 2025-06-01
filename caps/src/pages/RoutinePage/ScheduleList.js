@@ -77,9 +77,9 @@ function ScheduleList({ selectedDate, events, isLoading }) {
           일정을 등록하고 시간을 효율적으로 <br />
           관리해 보세요.
         </p>
-        <button className="add-schedule-btn" onClick={() => alert('새 일정 버튼 눌림')}>
+        {/* <button className="add-schedule-btn" onClick={() => alert('새 일정 버튼 눌림')}>
           + 새 일정
-        </button>
+        </button> */}
       </div>
     );
   }
