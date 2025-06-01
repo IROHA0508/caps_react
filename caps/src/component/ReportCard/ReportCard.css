@@ -2,30 +2,28 @@
 
 /* 반응형 카드 */
 .report-card {
-  /* 너비: 화면 크기에 따라 유연하게 (최대 420px 제한) */
-  flex: 0 0 min(90vw, 420px);
-
-  /* 카드 스타일 */
+  flex: 0 0 85vw; /* ✅ 화면의 85% 너비로 줄임 */
+  max-width: 360px;
   background-color: #fff8dd;
   border-radius: 1rem;
-  margin: 0 auto; /* 중앙 정렬 */
+  margin-right: 1rem; /* ✅ 카드 간 여백 */
   padding: clamp(1rem, 3vw, 1.5rem);
+  min-height: clamp(180px, 32vh, 280px);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-
-  /* 높이 유동 조절 */
-  min-height: clamp(180px, 35vh, 300px);
-  max-height: 80vh;
   box-sizing: border-box;
   scroll-snap-align: center;
 }
+
+
 .report-slider {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 1rem 0;
+  padding: 1rem 1rem 2rem 1rem; /* 아래 여백 약간 증가 */
   -webkit-overflow-scrolling: touch;
 }
+
 .dot-indicator {
   display: flex;
   justify-content: center;
