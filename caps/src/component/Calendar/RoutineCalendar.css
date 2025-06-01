@@ -116,3 +116,14 @@
     transform: translateX(0%);
   }
 }
+
+.under-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  transition: transform 0.3s ease;
+}
+
+.under-icon.rotated {
+  transform: rotate(180deg);
+}

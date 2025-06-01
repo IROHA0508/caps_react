@@ -31,7 +31,7 @@ const GoogleLoginButton = ({ onLoginSuccess }) => {
       });
       console.log('🔗 서버 주소:', `https://${serverIP}/users/google`);
       console.log('🔗 프로젝트 서버 응답:', res);
-      console.log('🔗 서버 응답 상태:', res.status);
+      // console.log('🔗 서버 응답 상태:', res.status);
       const result = await res.json();
       const token = result?.data?.token;
       if (token) {

@@ -82,3 +82,19 @@
     transform: translateX(0%);
   }
 }
+
+
+/* 월간 보기 grid 추가 */
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  justify-items: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* 확장된 calendar-body (MonthView용 추가 효과) */
+.calendar-body.month-mode {
+  flex-direction: column;
+}
