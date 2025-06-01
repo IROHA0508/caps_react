@@ -59,7 +59,7 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
     const weekStart = monthStart.startOf('week');
     setCurrentWeekStart(weekStart);
     onDateSelect(monthStart); // 선택한 월의 첫날을 선택
-    setShowMonthPicker(false);
+    // setShowMonthPicker(false);
   };
 
   const swipeHandlers = useSwipeable({
