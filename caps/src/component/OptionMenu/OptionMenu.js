@@ -18,29 +18,30 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
 
-  const imagePaths = [
-    routine_button,
-    report_button,
-    logout_button,
-    routine_button_select,
-    report_button_select,
-    logout_button_select
-  ];
-
   useEffect(() => {
+    const paths = [
+      routine_button,
+      report_button,
+      logout_button,
+      routine_button_select,
+      report_button_select,
+      logout_button_select
+    ];
+
     let loaded = 0;
 
-    imagePaths.forEach((src) => {
+    paths.forEach((src) => {
       const img = new Image();
       img.src = src;
       img.onload = () => {
         loaded++;
-        if (loaded === imagePaths.length) {
+        if (loaded === paths.length) {
           setImagesLoaded(true);
         }
       };
     });
-  }, []);
+  }, []); // ✅ 빈 배열로 유지
+
 
   if (!visible || !imagesLoaded) return null;
 
