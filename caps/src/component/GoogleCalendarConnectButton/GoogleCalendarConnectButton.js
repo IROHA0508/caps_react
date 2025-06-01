@@ -21,7 +21,9 @@ export const openAuthPopup = (onSuccessNavigate) => {
   // 🔽 기존 인증 팝업 로직
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const redirectUri = process.env.REACT_APP_REDIRECTURI;
-  const scope = 'https://www.googleapis.com/auth/calendar.readonly';
+
+  // 구글 캘린더 scope 수정
+  const scope = 'https://www.googleapis.com/auth/calendar';
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
 
   const width = 500;
