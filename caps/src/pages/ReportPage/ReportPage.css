@@ -1,9 +1,15 @@
 /* 페이지 전체 */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
 .report-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
   background-color: #f8f8f8;
+  overflow: hidden;
 }
 
 /* 상단 캐릭터 및 문구 영역 */
