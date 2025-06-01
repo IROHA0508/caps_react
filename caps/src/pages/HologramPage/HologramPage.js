@@ -6,6 +6,7 @@ import './HologramPage.css';
 
 function HologramPage() {
   const [user, setUser] = useState(null);
+  const [isUnityLoaded, setIsUnityLoaded] = useState(false);
   const unityContainerRef = useRef(null);
 
   useEffect(() => {
@@ -45,6 +46,9 @@ function HologramPage() {
                 (progress) => {
                   // 로딩 진행률 표시
                   console.log(`Unity 로딩 진행률: ${progress * 100}%`);
+                  if (progress === 1) {
+                    setIsUnityLoaded(true);
+                  }
                 }
               );
             } catch (error) {
@@ -81,14 +85,17 @@ function HologramPage() {
 
   // Unity로 메시지 전송하는 함수
   const sendMessageToUnity = (functionName, parameter) => {
-    if (window.unityInstance) {
-      window.unityInstance.SendMessage('GameManager', functionName, parameter);
+    if (window.unityInstance && isUnityLoaded) {
+      // Mishe 게임 오브젝트로 메시지 전송
+      window.unityInstance.SendMessage('Mishe', 'SetEmotion', parameter);
+    } else {
+      console.warn('Unity is not fully loaded yet');
     }
   };
 
   // anger 메시지 전송
   const sendAngerMessage = () => {
-    sendMessageToUnity('anger', '');
+    sendMessageToUnity('SetEmotion', 'anger');
   };
 
   return (
@@ -103,8 +110,9 @@ function HologramPage() {
         <button 
           onClick={sendAngerMessage}
           className="unity-button"
+          disabled={!isUnityLoaded}
         >
-          anger 메시지 전송
+          {isUnityLoaded ? 'anger 메시지 전송' : 'Unity 로딩 중...'}
         </button>
       </div>
     </div>
