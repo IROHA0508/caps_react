@@ -6,8 +6,6 @@ function MonthCalendarView({ selectedDate, onDateSelect }) {
   const start = dayjs(selectedDate).startOf('month').startOf('week');
   const end = dayjs(selectedDate).endOf('month').endOf('week');
 
-  const isSameMonth = date.month() === selectedDate.month();
-
   const dates = [];
   let current = start;
 
@@ -28,7 +26,8 @@ function MonthCalendarView({ selectedDate, onDateSelect }) {
         {dates.map((date) => {
           const isToday = date.isSame(dayjs(), 'day');
           const isSelected = date.isSame(selectedDate, 'day');
-
+          const isSameMonth = date.month() === selectedDate.month();
+          
           return (
             <div
               key={date.format('YYYY-MM-DD')}
