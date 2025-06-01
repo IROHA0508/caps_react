@@ -8,6 +8,8 @@ import './ReporePage.css';
 function ReportPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const sliderRef = useRef(null);
+  const [isGifLoaded, setIsGifLoaded] = useState(false);
+
 
   const handleScroll = () => {
     const scrollLeft = sliderRef.current.scrollLeft;
@@ -51,7 +53,7 @@ function ReportPage() {
     <div>
       <Header title="통계 리포트" />
 
-      <div className="report-page">
+      <div className="report-page" style={{ visibility: isGifLoaded ? 'visible' : 'hidden' }}>
         <div className="report-header">
           <div className="quote-box">
 
@@ -62,11 +64,11 @@ function ReportPage() {
             </div>
 
             <div className="quote-img-wrapper">
-              <img src={testgif} alt="테스트 gif" className="character-image" />
+              <img src={testgif} alt="테스트 gif" className="character-image" onLoad={() => setIsGifLoaded(true)} />
             </div>
           </div>
         </div>
-        
+
         <div className="report-slider" ref={sliderRef}>
           {dummyData.map((data, i) => (
             <ReportCard key={i} {...data} />

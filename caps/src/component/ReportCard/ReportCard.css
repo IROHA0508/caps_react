@@ -2,17 +2,22 @@
 
 /* 반응형 카드 */
 .report-card {
-  flex: 0 0 min(90vw, 400px);
-  scroll-snap-align: center;
+  /* 너비: 화면 크기에 따라 유연하게 (최대 420px 제한) */
+  flex: 0 0 min(90vw, 420px);
+
+  /* 카드 스타일 */
   background-color: #fff8dd;
   border-radius: 1rem;
-  margin: 0 1rem;
+  margin: 0 auto; /* 중앙 정렬 */
   padding: clamp(1rem, 3vw, 1.5rem);
-  min-height: 250px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
 
+  /* 높이 유동 조절 */
+  min-height: clamp(180px, 35vh, 300px);
+  max-height: 80vh;
+  box-sizing: border-box;
+  scroll-snap-align: center;
+}
 .report-slider {
   display: flex;
   overflow-x: auto;
@@ -28,9 +33,10 @@
   margin-top: 1rem;
 }
 
+/* 날짜 헤더 */
 .card-date {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   margin-bottom: 1rem;
   text-align: center;
   background-color: #d5edff;
@@ -39,8 +45,9 @@
   border-radius: 0.4rem;
 }
 
+/* 섹션 */
 .card-section {
-  margin-bottom: 1.2rem;
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
 }
 
 .activity-header {
@@ -52,13 +59,13 @@
 .card-section p {
   margin-top: 0.4rem;
   line-height: 1.5;
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
 }
 
 .activity-icon {
   display: inline-block;
   margin-top: 0.3rem;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
 }
 
 @media (max-width: 480px) {

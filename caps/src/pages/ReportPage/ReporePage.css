@@ -8,8 +8,10 @@
 
 /* 상단 캐릭터 및 문구 영역 */
 .report-header {
-  padding: 1rem;
+  height: clamp(150px, 25vh, 220px); /* 최소 150px, 최대 220px, 기본 25% 화면 높이 */
+  padding: clamp(1rem, 3vh, 2rem);
   position: relative;
+  box-sizing: border-box;
 }
 
 /* gif + 문구 flex 정렬 */
@@ -26,7 +28,9 @@
 }
 
 .character-image {
-  height: 100px;
+  height: clamp(80px, 18vh, 140px); /* 화면 높이에 비례한 캐릭터 크기 */
+  max-width: 40vw;
+  object-fit: contain;
 }
 
 .quote-text-wrapper {
