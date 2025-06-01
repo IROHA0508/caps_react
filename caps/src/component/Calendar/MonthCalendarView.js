@@ -27,11 +27,11 @@ function MonthCalendarView({ selectedDate, onDateSelect }) {
           const isToday = date.isSame(dayjs(), 'day');
           const isSelected = date.isSame(selectedDate, 'day');
           const isSameMonth = date.month() === selectedDate.month();
-          
+
           return (
             <div
               key={date.format('YYYY-MM-DD')}
-              className={`date-circle ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${isSameMonth ? 'dimmed' : ''}`}
+              className={`date-circle ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${!isSameMonth ? 'dimmed' : ''}`}
               onClick={() => onDateSelect(date)} // 클릭해도 Month 뷰 유지
             >
               {date.date()}
