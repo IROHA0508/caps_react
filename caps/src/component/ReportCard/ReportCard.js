@@ -2,7 +2,7 @@
 import React from 'react';
 import './ReportCard.css';
 
-function ReportCard({ date, activities, feedback }) {
+function ReportCard({ date, activities, feedback}) {
   return (
     <div className="report-card">
       <h3 className="card-date">{date}</h3>

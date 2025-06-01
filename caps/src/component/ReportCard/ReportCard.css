@@ -1,51 +1,15 @@
-/* src/component/ReportCard/ReportCard.css */
-
 /* 반응형 카드 */
 .report-card {
-  flex: 0 0 85vw; /* ✅ 화면의 85% 너비로 줄임 */
+  width: 100%;
   max-width: 360px;
   background-color: #fff8dd;
   border-radius: 1rem;
-  margin-right: 1rem; /* ✅ 카드 간 여백 */
   padding: clamp(1rem, 3vw, 1.5rem);
   min-height: clamp(180px, 32vh, 280px);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  scroll-snap-align: center;
-  scroll-margin-left: calc((100vw - 85vw) / 2);
 }
 
-
-.report-slider {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-
-  padding-left: calc((100vw - 85vw) / 2); /* ✅ 첫 카드 중앙 정렬용 여백 */
-  padding-right: 1rem; /* 다음 카드 여백 유지 */
-  margin-top: 1rem;
-  gap: 1rem; /* 카드 간 간격 */
-}
-.dot-indicator {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.dot {
-  width: 6px; /* ✅ 기존 10px → 6px로 축소 */
-  height: 6px;
-  border-radius: 50%;
-  background-color: #ccc;
-  transition: background-color 0.3s;
-}
-
-.dot.active {
-  background-color: #555;
-}
 
 /* 날짜 헤더 */
 .card-date {
@@ -59,7 +23,7 @@
   border-radius: 0.4rem;
 }
 
-/* 섹션 */
+/* 활동 섹션 */
 .card-section {
   margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
 }
@@ -80,16 +44,4 @@
   display: inline-block;
   margin-top: 0.3rem;
   font-size: clamp(1rem, 3vw, 1.2rem);
-}
-
-@media (max-width: 480px) {
-  .report-card {
-    flex: 0 0 95vw;
-  }
-}
-
-@media (min-width: 768px) {
-  .report-card {
-    flex: 0 0 400px;
-  }
 }
