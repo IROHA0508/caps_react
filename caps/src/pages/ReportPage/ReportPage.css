@@ -12,6 +12,8 @@
   padding: clamp(1rem, 3vh, 2rem);
   position: relative;
   box-sizing: border-box;
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
 }
 
 /* gif + 문구 flex 정렬 */
@@ -20,7 +22,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .quote-img-wrapper {
