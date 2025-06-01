@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import './MonthCalendarView.css'; // 동일한 스타일 사용
 
-function MonthCalendarView({ selectedDate, onDateSelect }) {
+function MonthCalendarView({ selectedDate, onDateSelect, swipeDirection  }) {
   const start = dayjs(selectedDate).startOf('month').startOf('week');
   const end = dayjs(selectedDate).endOf('month').endOf('week');
 
@@ -15,7 +15,7 @@ function MonthCalendarView({ selectedDate, onDateSelect }) {
   }
 
   return (
-    <div className="calendar-body month-mode">
+    <div className={`calendar-body month-mode ${swipeDirection}`}>
       <div className="day-labels">
         {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
           <div key={i} className="day-label">{day}</div>

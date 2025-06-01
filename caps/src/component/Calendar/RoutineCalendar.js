@@ -14,8 +14,10 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   const [swipeDirection, setSwipeDirection] = useState('');
   // const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [expandTransition, setExpandTransition] = useState('');
 
   const toggleCalendar = () => {
+    setExpandTransition(isExpanded ? 'collapse' : 'expand'); // 애니메이션 방향 저장
     setIsExpanded(!isExpanded);
   };
 
@@ -93,7 +95,9 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
         <MonthCalendarView
           selectedDate={selectedDate}
           onDateSelect={handleDateClick}
+          swipeDirection={expandTransition}
         />
+
       ) : (
         <WeekCalendarView
           selectedDate={selectedDate}
