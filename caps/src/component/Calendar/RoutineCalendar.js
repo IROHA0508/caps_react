@@ -16,6 +16,7 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   const [isExpanded, setIsExpanded] = useState(false);     // 확장 여부
   const [showMonth, setShowMonth] = useState(false);       // DOM 표시 여부
   const [expandTransition, setExpandTransition] = useState('');
+  const currentTransition = expandTransition || swipeDirection;
 
   const toggleCalendar = () => {
     if (!isExpanded) {
@@ -110,16 +111,9 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   return (
     <div className="calendar-container" {...swipeHandlers}>
       <div className="calendar-header">
-        <span
-          className={`month-text ${isExpanded ? 'active' : ''}`}
-          onClick={toggleCalendar}
-        >
-          {currentWeekStart.format('M월')}
-          <img
-            src={underIcon}
-            alt="드롭다운"
-            className={`under-icon ${isExpanded ? 'rotated' : ''}`}
-          />
+        <span className={`month-text ${isExpanded ? 'active' : ''}`} onClick={toggleCalendar}>
+          {selectedDate.format('M월')}
+          <img src={underIcon} alt="드롭다운" className={`under-icon ${isExpanded ? 'rotated' : ''}`} />
         </span>
       </div>
 
@@ -135,9 +129,10 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
       {/* ✅ 월간/주간 달력 전환 */}
       {showMonth ? (
         <MonthCalendarView
+          key={selectedDate.format('YYYY-MM')}
           selectedDate={selectedDate}
           onDateSelect={handleDateClick}
-          swipeDirection={expandTransition}
+          swipeDirection={currentTransition}
         />
       ) : (
         <WeekCalendarView
