@@ -1,3 +1,4 @@
+/* 페이지 전체 */
 .report-page {
   display: flex;
   flex-direction: column;
@@ -5,34 +6,47 @@
   background-color: #f8f8f8;
 }
 
+/* 상단 캐릭터 및 문구 영역 */
 .report-header {
   padding: 1rem;
   position: relative;
 }
 
-.back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  font-size: 1.2rem;
+/* gif + 문구 flex 정렬 */
+.quote-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.quote-img-wrapper {
+  flex-shrink: 0;
 }
 
 .character-image {
-  height: 120px;
+  height: 100px;
 }
 
-.quote-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-top: 1rem;
+.quote-text-wrapper {
+  max-width: 60%;
 }
 
+.quote {
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* 슬라이드 영역 */
 .report-slider {
   display: flex;
-  overflow-x: scroll;
+  overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
   padding: 1rem 0;
 }
 
@@ -42,7 +56,35 @@
   background-color: #fff8dd;
   border-radius: 1rem;
   margin: 0 1rem;
-  padding: 1rem;
+  padding: 1.5rem;
   min-height: 300px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* dot indicator 하단 */
+.dot-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  transition: background-color 0.3s;
+}
+
+.dot.active {
+  background-color: #555;
+}
+
+/* 뒤로가기 버튼 (사용하지 않으면 생략 가능) */
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1.2rem;
 }
