@@ -1,5 +1,5 @@
 // component/OptionMenu/OptionMenu.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './OptionMenu.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,8 +15,34 @@ import { openAuthPopup } from '../GoogleCalendarConnectButton/GoogleCalendarConn
 
 function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
   const navigate = useNavigate();
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  if (!visible) return null;
+
+  const imagePaths = [
+    routine_button,
+    report_button,
+    logout_button,
+    routine_button_select,
+    report_button_select,
+    logout_button_select
+  ];
+
+  useEffect(() => {
+    let loaded = 0;
+
+    imagePaths.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        loaded++;
+        if (loaded === imagePaths.length) {
+          setImagesLoaded(true);
+        }
+      };
+    });
+  }, []);
+
+  if (!visible || !imagesLoaded) return null;
 
   return (
     <div className="overlay" onClick={onClose}>
