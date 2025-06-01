@@ -47,11 +47,14 @@
 /* 슬라이드 영역 */
 .report-slider {
   display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden; /* 터치 제어로만 넘김 */
   padding: 1rem 0;
+}
+
+.report-card-wrapper {
+  flex: 0 0 100vw;
+  display: flex;
+  justify-content: center;
 }
 
 .card-slide {
@@ -74,8 +77,8 @@
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: #ccc;
   transition: background-color 0.3s;
@@ -85,10 +88,3 @@
   background-color: #555;
 }
 
-/* 뒤로가기 버튼 (사용하지 않으면 생략 가능) */
-.back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  font-size: 1.2rem;
-}
