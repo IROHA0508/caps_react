@@ -1,14 +1,31 @@
 /* src/component/ReportCard/ReportCard.css */
 
+/* 반응형 카드 */
 .report-card {
-  flex: 0 0 90%;
+  flex: 0 0 min(90vw, 400px);
   scroll-snap-align: center;
   background-color: #fff8dd;
   border-radius: 1rem;
   margin: 0 1rem;
-  padding: 1.5rem;
-  min-height: 300px;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  min-height: 250px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.report-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+.dot-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .card-date {
@@ -42,4 +59,16 @@
   display: inline-block;
   margin-top: 0.3rem;
   font-size: 1.2rem;
+}
+
+@media (max-width: 480px) {
+  .report-card {
+    flex: 0 0 95vw;
+  }
+}
+
+@media (min-width: 768px) {
+  .report-card {
+    flex: 0 0 400px;
+  }
 }
