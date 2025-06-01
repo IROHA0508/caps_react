@@ -17,8 +17,17 @@
   font-weight: 700;
   display: flex;
   align-items: center;
-  margin-left: 0.8rem;
+  /* margin-left: 0.8rem; */
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  /* transition: background-color 0.3s ease; */
 }
+
+.month-text:hover,
+.month-text.active {
+  background-color: #f0f0f0;
+}
+
 
 .under-icon {
   width: 16px;
@@ -128,18 +137,3 @@
   transform: rotate(180deg);
 }
 
-.month-text {
-  font-size: 1.3rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  /* margin-left: 0.8rem; */
-  padding: 0.2rem 0.6rem;
-  border-radius: 8px;
-  /* transition: background-color 0.3s ease; */
-}
-
-/* .month-text:hover,
-.month-text.active {
-  background-color: #f0f0f0;
-} */

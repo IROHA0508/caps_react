@@ -30,7 +30,8 @@
 .month-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.3rem 0.3rem;
+  column-gap: 0rem;   /* ✅ 가로 간격 촘촘하게 */
+  row-gap: 0.4rem;      /* ✅ 세로 간격은 유지 */
   justify-items: center;
   align-items: center;
   padding-top: 0.4rem;
