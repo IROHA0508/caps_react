@@ -63,6 +63,20 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
     onDateSelect(newWeekStart);
   };
 
+
+  const goToPrevMonth = () => {
+    const newDate = selectedDate.subtract(1, 'month');
+    setSwipeDirection('swipe-right');
+    onDateSelect(newDate);
+  };
+
+  const goToNextMonth = () => {
+    const newDate = selectedDate.add(1, 'month');
+    setSwipeDirection('swipe-left');
+    onDateSelect(newDate);
+  };
+
+
   const handleDateClick = (date) => {
     onDateSelect(date); // 선택한 날짜 상태 전달
   };
@@ -75,17 +89,35 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   };
 
   const swipeHandlers = useSwipeable({
-    onSwipedLeft: goToNextWeek,
-    onSwipedRight: goToPrevWeek,
+    onSwipedLeft: () => {
+      if (isExpanded) {
+        goToNextMonth();
+      } else {
+        goToNextWeek();
+      }
+    },
+    onSwipedRight: () => {
+      if (isExpanded) {
+        goToPrevMonth();
+      } else {
+        goToPrevWeek();
+      }
+    },
     trackMouse: true,
   });
+
 
   return (
     <div className="calendar-container" {...swipeHandlers}>
       <div className="calendar-header">
-        <span className={`month-text ${isExpanded ? 'active' : ''}`} onClick={toggleCalendar}>
+        <span
+          className={`month-text ${isExpanded ? 'active' : ''}`}
+          onClick={toggleCalendar}
+        >
           {currentWeekStart.format('M월')}
-          <img src={underIcon} alt="드롭다운"
+          <img
+            src={underIcon}
+            alt="드롭다운"
             className={`under-icon ${isExpanded ? 'rotated' : ''}`}
           />
         </span>

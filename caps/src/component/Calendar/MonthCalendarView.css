@@ -36,6 +36,7 @@
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
   margin: 0; /* margin-top 제거 */
+  margin-bottom: 0.5rem; /* 아래 여백 추가 */
 }
 
 /* 날짜 원 */
