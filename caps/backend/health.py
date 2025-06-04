@@ -9,7 +9,7 @@ from health_message_generator import generate_message
 health_bp = Blueprint('health', __name__)
 
 @health_bp.route('/health/from-node', methods=['POST', 'OPTIONS'])
-@cross_origin(origins="*", allow_headers=["Content-Type", "Authorization"])
+# @cross_origin(origins="https://www.talktolia.org")
 def receive_node_data():
     print(f"🔍 Method: {request.method}")
     if request.method == 'OPTIONS':
@@ -31,6 +31,59 @@ def receive_node_data():
     # recommendations = generate_recommendations(decrypted_data)
 
     return jsonify({"status": "success", "message": "데이터 수신 완료"}), 200
+
+dummy_data = {
+  "stepData": [
+    {
+      "date": "2025-06-04",
+      "time": "14:00",
+      "value": "1w4qTXMmp9mzTsZnoFPTJg=="
+    }
+  ],
+  "heartRateData": [
+    {
+      "bpm": "1IaVKUbcXL0uwwo6IPWWMg==",
+      "date": "2025-06-04",
+      "time": "14:00"
+    }
+  ],
+  "caloriesBurnedData": [
+    {
+      "date": "2025-06-04",
+      "time": "14:00",
+      "value": "1ymeZTC11uzRG46wm4rcoA=="
+    }
+  ],
+  "distanceWalked": [
+    {
+      "date": "2025-06-04",
+      "time": "14:00",
+      "value": "eGmcX8L5YYNFYW/5iWjPEw=="
+    }
+  ],
+  "totalSleepMinutes": "44cO1ZZejbzDUV0OaOg6GQ==",
+  "deepSleepMinutes": [
+    {
+      "date": "2025-06-04",
+      "time": "00:00",
+      "value": "z1q8yH3dWy9uolk8XbpvAA=="
+    }
+  ],
+  "remSleepMinutes": [
+    {
+      "date": "2025-06-04",
+      "time": "01:30",
+      "value": "UgdODt/xr5shC8Ue/x7BlQ=="
+    }
+  ],
+  "lightSleepMinutes": [
+    {
+      "date": "2025-06-04",
+      "time": "02:00",
+      "value": "ZVoNNPvRKfJNKUeJfBqIbg=="
+    }
+  ]
+}
 
 # # 복호화 함수
 # # AES 키 설정 (16바이트)

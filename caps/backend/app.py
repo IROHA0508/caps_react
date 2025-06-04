@@ -10,8 +10,11 @@ from health import health_bp
 
 app = Flask(__name__)
 # CORS(app)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-CORS(health_bp, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app,
+     resources={r"/*": {"origins": "https://www.talktolia.org"}},
+     supports_credentials=True,
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "OPTIONS", "PUT", "DELETE"])
 
 app.register_blueprint(api_bp)
 app.register_blueprint(data_bp) 
