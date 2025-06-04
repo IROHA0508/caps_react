@@ -71,17 +71,19 @@ function MainPage() {
 
         const nodeData = await nodeRes.json();
         console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
+        // downloadJSON(nodeData);
 
         // 2. Flask 서버로 전송
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
         console.log('🔗 백엔드 URL:', BACKEND_URL);
         
-        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-        // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+        // const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+        const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          // credentials: "include", // 🔥 이 줄 추가!
           body: JSON.stringify({
             user_id: JSON.parse(localStorage.getItem("user"))?.sub,
             data: nodeData,
@@ -106,6 +108,18 @@ function MainPage() {
     }
   }, [user]);
 
+// const downloadJSON = (data, filename = 'health_data.json') => {
+//   const jsonStr = JSON.stringify(data, null, 2);
+//   const blob = new Blob([jsonStr], { type: 'application/json' });
+//   const url = URL.createObjectURL(blob);
+
+//   const a = document.createElement('a');
+//   a.href = url;
+//   a.download = filename;
+//   a.click();
+
+//   URL.revokeObjectURL(url);
+// };
 
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
