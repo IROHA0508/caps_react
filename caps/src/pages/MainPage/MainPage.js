@@ -73,7 +73,10 @@ function MainPage() {
         console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
 
         // 2. Flask 서버로 전송
-        const flaskRes = await fetch("https://lia-flask.onrender.com/api/health/from-node", {
+        const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+        console.log('🔗 백엔드 URL:', BACKEND_URL);
+        
+        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

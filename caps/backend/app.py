@@ -9,7 +9,9 @@ from wake import wake_bp
 from health import health_bp
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(health_bp, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 app.register_blueprint(api_bp)
 app.register_blueprint(data_bp) 

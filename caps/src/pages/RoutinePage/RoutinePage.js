@@ -14,45 +14,45 @@ function RoutinePage() {
   
   // ✅ access_token으로 일정 가져오기
   const fetchCalendarEvents = async (startDate, endDate) => {
-    setIsLoading(true);
-    console.log('📅 일정 가져오기 시작:', startDate, endDate);
+      setIsLoading(true);
+      console.log('📅 일정 가져오기 시작:', startDate, endDate);
 
-    const accessToken = localStorage.getItem('google_access_token');
-    if (!accessToken) return;
+      const accessToken = localStorage.getItem('google_access_token');
+      if (!accessToken) return;
 
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-    console.log('🔗 백엔드 URL:', BACKEND_URL);
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      console.log('🔗 백엔드 URL:', BACKEND_URL);
 
-    try {
-    const res = await fetch(`${BACKEND_URL}/calendar/events`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        access_token: localStorage.getItem('google_access_token'),
-        refresh_token: localStorage.getItem('google_refresh_token'),
-        timeMin: startDate.toISOString(),
-        timeMax: endDate.toISOString(),
-      }),
-    });
+      try {
+      const res = await fetch(`${BACKEND_URL}/calendar/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: localStorage.getItem('google_access_token'),
+          refresh_token: localStorage.getItem('google_refresh_token'),
+          timeMin: startDate.toISOString(),
+          timeMax: endDate.toISOString(),
+        }),
+      });
 
-    const data = await res.json();
-    if (data.new_access_token) {
-      localStorage.setItem('google_access_token', data.new_access_token);
+      const data = await res.json();
+      if (data.new_access_token) {
+        localStorage.setItem('google_access_token', data.new_access_token);
+      }
+
+      if (data.events) {
+        setEvents(data.events);
+        console.log('📆 받아온 일정:', data.events);
+      } else {
+        setEvents([]);
+      }
+    } catch (err) {
+      console.error('❌ 일정 불러오기 실패:', err);
+      setEvents([]); // 에러 시도 비움
     }
 
-    if (data.events) {
-      setEvents(data.events);
-      console.log('📆 받아온 일정:', data.events);
-    } else {
-      setEvents([]);
-    }
-  } catch (err) {
-    console.error('❌ 일정 불러오기 실패:', err);
-    setEvents([]); // 에러 시도 비움
-  }
-
-  setIsLoading(false); // 마지막에 로딩 false
-};
+    setIsLoading(false); // 마지막에 로딩 false
+  };
 
   // ✅ 달 변경 감지하여 일정 요청 (최종)
   useEffect(() => {
