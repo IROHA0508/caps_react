@@ -25,14 +25,23 @@ def receive_node_data():
     print(f"📥 Node에서 받은 데이터 (user: {user_id})", health_data)
 
     # # ✅ 데이터 복호화
-    print("🔐 데이터 복호화 중...")
+    # print("🔐 데이터 복호화 중...")
     decrypted_data = decrypt_data(health_data)
-    print("🔐 복호화 완료")
+    # print("🔐 복호화 완료")
 
     print("📊 복호화된 데이터:", decrypted_data)
     print_data(decrypted_data)
 
-    return jsonify({"status": "success", "message": "데이터 수신 완료"}), 200
+    
+    # 💡 GPT 추천 메시지 생성
+    feedback_message = generate_message(decrypted_data)
+    print("💬 추천 메시지:", feedback_message)
+
+    return jsonify({
+        "status": "success",
+        "message": "데이터 수신 완료",
+        "feedback": feedback_message  # ✅ 프론트로 메시지 전달
+    }), 200
 
 AES_KEY = b"MySecretKey12345"  # 그대로 사용
 IV = b'\x00' * 16  # CBC 모드용 IV

@@ -77,8 +77,8 @@ function MainPage() {
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
         console.log('🔗 백엔드 URL:', BACKEND_URL);
         
-        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-        // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+        // const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+        const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -96,6 +96,11 @@ function MainPage() {
         }
 
         const result = await flaskRes.json();
+        const feedback = result.feedback;
+        if(feedback) {
+          console.log("💬 Flask 서버로부터 받은 피드백:", feedback)
+        };
+        
         console.log("✅ Flask 응답:", result);
       } catch (error) {
         console.error("❌ 데이터 요청 중 오류:", error);
