@@ -4,6 +4,8 @@ from flask_cors import cross_origin
 from Crypto.Cipher import AES
 import base64
 
+from health_message_generator import generate_message
+
 health_bp = Blueprint('health', __name__)
 
 @health_bp.route('/health/from-node', methods=['POST', 'OPTIONS'])
