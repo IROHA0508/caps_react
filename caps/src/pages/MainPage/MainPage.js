@@ -77,8 +77,8 @@ function MainPage() {
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
         console.log('🔗 백엔드 URL:', BACKEND_URL);
         
-        // const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-        const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+        // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
