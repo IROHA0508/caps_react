@@ -49,14 +49,20 @@ function MainPage() {
   useEffect(() => {
     const fetchAndForwardHealthData = async () => {
       const serverToken = localStorage.getItem("server_jwt_token");
-      console.log("🔑 현재 Node 서버 토큰:", serverToken);
+      const today = new Date().toISOString().slice(0, 10);
+      const lastExecuted = localStorage.getItem("last_health_sync");
+
+      if (lastExecuted === today) {
+        console.log("📅 오늘 이미 건강 데이터를 전송했습니다.");
+        return;
+      }
+
       if (!serverToken) {
         console.warn("❌ Google 토큰이 없습니다.");
         return;
       }
 
       try {
-        // 1. Node 서버에 건강 정보 요청
         const nodeRes = await fetch(`https://${process.env.REACT_APP_IP_PORT}/data?days=1`, {
           method: "GET",
           headers: {
@@ -71,19 +77,14 @@ function MainPage() {
 
         const nodeData = await nodeRes.json();
         console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
-        // downloadJSON(nodeData);
 
-        // 2. Flask 서버로 전송
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-        console.log('🔗 백엔드 URL:', BACKEND_URL);
-        
-        // const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-        const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+        // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          // credentials: "include", // 🔥 이 줄 추가!
           body: JSON.stringify({
             user_id: JSON.parse(localStorage.getItem("user"))?.sub,
             data: nodeData,
@@ -97,21 +98,25 @@ function MainPage() {
 
         const result = await flaskRes.json();
         const feedback = result.feedback;
-        if(feedback) {
-          console.log("💬 Flask 서버로부터 받은 피드백:", feedback)
-        };
-        
-        console.log("✅ Flask 응답:", result);
+
+        if (feedback) {
+          console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
+          localStorage.setItem("today_feedback", feedback);
+
+          // ✅ 추천 저장 완료 후에 날짜 기록
+          localStorage.setItem("last_health_sync", today);
+          console.log("📅 오늘의 데이터 전송 완료");
+        }
       } catch (error) {
         console.error("❌ 데이터 요청 중 오류:", error);
       }
     };
 
-    // 로그인된 경우에만 실행
     if (user) {
       fetchAndForwardHealthData();
     }
   }, [user]);
+
 
 // const downloadJSON = (data, filename = 'health_data.json') => {
 //   const jsonStr = JSON.stringify(data, null, 2);
@@ -127,7 +132,7 @@ function MainPage() {
 // };
 
   return (
-    <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="main-page-container">
         {/* ✅ Header는 항상 렌더링되며 user를 props로 전달 */}
         <Header user={user} onLogout={handleLogout} />

@@ -63,6 +63,13 @@ html, body {
   flex: 0 0 100vw;
   display: flex;
   justify-content: center;
+
+  height: 100%;
+  max-width: 480px;             /* 최대 너비 제한 */
+  min-width: 320px;
+  min-height: calc(100vh - 400px);             /* 최소 너비 보장 */
+  margin: 0 auto;               /* 가운데 정렬 */
+  scroll-snap-align: center;
 }
 
 .card-slide {

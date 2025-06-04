@@ -11,30 +11,38 @@ function ReportPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const sliderRef = useRef(null);
   const touchStartX = useRef(null);
+  const [healthReports, setHealthReports] = useState([]);
 
-  const dummyData = [
-    {
-      date: '2025.05.25 (일)',
-      activities: [
-        { title: '산책', time: '5분', comment: '조금씩이라도 밖에 나가보는 건 기분 전환에 좋아!', icon: '✔️' },
-        { title: '토익 공부', time: '1시간 30분', comment: '평소보다 긴 시간 공부하려고 노력했어!', icon: '✔️' },
-      ],
-      feedback:
-        '오전엔 잠시 기분이 안좋았지만 산책 후에 많이 나아졌어. 오늘은 오랫동안 집중하려고 노력했어! 처음엔 잘 안될 수 있지만, 시작한 것만으로도 이미 많이 성장한거야.',
-    },
-    {
-      date: '2025.05.26 (월)',
-      activities: [
-        { title: '운동', time: '20분', comment: '꾸준한 루틴이 쌓이고 있어!', icon: '💪' },
-      ],
-      feedback: '월요일이지만 잘 해냈어. 흐름을 계속 이어가자.',
-    },
-    {
-      date: '2025.05.27 (화)',
+  const MIN_CARDS = 3;
+  const paddedReports = [
+    ...healthReports,
+    ...Array(Math.max(0, MIN_CARDS - healthReports.length)).fill({
+      date: '',
       activities: [],
-      feedback: '피곤했지만 일정을 지키려고 한 점이 멋졌어!',
-    },
+      feedback: '',
+    }),
   ];
+
+  useEffect(() => {
+    const feedback = localStorage.getItem("today_feedback");
+    if (feedback) {
+      const today = new Date().toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'short',
+      });
+
+      setHealthReports([
+        {
+          date: today,
+          activities: [],
+          feedback: feedback,
+        }
+      ]);
+    }
+  }, []);
+
 
   const scrollToCard = (index) => {
     const slider = sliderRef.current;
@@ -54,7 +62,7 @@ function ReportPage() {
     const diff = endX - touchStartX.current;
 
     if (Math.abs(diff) > 50) {
-      if (diff < 0 && currentIndex < dummyData.length - 1) {
+      if (diff < 0 && currentIndex < paddedReports.length - 1) {
         setCurrentIndex((prev) => prev + 1);
       } else if (diff > 0 && currentIndex > 0) {
         setCurrentIndex((prev) => prev - 1);
@@ -91,7 +99,7 @@ function ReportPage() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {dummyData.map((data, i) => (
+          {paddedReports.map((data, i) => (
             <div key={i} className="report-card-wrapper">
               <ReportCard {...data} />
             </div>
@@ -99,10 +107,11 @@ function ReportPage() {
         </div>
 
         <div className="dot-indicator">
-          {dummyData.map((_, i) => (
+          {paddedReports.map((_, i) => (
             <span key={i} className={`dot ${currentIndex === i ? 'active' : ''}`} />
           ))}
         </div>
+
       </div>
     </div>
   );

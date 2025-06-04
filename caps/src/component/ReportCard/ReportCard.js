@@ -20,9 +20,8 @@ function ReportCard({ date, activities, feedback}) {
 
       {feedback && (
         <div className="card-section">
-          <strong>오늘 상태는?</strong>
+          <strong>오늘의 추천 루틴</strong>
           <p>{feedback}</p>
-          <span className="activity-icon">🧠</span>
         </div>
       )}
     </div>
