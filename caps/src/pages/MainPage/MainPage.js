@@ -46,6 +46,62 @@ function MainPage() {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchAndForwardHealthData = async () => {
+      const serverToken = localStorage.getItem("server_jwt_token");
+      console.log("🔑 현재 Node 서버 토큰:", serverToken);
+      if (!serverToken) {
+        console.warn("❌ Google 토큰이 없습니다.");
+        return;
+      }
+
+      try {
+        // 1. Node 서버에 건강 정보 요청
+        const nodeRes = await fetch(`https://${process.env.REACT_APP_IP_PORT}/data?days=1`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${serverToken}`,
+          },
+        });
+
+        if (!nodeRes.ok) {
+          console.error("❌ Node 서버 응답 실패:", nodeRes.status);
+          return;
+        }
+
+        const nodeData = await nodeRes.json();
+        console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
+
+        // 2. Flask 서버로 전송
+        const flaskRes = await fetch("https://lia-flask.onrender.com/api/health/from-node", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: JSON.parse(localStorage.getItem("user"))?.sub,
+            data: nodeData,
+          }),
+        });
+
+        if (!flaskRes.ok) {
+          console.error("❌ Flask 서버 전송 실패:", flaskRes.status);
+          return;
+        }
+
+        const result = await flaskRes.json();
+        console.log("✅ Flask 응답:", result);
+      } catch (error) {
+        console.error("❌ 데이터 요청 중 오류:", error);
+      }
+    };
+
+    // 로그인된 경우에만 실행
+    if (user) {
+      fetchAndForwardHealthData();
+    }
+  }, [user]);
+
 
   return (
     <GoogleOAuthProvider clientId="829026060536-f7dpc16930esthgnn97soleggvmv3o16.apps.googleusercontent.com">
