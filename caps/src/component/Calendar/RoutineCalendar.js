@@ -4,7 +4,6 @@ import './RoutineCalendar.css';
 import dayjs from 'dayjs';
 import { useSwipeable } from 'react-swipeable';
 import underIcon from '../../pictures/underIcon.svg';
-// import MonthPicker from './MonthPicker/MonthPicker';
 import WeekCalendarView from './WeekCalendarView';
 import MonthCalendarView from './MonthCalendarView';
 
@@ -12,7 +11,6 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
   const today = dayjs();
   const [currentWeekStart, setCurrentWeekStart] = useState(today.startOf('week'));
   const [swipeDirection, setSwipeDirection] = useState('');
-  // const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);     // 확장 여부
   const [showMonth, setShowMonth] = useState(false);       // DOM 표시 여부
   const [expandTransition, setExpandTransition] = useState('');
@@ -37,7 +35,7 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
     if (!startOfWeek.isSame(currentWeekStart, 'date')) {
       setCurrentWeekStart(startOfWeek);
     }
-  }, [selectedDate]);
+  }, [selectedDate, currentWeekStart]);
 
   useEffect(() => {
     if (swipeDirection) {
@@ -82,12 +80,6 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
     onDateSelect(date); // 선택한 날짜 상태 전달
   };
 
-  const handleMonthSelect = (monthStart) => {
-    const weekStart = monthStart.startOf('week');
-    setCurrentWeekStart(weekStart);
-    onDateSelect(monthStart); // 선택한 월의 첫날을 선택
-    // setShowMonthPicker(false);
-  };
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
@@ -116,15 +108,6 @@ function RoutineCalendar({ selectedDate, onDateSelect }) {
           <img src={underIcon} alt="드롭다운" className={`under-icon ${isExpanded ? 'rotated' : ''}`} />
         </span>
       </div>
-
-      {/* 🔽 월 선택 모달 */}
-      {/* {showMonthPicker && (
-        <MonthPicker
-          currentDate={currentWeekStart}
-          onMonthSelect={handleMonthSelect}
-          onClose={() => setShowMonthPicker(false)}
-        />
-      )} */}
 
       {/* ✅ 월간/주간 달력 전환 */}
       {showMonth ? (

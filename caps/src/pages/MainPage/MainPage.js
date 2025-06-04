@@ -77,11 +77,11 @@ function MainPage() {
           onClose={() => setShowTalkOptions(false)}
         />
 
-        {/* {calendarLinked && (
+        {calendarLinked && (
           <div className="calendar-status-message">
             📅 Google 캘린더 연동이 완료되었습니다!
           </div>
-        )} */}
+        )}
         
       </div>
     </GoogleOAuthProvider>
