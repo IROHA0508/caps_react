@@ -26,6 +26,7 @@ function RoutinePage() {
       try {
       const res = await fetch(`${BACKEND_URL}/calendar/events`, {
         method: 'POST',
+        credentials: "include",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           access_token: localStorage.getItem('google_access_token'),

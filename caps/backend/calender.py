@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from datetime import datetime
 import os
 import requests
+from flask_cors import cross_origin
+
 
 load_dotenv()
 
@@ -14,7 +16,8 @@ calender_bp = Blueprint('calender', __name__)
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
-@calender_bp.route('/calendar/events', methods=['POST'])
+@calender_bp.route('/calendar/events', methods=['POST', 'OPTIONS'])
+@cross_origin(origins=["https://www.talktolia.org"], supports_credentials=True)
 def get_calendar_events():
     try:
         print("📥 [요청 수신] /calendar/events")
