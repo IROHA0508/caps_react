@@ -21,7 +21,14 @@ function ReportCard({ date, activities, feedback}) {
       {feedback && (
         <div className="card-section">
           <strong>오늘의 추천 루틴</strong>
-          <p>{feedback}</p>
+          <div className="feedback-text">
+            {feedback.split('\n').map((line, i) => (
+              <React.Fragment key={i}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       )}
     </div>
