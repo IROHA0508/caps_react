@@ -2,11 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../component/Header/Header';
+import VoiceRecognizer from '../../component/VoiceRecognizer/VoiceRecognizer';
 import './HologramPage.css';
 
 function HologramPage() {
   const [user, setUser] = useState(null);
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
+  const [voiceResult, setVoiceResult] = useState("");
   const unityContainerRef = useRef(null);
 
   useEffect(() => {
@@ -98,6 +100,27 @@ function HologramPage() {
     sendMessageToUnity('SetEmotion', 'anger');
   };
 
+  // AI 응답을 Unity로 전송하는 함수
+  const sendAIResponseToUnity = (response) => {
+    if (window.unityInstance && isUnityLoaded) {
+      window.unityInstance.SendMessage('Mishe', 'SetEmotion', response);
+    } else {
+      console.warn('Unity is not fully loaded yet');
+    }
+  };
+
+  // 음성 인식 결과 처리
+  const handleVoiceResult = async (text) => {
+    setVoiceResult(text);
+    try {
+      // TODO: AI API 호출 구현
+      const aiResponse = "anger"; // 실제 AI API 호출로 대체 필요
+      sendAIResponseToUnity(aiResponse);
+    } catch (error) {
+      console.error('AI 처리 중 오류:', error);
+    }
+  };
+
   return (
     <div className="hologram-page">
       <Header user={user} onLogout={handleLogout} />
@@ -107,6 +130,14 @@ function HologramPage() {
           id="unity-canvas"
           className="unity-canvas"
         />
+        <div className="voice-recognizer-container">
+          <VoiceRecognizer onResult={handleVoiceResult} />
+          {voiceResult && (
+            <div className="voice-result">
+              인식된 음성: {voiceResult}
+            </div>
+          )}
+        </div>
         <button 
           onClick={sendAngerMessage}
           className="unity-button"
