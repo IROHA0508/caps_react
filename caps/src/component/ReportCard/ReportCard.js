@@ -22,15 +22,19 @@ function ReportCard({ date, activities, feedback}) {
         <div className="card-section">
           <strong>오늘의 추천 루틴</strong>
           <div className="feedback-text">
-            {feedback.split('\n').map((line, i) => (
-              <React.Fragment key={i}>
-                {line}
-                <br />
-              </React.Fragment>
-            ))}
+            {feedback
+              .replace(/\n{2,}/g, '\n') // ✅ 두 줄 이상 개행 → 한 줄로 통일
+              .split('\n')
+              .map((line, i) => (
+                <React.Fragment key={i}>
+                  {line.trim()}
+                  <br />
+                </React.Fragment>
+              ))}
           </div>
         </div>
       )}
+
     </div>
   );
 }
