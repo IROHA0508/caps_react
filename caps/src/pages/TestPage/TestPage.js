@@ -4,17 +4,12 @@ import VoiceRecognizer from '../../component/VoiceRecognizer/VoiceRecognizer';
 import './TestPage.css';
 
 function TestPage() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [latestResult, setLatestResult] = useState("");
+  // const [latestResult, setLatestResult] = useState("");
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/onboarding";
-  };
-
+  const [setLatestResult] = useState("");
   return (
     <div className="test-page-container">
-      <Header user={user} onLogout={handleLogout} />
+      <Header title="마이 페이지" />
 
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <h1>🧪 기능 테스트 페이지</h1>

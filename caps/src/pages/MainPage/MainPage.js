@@ -50,7 +50,10 @@ function MainPage() {
     const fetchAndForwardHealthData = async () => {
       const serverToken = localStorage.getItem("server_jwt_token");
       const today = new Date().toISOString().slice(0, 10);
-      const lastExecuted = localStorage.getItem("last_health_sync");
+
+      
+      // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
+      // const lastExecuted = localStorage.getItem("last_health_sync");
 
       // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
       // if (lastExecuted === today) {
