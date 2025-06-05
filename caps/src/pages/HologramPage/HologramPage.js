@@ -18,6 +18,46 @@ function HologramPage() {
     }
   }, []);
 
+  // Unity 인스턴스 정리를 위한 함수
+  const cleanupUnity = async () => {
+    if (window.unityInstance) {
+      try {
+        // Unity 렌더링 중지
+        if (window.unityInstance.Module) {
+          window.unityInstance.Module.StopMainLoop();
+        }
+        
+        // Unity 인스턴스 정리
+        await window.unityInstance.Quit();
+        
+        // WebGL 컨텍스트 정리
+        const canvas = unityContainerRef.current;
+        if (canvas) {
+          const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+          if (gl) {
+            gl.getExtension('WEBGL_lose_context')?.loseContext();
+          }
+        }
+
+        // Unity 인스턴스 참조 제거
+        window.unityInstance = null;
+        
+        // Unity 컨테이너 정리
+        if (unityContainerRef.current) {
+          unityContainerRef.current.innerHTML = '';
+        }
+        
+        // Unity 로더 스크립트 제거
+        const unityScript = document.querySelector('script[src="/unity/Build/unityLIa.loader.js"]');
+        if (unityScript) {
+          unityScript.remove();
+        }
+      } catch (error) {
+        console.error('Unity 정리 중 오류:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     const loadUnity = async () => {
       try {
@@ -71,11 +111,21 @@ function HologramPage() {
 
     loadUnity();
 
+    // 페이지 언마운트 시 정리
     return () => {
-      // 컴포넌트 언마운트 시 정리
-      if (window.unityInstance) {
-        window.unityInstance.Quit();
-      }
+      cleanupUnity();
+    };
+  }, []);
+
+  // 페이지를 떠날 때 정리
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      cleanupUnity();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
@@ -131,6 +181,7 @@ function HologramPage() {
       // TODO: AI API 호출 구현
       const aiResponse = "anger"; // 실제 AI API 호출로 대체 필요
       sendAIResponseToUnity(aiResponse);
+      // STT 음성 실행
     } catch (error) {
       console.error('AI 처리 중 오류:', error);
     }
