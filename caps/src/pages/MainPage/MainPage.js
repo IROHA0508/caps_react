@@ -153,6 +153,14 @@ function MainPage() {
               <button className="button" onClick={() => setShowTalkOptions(true)}>
                 LIA와 이야기하기
               </button>
+
+              {/* ⬇️ 테스트 페이지로 이동하는 버튼 추가 */}
+              <button
+                className="button test-button"
+                onClick={() => navigate("/test")}
+              >
+                테스트 페이지로 이동
+              </button>
             </div>
           </div>
         </div>
@@ -161,6 +169,8 @@ function MainPage() {
           visible={showTalkOptions}
           onClose={() => setShowTalkOptions(false)}
         />
+
+
 
         {calendarLinked && (
           <div className="calendar-status-message">
