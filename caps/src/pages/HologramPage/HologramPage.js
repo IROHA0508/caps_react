@@ -88,16 +88,31 @@ function HologramPage() {
   // Unity로 메시지 전송하는 함수
   const sendMessageToUnity = (functionName, parameter) => {
     if (window.unityInstance && isUnityLoaded) {
-      // Mishe 게임 오브젝트로 메시지 전송
       window.unityInstance.SendMessage('Mishe', 'SetEmotion', parameter);
     } else {
       console.warn('Unity is not fully loaded yet');
     }
   };
 
-  // anger 메시지 전송
+  // 감정 메시지 전송 함수들
   const sendAngerMessage = () => {
     sendMessageToUnity('SetEmotion', 'anger');
+  };
+
+  const sendDanceMessage = () => {
+    sendMessageToUnity('SetEmotion', 'dance');
+  };
+
+  const sendCheeringMessage = () => {
+    sendMessageToUnity('SetEmotion', 'cheering');
+  };
+
+  const sendJoyMessage = () => {
+    sendMessageToUnity('SetEmotion', 'joy');
+  };
+
+  const sendSurpriseMessage = () => {
+    sendMessageToUnity('SetEmotion', 'surprise');
   };
 
   // AI 응답을 Unity로 전송하는 함수
@@ -130,6 +145,43 @@ function HologramPage() {
           id="unity-canvas"
           className="unity-canvas"
         />
+        <div className="emotion-buttons">
+          <button 
+            onClick={sendAngerMessage}
+            className="emotion-button"
+            disabled={!isUnityLoaded}
+          >
+            {isUnityLoaded ? 'Anger' : 'Loading...'}
+          </button>
+          <button 
+            onClick={sendDanceMessage}
+            className="emotion-button"
+            disabled={!isUnityLoaded}
+          >
+            {isUnityLoaded ? 'Dance' : 'Loading...'}
+          </button>
+          <button 
+            onClick={sendCheeringMessage}
+            className="emotion-button"
+            disabled={!isUnityLoaded}
+          >
+            {isUnityLoaded ? 'Cheering' : 'Loading...'}
+          </button>
+          <button 
+            onClick={sendJoyMessage}
+            className="emotion-button"
+            disabled={!isUnityLoaded}
+          >
+            {isUnityLoaded ? 'Joy' : 'Loading...'}
+          </button>
+          <button 
+            onClick={sendSurpriseMessage}
+            className="emotion-button"
+            disabled={!isUnityLoaded}
+          >
+            {isUnityLoaded ? 'Surprise' : 'Loading...'}
+          </button>
+        </div>
         <div className="voice-recognizer-container">
           <VoiceRecognizer onResult={handleVoiceResult} />
           {voiceResult && (
@@ -138,13 +190,6 @@ function HologramPage() {
             </div>
           )}
         </div>
-        <button 
-          onClick={sendAngerMessage}
-          className="unity-button"
-          disabled={!isUnityLoaded}
-        >
-          {isUnityLoaded ? 'anger 메시지 전송' : 'Unity 로딩 중...'}
-        </button>
       </div>
     </div>
   );
