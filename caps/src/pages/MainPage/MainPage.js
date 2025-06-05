@@ -52,10 +52,11 @@ function MainPage() {
       const today = new Date().toISOString().slice(0, 10);
       const lastExecuted = localStorage.getItem("last_health_sync");
 
-      if (lastExecuted === today) {
-        console.log("📅 오늘 이미 건강 데이터를 전송했습니다.");
-        return;
-      }
+      // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
+      // if (lastExecuted === today) {
+      //   console.log("📅 오늘 이미 건강 데이터를 전송했습니다.");
+      //   return;
+      // }
 
       if (!serverToken) {
         console.warn("❌ Google 토큰이 없습니다.");
