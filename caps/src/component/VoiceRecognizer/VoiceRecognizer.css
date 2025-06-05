@@ -1,0 +1,17 @@
+.voice-button {
+  background-color: #1B687D;
+  color: white;
+  padding: 0.8rem 2rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.voice-button:hover {
+  background-color: #145061;
+}
+
+.voice-recognizer p {
+  margin-top: 1rem;
+}
