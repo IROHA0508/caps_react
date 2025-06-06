@@ -7,13 +7,13 @@ import report_button from '../../pictures/report_button.svg';
 import routine_button from '../../pictures/routine_button.svg';
 import logout_button from '../../pictures/logout_button.svg';
 
-import mypage_button from '../../pictures/routine_button.svg';
+import mypage_button from '../../pictures/mypage_button.svg';
 
 import report_button_select from '../../pictures/report_button_select.svg';
 import routine_button_select from '../../pictures/routine_button_select.svg';
 import logout_button_select from '../../pictures/logout_button_select.svg';
 
-import mypage_button_select from '../../pictures/routine_button_select.svg';
+import mypage_button_select from '../../pictures/mypage_button.svg';
 
 import { openAuthPopup } from '../GoogleCalendarConnectButton/GoogleCalendarConnectButton';
 
