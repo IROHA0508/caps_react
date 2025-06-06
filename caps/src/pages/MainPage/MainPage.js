@@ -84,7 +84,11 @@ function MainPage() {
 
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-        if(nodeData){
+        if(nodeData &&
+          nodeData.data &&
+          Array.isArray(nodeData.data.biometrics) &&
+          nodeData.data.biometrics.length > 0)
+        {
           const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
           // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
             method: "POST",
