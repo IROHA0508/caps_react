@@ -22,6 +22,7 @@ function Header({ user, onLogout }) {
     if (location.pathname === '/main/routine') return '일정 / 루틴';
     if (location.pathname === '/main/report') return '통계 리포트';
     if (location.pathname === '/main/mypage') return '마이 페이지';
+    if (location.pathname === '/test') return '🧪 기능 테스트 페이지';
     return '';
   };
 

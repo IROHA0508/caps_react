@@ -12,7 +12,6 @@ function TestPage() {
       <Header title="마이 페이지" />
 
       <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <h1>🧪 기능 테스트 페이지</h1>
         <VoiceRecognizer onResult={(text) => setLatestResult(text)} />
       </div>
     </div>
