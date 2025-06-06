@@ -18,7 +18,8 @@ function RoutinePage() {
       console.log('📅 일정 가져오기 시작:', startDate, endDate);
 
       const accessToken = localStorage.getItem('google_access_token');
-      if (!accessToken) return;
+      const refreshToken = localStorage.getItem('google_refresh_token');
+      // if (!accessToken) return;
 
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
       console.log('🔗 백엔드 URL:', BACKEND_URL);
@@ -29,12 +30,24 @@ function RoutinePage() {
         credentials: "include",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_token: localStorage.getItem('google_access_token'),
-          refresh_token: localStorage.getItem('google_refresh_token'),
+          // access_token: localStorage.getItem('google_access_token'),
+          // refresh_token: localStorage.getItem('google_refresh_token'),
+          access_token: accessToken,
+          refresh_token: refreshToken,
           timeMin: startDate.toISOString(),
           timeMax: endDate.toISOString(),
         }),
       });
+      
+      // 🔥 access_token이 만료된 경우 → 재로그인 유도 또는 제거
+      if (res.status === 401) {
+        console.warn("❌ 토큰 만료: 재로그인 필요");
+        localStorage.removeItem("google_access_token");
+        localStorage.removeItem("google_refresh_token");
+        alert("인증이 만료되었습니다. 다시 로그인해주세요.");
+        window.location.reload();
+        return;
+      }
 
       const data = await res.json();
       if (data.new_access_token) {
