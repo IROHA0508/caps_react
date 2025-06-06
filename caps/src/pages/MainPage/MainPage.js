@@ -83,37 +83,45 @@ function MainPage() {
         console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
 
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-        // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: JSON.parse(localStorage.getItem("user"))?.sub,
-            data: nodeData,
-          }),
-        });
 
-        if (!flaskRes.ok) {
-          console.error("❌ Flask 서버 전송 실패:", flaskRes.status);
-          return;
+        if(nodeData){
+          const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+          // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id: JSON.parse(localStorage.getItem("user"))?.sub,
+              data: nodeData,
+            }),
+          });
+
+          if (!flaskRes.ok) {
+            console.error("❌ Flask 서버 전송 실패:", flaskRes.status);
+            return;
+          }
+
+          const result = await flaskRes.json();
+          const feedback = result.feedback;
+
+          if (feedback) {
+            console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
+            localStorage.setItem("today_feedback", feedback);
+
+            // ✅ 추천 저장 완료 후에 날짜 기록
+            localStorage.setItem("last_health_sync", today);
+            console.log("📅 오늘의 데이터 전송 완료");
+          }
+        } 
+        else {
+          console.warn("❌ Node 서버에서 받은 데이터가 없습니다.");
         }
-
-        const result = await flaskRes.json();
-        const feedback = result.feedback;
-
-        if (feedback) {
-          console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
-          localStorage.setItem("today_feedback", feedback);
-
-          // ✅ 추천 저장 완료 후에 날짜 기록
-          localStorage.setItem("last_health_sync", today);
-          console.log("📅 오늘의 데이터 전송 완료");
-        }
-      } catch (error) {
+      }
+      catch (error) {
         console.error("❌ 데이터 요청 중 오류:", error);
       }
+
     };
 
     if (user) {
