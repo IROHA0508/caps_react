@@ -1,0 +1,110 @@
+.picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: flex-end;
+  z-index: 9999;
+}
+
+
+.picker-container {
+  width: 100%;
+  background-color: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  font-size: 1rem; /* ✅ 크기 증가 */
+  border-bottom: 1px solid #eee;
+}
+
+/* ✅ 취소 버튼 스타일 (회색, 중간 굵기, 크기 증가) */
+.picker-header button:first-child {
+  color: #999;
+  background: none;
+  border: none;
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+/* ✅ 확인 버튼 스타일 (검정, 굵은 글씨, 크기 증가) */
+.picker-header button:last-child {
+  color: #111;
+  background: none;
+  border: none;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.picker-wheel-wrapper {
+  position: relative;
+  height: 200px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.picker-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.picker-item {
+  height: 40px;
+  line-height: 40px;
+  color: #aaa;
+  font-size: 1.2rem;
+}
+
+.picker-item.selected {
+  color: #000;
+  font-weight: bold;
+}
+
+.picker-highlight {
+  position: absolute;
+  top: 80px; /* 가운데 강조 줄 위치 */
+  height: 40px;
+  width: 100%;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  pointer-events: none;
+}
+
+/* ✅ 올라올 때 */
+.slide-up {
+  animation: slideUp 300ms ease-out forwards;
+}
+
+/* ✅ 내려갈 때 */
+.slide-down {
+  animation: slideDown 300ms ease-in forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
