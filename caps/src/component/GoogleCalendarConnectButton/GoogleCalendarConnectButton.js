@@ -4,7 +4,8 @@ import React from 'react';
 
 export const openAuthPopup = (onSuccessNavigate) => {
   const accessToken = localStorage.getItem('google_access_token');
-
+  const refresh_token = localStorage.getItem('google_refresh_token'); 
+  
   // ✅ 유효한 access_token만 허용 (예: 30자 이상, "ya29."로 시작 등)
   const isValidAccessToken = accessToken && accessToken.startsWith('ya29.');
 
