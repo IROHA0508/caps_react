@@ -1,44 +1,43 @@
-import React, { useEffect, useState } from 'react';
+// component/BottomPicker/BottomPicker.js
+import React from 'react';
+import Picker  from 'react-mobile-picker';
 import './BottomPicker.css';
 
 function BottomPicker({ options, selected, onSelect, onClose }) {
-  const [isClosing, setIsClosing] = useState(false);
+  console.log('📥 [BottomPicker] props.options:', options);
+  console.log('📥 [BottomPicker] props.selected:', selected);
 
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose(); // 부모 상태에서 picker 제거
-    }, 300); // 애니메이션 시간과 동일
-  };
 
+  const value = { picker: selected }
+
+  const handleChange = (nextValue) => {
+    console.log('🔄 [BottomPicker] 선택 변경 →', nextValue)
+    onSelect(nextValue.picker)
+  }
+  
   return (
-    <div className="picker-overlay" onClick={handleClose}>
-      <div
-        className={`picker-container ${isClosing ? 'slide-down' : 'slide-up'}`}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="bottom-picker-overlay" onClick={onClose}>
+      <div className="bottom-picker-container" onClick={(e) => e.stopPropagation()}>
         <div className="picker-header">
-          <button onClick={handleClose}>취소</button>
-          <button onClick={() => onSelect(selected)}>확인</button>
+          <button className="picker-close-btn" onClick={onClose}>취소</button>
+          <button className="picker-select-btn" onClick={() => onSelect(value.picker)}>선택</button>
         </div>
-
-        <div className="picker-wheel-wrapper">
-          <div className="picker-highlight" />
-          <ul className="picker-list">
-            {options.map((item) => (
-              <li
-                key={item}
-                className={`picker-item ${item === selected ? 'selected' : ''}`}
-                onClick={() => onSelect(item)}
-              >
-                {item}
-              </li>
+        <Picker value={value} onChange={handleChange} wheelMode="natural">
+          <Picker.Column name="picker">
+            {options.map((option) => (
+              <Picker.Item key={option} value={option}>
+                {({ selected }) => (
+                  <div style={{ color: selected ? '#007aff' : '#333', fontWeight: selected ? 'bold' : 'normal' }}>
+                    {option}
+                  </div>
+                )}
+              </Picker.Item>
             ))}
-          </ul>
-        </div>
+          </Picker.Column>
+        </Picker>
       </div>
     </div>
-  );
+  )
 }
 
 export default BottomPicker;

@@ -66,7 +66,14 @@ function Header({ user, onLogout }) {
         <>
           <button
             className="back-button"
-            onClick={() => navigate('/main')}
+            onClick={() => {
+              // if (location.pathname.startsWith('/main/mypage/')) {
+              //   navigate('/main/mypage');
+              // } else {
+              //   navigate('/main');
+              // }
+              navigate(-1);
+            }}
             aria-label="뒤로가기"
           >
             <img src={backIcon} alt="뒤로가기" />
