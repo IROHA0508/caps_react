@@ -1,4 +1,4 @@
-/* 기존 오버레이/버튼 스타일 유지 */
+/* 오버레이 */
 .bottom-picker-overlay {
   position: fixed;
   inset: 0;
@@ -9,6 +9,7 @@
   z-index: 1000;
 }
 
+/* Picker 컨테이너 */
 .bottom-picker-container {
   background-color: #fff;
   width: 100%;
@@ -17,8 +18,20 @@
   padding-top: 1rem;
   padding-bottom: 2rem;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+
+  /* 🔽 애니메이션 기본 상태 */
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+/* 🔼 애니메이션 보이기 상태 */
+.bottom-picker-container.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 상단 버튼 영역 */
 .picker-header {
   display: flex;
   justify-content: space-between;
@@ -36,8 +49,7 @@
   cursor: pointer;
 }
 
-
-/* react-mobile-picker 핵심 스타일 정의 */
+/* react-mobile-picker 기본 구조 */
 .picker-column {
   flex: 1;
   overflow: hidden;
@@ -66,6 +78,7 @@
   color: #007aff;
 }
 
+/* 선택된 영역 강조 라인 */
 .picker-highlight {
   position: absolute;
   top: 72px;

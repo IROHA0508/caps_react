@@ -1,25 +1,36 @@
-// component/BottomPicker/BottomPicker.js
-import React from 'react';
-import Picker  from 'react-mobile-picker';
+import React, { useEffect, useState } from 'react';
+import Picker from 'react-mobile-picker';
 import './BottomPicker.css';
 
 function BottomPicker({ options, selected, onSelect, onClose }) {
-  console.log('📥 [BottomPicker] props.options:', options);
-  console.log('📥 [BottomPicker] props.selected:', selected);
+  const [animate, setAnimate] = useState(false);
+  const value = { picker: selected };
 
+  useEffect(() => {
+    // 마운트 직후 애니메이션 적용
+    requestAnimationFrame(() => setAnimate(true));
+  }, []);
 
-  const value = { picker: selected }
+  const handleClose = () => {
+    // 사라지는 애니메이션 후 닫기
+    setAnimate(false);
+    setTimeout(() => {
+      onClose();
+    }, 300); // CSS transition 시간과 맞춰야 함
+  };
 
   const handleChange = (nextValue) => {
-    console.log('🔄 [BottomPicker] 선택 변경 →', nextValue)
-    onSelect(nextValue.picker)
-  }
-  
+    onSelect(nextValue.picker);
+  };
+
   return (
-    <div className="bottom-picker-overlay" onClick={onClose}>
-      <div className="bottom-picker-container" onClick={(e) => e.stopPropagation()}>
+    <div className="bottom-picker-overlay" onClick={handleClose}>
+      <div
+        className={`bottom-picker-container ${animate ? 'show' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="picker-header">
-          <button className="picker-close-btn" onClick={onClose}>취소</button>
+          <button className="picker-close-btn" onClick={handleClose}>취소</button>
           <button className="picker-select-btn" onClick={() => onSelect(value.picker)}>선택</button>
         </div>
         <Picker value={value} onChange={handleChange} wheelMode="natural">
@@ -37,7 +48,7 @@ function BottomPicker({ options, selected, onSelect, onClose }) {
         </Picker>
       </div>
     </div>
-  )
+  );
 }
 
 export default BottomPicker;
