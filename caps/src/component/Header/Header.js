@@ -8,7 +8,7 @@ import './Header.css';
 import menuIcon from '../../pictures/menuIcon.svg';
 import backIcon from '../../pictures/backIcon.svg';
 
-function Header({ user, onLogout }) {
+function Header({ user, serverUser, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -39,13 +39,13 @@ function Header({ user, onLogout }) {
   };
 
   return (
-    <div
-      className={`header-container ${isMain ? 'header-main' : 'header-sub'}`}
-    >
+    <div  className={`header-container ${isMain ? 'header-main' : 'header-sub'}`}>
       {isMain && user &&(
         <>
           <img src={user.picture} alt="프로필" className="header-profile" />
-          <span className="header-username">{user.name}님!</span>
+          <span className="header-username">
+            {(serverUser || user.name) + '님!'}
+          </span>
           <img
             src={menuIcon}
             alt="메뉴"

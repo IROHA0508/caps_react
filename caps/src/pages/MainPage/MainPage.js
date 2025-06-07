@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +16,8 @@ function MainPage() {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  const [serverUser, setServerUser] = useState(null); // ✅ 서버에서 받은 사용자 정보 상태
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,6 +32,45 @@ function MainPage() {
       navigate('/onboarding');
     }
   }, [user, navigate]);
+
+  // ✅ 서버에서 사용자 nickname 등 정보를 불러옴
+  useEffect(() => {
+    const fetchServerUser = async () => {
+      const token = localStorage.getItem('server_jwt_token');
+      if (!token) return;
+
+      try {
+        const response = await fetch(`https://${process.env.REACT_APP_IP_PORT}/users/me`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error('❌ 서버 사용자 정보 요청 실패:', response.status);
+          return;
+        }
+
+        const data = await response.json();
+        console.log('🙋 서버에서 받은 사용자 정보:', data);
+        // downloadJSON(data); // ✅ 받은 JSON을 다운로드
+
+        const nickname = data.data?.nickname;
+        console.log("🙋 서버 사용자에 저장된 닉네임:", nickname);
+
+        setServerUser(nickname);
+        localStorage.setItem('node_serverUser', JSON.stringify(nickname));
+        localStorage.getItem('node_serverUser'); // ✅ 서버 사용자 정보 저장
+      } catch (error) {
+        console.error('❌ 서버 사용자 정보 요청 중 오류:', error);
+      }
+    };
+
+    if (user) {
+      fetchServerUser();
+    }
+  }, [user]);
 
   const [calendarLinked, setCalendarLinked] = useState(false);
 
@@ -51,7 +91,6 @@ function MainPage() {
       const serverToken = localStorage.getItem("server_jwt_token");
       const today = new Date().toISOString().slice(0, 10);
 
-      
       // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
       // const lastExecuted = localStorage.getItem("last_health_sync");
 
@@ -84,13 +123,12 @@ function MainPage() {
 
         const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-        if(nodeData &&
+        if (nodeData &&
           nodeData.data &&
           Array.isArray(nodeData.data.biometrics) &&
-          nodeData.data.biometrics.length > 0)
-        {
+          nodeData.data.biometrics.length > 0) {
+
           const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-          // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -117,15 +155,12 @@ function MainPage() {
             localStorage.setItem("last_health_sync", today);
             console.log("📅 오늘의 데이터 전송 완료");
           }
-        } 
-        else {
+        } else {
           console.warn("❌ Node 서버에서 받은 데이터가 없습니다.");
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error("❌ 데이터 요청 중 오류:", error);
       }
-
     };
 
     if (user) {
@@ -134,24 +169,25 @@ function MainPage() {
   }, [user]);
 
 
-// const downloadJSON = (data, filename = 'health_data.json') => {
-//   const jsonStr = JSON.stringify(data, null, 2);
-//   const blob = new Blob([jsonStr], { type: 'application/json' });
-//   const url = URL.createObjectURL(blob);
+  const downloadJSON = (data, filename = 'user_info.json') => {
+    const jsonStr = JSON.stringify(data, null, 2); // 보기 좋은 들여쓰기
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
 
-//   const a = document.createElement('a');
-//   a.href = url;
-//   a.download = filename;
-//   a.click();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
 
-//   URL.revokeObjectURL(url);
-// };
+    URL.revokeObjectURL(url);
+  };
+
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="main-page-container">
-        {/* ✅ Header는 항상 렌더링되며 user를 props로 전달 */}
-        <Header user={user} onLogout={handleLogout} />
+        {/* ✅ Header는 항상 렌더링되며 user와 서버 유저 정보를 props로 전달 */}
+        <Header user={user} serverUser={serverUser} onLogout={handleLogout} />
 
         <div className="lia-wrapper">
           <div className="lia-text-box">
@@ -185,14 +221,11 @@ function MainPage() {
           onClose={() => setShowTalkOptions(false)}
         />
 
-
-
         {calendarLinked && (
           <div className="calendar-status-message">
             📅 Google 캘린더 연동이 완료되었습니다!
           </div>
         )}
-        
       </div>
     </GoogleOAuthProvider>
   );
