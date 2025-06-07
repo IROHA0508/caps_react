@@ -29,8 +29,8 @@ function ChatVoice() {
 
   // GPT 호출 (history 포함)
   const sendToGpt = useCallback(async (userMsg) => {
-    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    const res = await fetch(`http://localhost:5000/chat`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
