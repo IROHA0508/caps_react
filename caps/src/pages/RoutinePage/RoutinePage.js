@@ -30,8 +30,6 @@ function RoutinePage() {
         credentials: "include",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          // access_token: localStorage.getItem('google_access_token'),
-          // refresh_token: localStorage.getItem('google_refresh_token'),
           access_token: accessToken,
           refresh_token: refreshToken,
           timeMin: startDate.toISOString(),

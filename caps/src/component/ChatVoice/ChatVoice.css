@@ -1,0 +1,10 @@
+/* src/components/ChatVoice/ChatVoice.css */
+.chat-voice { text-align:center; padding:1rem; }
+.messages { max-height:300px; overflow-y:auto; margin-bottom:1rem; }
+.user       { text-align:right; margin:0.5rem; color:#000000; }
+.assistant  { text-align:left;  margin:0.5rem; color:#145061; }
+.voice-button {
+  padding:0.8rem 2rem; font-size:1.1rem;
+  background:#1B687D; color:#fff; border:none; border-radius:8px;
+  cursor:pointer;
+}

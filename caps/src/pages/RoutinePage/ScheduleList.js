@@ -78,9 +78,6 @@ function ScheduleList({ selectedDate, events, isLoading }) {
           일정을 등록하고 시간을 효율적으로 <br />
           관리해 보세요.
         </p>
-        {/* <button className="add-schedule-btn" onClick={() => alert('새 일정 버튼 눌림')}>
-          + 새 일정
-        </button> */}
       </div>
     );
   }
@@ -88,7 +85,7 @@ function ScheduleList({ selectedDate, events, isLoading }) {
   // 일정 항목 렌더링 부분만 수정
   return (
     <ul className="schedule-list">
-      {/* 🕐 하루 종일 일정 */}
+
       {allDayEvents.map((event) => {
         const color = event.color || '#33AAEE';
         return (

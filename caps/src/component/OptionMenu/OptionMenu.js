@@ -58,7 +58,6 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
 
         <button className="menu-item" onClick={() => {
           onSelect('routine'); // 클릭 시 선택 상태 갱신
-          // navigate('/main/routine');
           onClose();
           openAuthPopup(() => navigate('/main/routine'));
         }}>
