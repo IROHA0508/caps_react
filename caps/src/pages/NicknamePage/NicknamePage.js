@@ -42,6 +42,7 @@ function NicknamePage() {
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
+            autoFocus
           />
         </div>
         <div className="button-group">
