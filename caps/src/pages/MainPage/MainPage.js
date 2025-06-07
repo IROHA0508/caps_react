@@ -57,11 +57,15 @@ function MainPage() {
         // downloadJSON(data); // ✅ 받은 JSON을 다운로드
 
         const nickname = data.data?.nickname;
+        const gender = data.data?.gender;
+        const age = data.data?.age;
         console.log("🙋 서버 사용자에 저장된 닉네임:", nickname);
 
         setServerUser(nickname);
-        localStorage.setItem('node_serverUser', JSON.stringify(nickname));
-        localStorage.getItem('node_serverUser'); // ✅ 서버 사용자 정보 저장
+
+        localStorage.setItem('node_serverUser_nickname', JSON.stringify(nickname));
+        localStorage.setItem('node_serverUser_gender', JSON.stringify(gender))
+        localStorage.setItem('node_serverUser_age', JSON.stringify(age));
       } catch (error) {
         console.error('❌ 서버 사용자 정보 요청 중 오류:', error);
       }

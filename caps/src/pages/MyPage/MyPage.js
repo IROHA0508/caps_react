@@ -16,13 +16,23 @@ function MyPage() {
   // ✅ 사용자 정보 불러오기
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
+    const storedNickname = JSON.parse(localStorage.getItem('node_serverUser_nickname'));
+    const storedGender = JSON.parse(localStorage.getItem('node_serverUser_gender'));
+    const storedAge = JSON.parse(localStorage.getItem('node_serverUser_age'));
+
     if (userData) {
       setUser({
-        name: userData.name,
+        // ✅ nickname이 있으면 그것을 name으로 사용
+        name: storedNickname || userData.name,
         profileImage: userData.picture,
       });
     }
+
+    // ✅ 성별, 나이도 localStorage에 있으면 사용
+    if (storedGender) setGender(storedGender);
+    if (storedAge) setAge(storedAge);
   }, []);
+
 
   // ✅ Picker 렌더 타이밍 문제 해결용 함수
   const openPicker = (type) => {
