@@ -32,7 +32,7 @@ function MyPage() {
 
   // ✅ 선택 가능한 항목 정의
   const pickerOptions = useMemo(() => {
-    if (pickerType === 'gender') return ['여성', '남성', '둘 다 아님'];
+    if (pickerType === 'gender') return ['님성', '여성', '둘 다 아님'];
     if (pickerType === 'age') return Array.from({ length: 100 }, (_, i) => `${i + 1}`);
     return [];
   }, [pickerType]);
