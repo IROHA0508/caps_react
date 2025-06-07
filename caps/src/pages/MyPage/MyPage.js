@@ -13,27 +13,33 @@ function MyPage() {
   const [pickerType, setPickerType] = useState(null);
   const navigate = useNavigate();
 
-  // ✅ 사용자 정보 불러오기
+// ✅ 사용자 정보 불러오기
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
     const storedNickname = JSON.parse(localStorage.getItem('node_serverUser_nickname'));
-    const storedGender = JSON.parse(localStorage.getItem('node_serverUser_gender'));
+    const storedRawGender = JSON.parse(localStorage.getItem('node_serverUser_gender'));
     const storedAge = JSON.parse(localStorage.getItem('node_serverUser_age'));
 
     if (userData) {
       setUser({
-        // ✅ nickname이 있으면 그것을 name으로 사용
         name: storedNickname || userData.name,
         profileImage: userData.picture,
       });
     }
 
-    // ✅ 성별, 나이도 localStorage에 있으면 사용
-    if (storedGender) setGender(storedGender);
-    if (storedAge) setAge(storedAge);
+    if (storedRawGender) {
+      const storedGender =
+        storedRawGender === 'male' ? '남성'
+        : storedRawGender === 'female' ? '여성'
+        : storedRawGender;
+      setGender(storedGender);
+    }
+
+    if (storedAge) {
+      setAge(storedAge);
+    }
   }, []);
-
-
+  
   // ✅ Picker 렌더 타이밍 문제 해결용 함수
   const openPicker = (type) => {
     setPickerType(type);
@@ -42,7 +48,7 @@ function MyPage() {
 
   // ✅ 선택 가능한 항목 정의
   const pickerOptions = useMemo(() => {
-    if (pickerType === 'gender') return ['님성', '여성', '둘 다 아님'];
+    if (pickerType === 'gender') return ['남성', '여성', '둘 다 아님'];
     if (pickerType === 'age') return Array.from({ length: 100 }, (_, i) => `${i + 1}`);
     return [];
   }, [pickerType]);
@@ -59,12 +65,54 @@ function MyPage() {
     setPickerVisible(false);
   };
 
-  // ✅ 디버깅 로그 (선택)
-  useEffect(() => {
-    console.log('🛠️ [DEBUG] pickerType changed →', pickerType);
-    console.log('📦 [DEBUG] Picker Options:', pickerOptions);
-    console.log('📍 [DEBUG] Picker Selected:', pickerSelected);
-  }, [pickerType, pickerOptions, pickerSelected]);
+  // ✅ 서버에 사용자 정보 저장
+  const handleApply = async () => {
+    const token = localStorage.getItem('server_jwt_token');
+    if (!token) {
+      alert('서버 인증 토큰이 없습니다.');
+      return;
+    }
+
+    const payload = {
+      nickname: user.name,
+      gender:
+        gender === '남성' ? 'male'
+        : gender === '여성' ? 'female'
+        : gender === '-' ? null
+        : gender,
+      age: age === '-' ? null : parseInt(age),
+    };
+
+
+    try {
+      const res = await fetch(`https://${process.env.REACT_APP_IP_PORT}/users/me`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        console.error('❌ 사용자 정보 저장 실패:', res.status);
+        alert('서버 전송 실패');
+        return;
+      }
+
+      const result = await res.json();
+      console.log('✅ 사용자 정보 저장 성공:', result);
+      alert('변경 내용이 저장되었습니다');
+
+      // 저장 후 localStorage에도 반영
+      localStorage.setItem('node_serverUser_nickname', JSON.stringify(payload.nickname));
+      localStorage.setItem('node_serverUser_gender', JSON.stringify(payload.gender));
+      localStorage.setItem('node_serverUser_age', JSON.stringify(payload.age));
+    } catch (error) {
+      console.error('❌ 서버 요청 오류:', error);
+      alert('요청 중 오류가 발생했습니다.');
+    }
+  };
 
   if (!user) return <div>로딩 중...</div>;
 
@@ -98,6 +146,13 @@ function MyPage() {
             <span className="info-label">나이</span>
             <span className="info-value clickable">{age}</span>
           </div>
+        </div>
+
+        {/* ✅ 저장하기 버튼 */}
+        <div className="apply-button-wrapper">
+          <button className="button apply-button" onClick={handleApply}>
+            저장하기
+          </button>
         </div>
       </div>
 

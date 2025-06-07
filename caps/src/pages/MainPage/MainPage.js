@@ -57,8 +57,14 @@ function MainPage() {
         // downloadJSON(data); // ✅ 받은 JSON을 다운로드
 
         const nickname = data.data?.nickname;
-        const gender = data.data?.gender;
+        const genderRaw = data.data?.gender;
+        const gender =
+          genderRaw === 'male' ? '남성'
+          : genderRaw === 'female' ? '여성'
+          : genderRaw; 
         const age = data.data?.age;
+
+
         console.log("🙋 서버 사용자에 저장된 닉네임:", nickname);
 
         setServerUser(nickname);

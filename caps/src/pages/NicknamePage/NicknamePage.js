@@ -1,38 +1,53 @@
-// NicknamePage.js
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../component/Header/Header';
+import './NicknamePage.css';
 
 function NicknamePage() {
   const inputRef = useRef();
-  const [nickname, setNickname] = useState('');
   const navigate = useNavigate();
 
+  const [nickname, setNickname] = useState(() => {
+    try {
+      const stored = localStorage.getItem('node_serverUser_nickname');
+      return stored ? JSON.parse(stored) : '';
+    } catch {
+      return '';
+    }
+  });
+
   useEffect(() => {
-    // 자동 포커스
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, []);
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   const handleSubmit = () => {
-    // 로컬 또는 서버 저장 로직 추가 가능
-    localStorage.setItem('nickname', nickname);
-    navigate(-1); // 이전 페이지로
+    localStorage.setItem('node_serverUser_nickname', JSON.stringify(nickname));
+    navigate(-1);
   };
 
   return (
     <div className="nickname-page">
       <Header />
-      <h2>닉네임</h2>
-      <input
-        ref={inputRef}
-        type="text"
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value)}
-        placeholder="닉네임 입력"
-      />
-      <div className="button-group">
-        <button onClick={() => navigate(-1)}>취소</button>
-        <button onClick={handleSubmit}>완료</button>
+      <div className="nickname-label">닉네임</div>
+
+      <div className="nickname-content">
+        <div className="nickname-box">
+          <input
+            ref={inputRef}
+            className="nickname-input"
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+        </div>
+        <div className="button-group">
+          <button onClick={handleCancel}>취소</button>
+          <button onClick={handleSubmit}>완료</button>
+        </div>
       </div>
     </div>
   );
