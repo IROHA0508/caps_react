@@ -8,6 +8,7 @@ from auth import auth_bp
 from wake import wake_bp
 from health import health_bp
 from chat import chat_bp
+from chatlog import chatlog_bp
 
 app = Flask(__name__)
 # CORS(app)
@@ -24,6 +25,8 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(wake_bp)
 app.register_blueprint(health_bp)
 app.register_blueprint(chat_bp)
+app.register_blueprint(chatlog_bp)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

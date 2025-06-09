@@ -159,7 +159,7 @@ function MainPage() {
 
           if (feedback) {
             console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
-            localStorage.setItem("today_feedback", feedback);
+            localStorage.setItem("today__health_feedback", feedback);
 
             // ✅ 추천 저장 완료 후에 날짜 기록
             localStorage.setItem("last_health_sync", today);
@@ -167,6 +167,7 @@ function MainPage() {
           }
         } else {
           console.warn("❌ Node 서버에서 받은 데이터가 없습니다.");
+          localStorage.setItem("today__health_feedback", "건강 데이터 없음");
         }
       } catch (error) {
         console.error("❌ 데이터 요청 중 오류:", error);
@@ -179,18 +180,18 @@ function MainPage() {
   }, [user]);
 
 
-  const downloadJSON = (data, filename = 'user_info.json') => {
-    const jsonStr = JSON.stringify(data, null, 2); // 보기 좋은 들여쓰기
-    const blob = new Blob([jsonStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
+  // const downloadJSON = (data, filename = 'user_info.json') => {
+  //   const jsonStr = JSON.stringify(data, null, 2); // 보기 좋은 들여쓰기
+  //   const blob = new Blob([jsonStr], { type: 'application/json' });
+  //   const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = filename;
+  //   a.click();
 
-    URL.revokeObjectURL(url);
-  };
+  //   URL.revokeObjectURL(url);
+  // };
 
 
   return (
