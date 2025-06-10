@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from '../../component/Header/Header';
 // import VoiceRecognizer from '../../component/VoiceRecognizer/VoiceRecognizer';
 import ChatVoice from '../../component/ChatVoice/ChatVoice'
+import ModeSelect from '../../component/ModeSelect/ModeSelect';
+
 import './TestPage.css';
+
 
 function TestPage() {
   // const [latestResult, setLatestResult] = useState("");
 
-  const [setLatestResult] = useState("");
+  // const [setLatestResult] = useState("");
   return (
     <div className="test-page-container">
       <Header title="테스트 페이지" />
@@ -18,10 +21,7 @@ function TestPage() {
       </div> */}
       <p style={{ textAlign: 'center' }}>Web Speech API 대화 모드</p>
       <ChatVoice />
-
-      <p style={{ textAlign: 'center' }}>Google Cloud Speech-to-Text</p>
-
-`      {/* <ChatVoice_ver2 /> */}
+      {/* <ChatVoice_ver2 /> */}
     </div>
   );
 }

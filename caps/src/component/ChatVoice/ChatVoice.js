@@ -1,6 +1,8 @@
 // src/components/ChatVoice/ChatVoice.js
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './ChatVoice.css';
+import ModeSelect from '../ModeSelect/ModeSelect.js';          // ★ 추가
+import '../ModeSelect/ModeSelect.css';
 
 // 마크다운 제거
 function stripMarkdown(text) {
@@ -151,8 +153,26 @@ function ChatVoice() {
     return () => stopRecognition();
   }, [startRecognition, stopRecognition]);
 
+  // 버튼 클릭 시 “모드 n번을 선택함” 처리
+  const handleModeSelect = useCallback(async (mode) => {
+    // (1) 현재 듣기 중이면 멈추고
+    if (recognitionRef.current) {
+      stopRecognition();
+    }
+    // (2) 유저 메시지 추가
+    const userText = `모드 ${mode}번을 선택함`;
+    addMessage('user', userText);
+    // (3) GPT에 보내고
+    const reply = await sendToGpt(userText);
+    addMessage('assistant', reply);
+    // (4) TTS 후 다시 듣기 재시작
+    speak(reply, startRecognition);
+  }, [stopRecognition, addMessage, sendToGpt, speak, startRecognition]);
+
   return (
     <div className="chat-voice">
+
+
       <div className="messages">
         {messages.map((m, i) => (
           <div key={i} className={m.role}>
@@ -174,6 +194,10 @@ function ChatVoice() {
       >
         대화 종료 &amp; 리포트 생성
       </button>
+
+      {/* 모드 선택 버튼 그룹 */}
+      <p style={{ textAlign: 'center' }}>모드 선택</p>
+      <ModeSelect onSelect={handleModeSelect} />
     </div>
   );
 }

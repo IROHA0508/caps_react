@@ -1,0 +1,26 @@
+/* src/components/ChatVoice/ModeSelect.css */
+.mode-select {
+  display: flex;
+  justify-content: center;
+  gap: 16px;          /* 버튼 사이 간격 */
+  margin: 16px 0;     /* 위아래 여유 */
+}
+
+.mode-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #1B687D;  /* 버튼 색 */
+  color: #FFFFFF;             /* 숫자 색 */
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.mode-button:active {
+  transform: scale(0.9);
+}

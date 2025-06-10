@@ -8,7 +8,7 @@ from auth import auth_bp
 from wake import wake_bp
 from health import health_bp
 from chat import chat_bp
-from caps.backend.analyze_chatlog import chatlog_bp
+from analyze_chatlog import anaylze_chatlog_bp
 
 app = Flask(__name__)
 # CORS(app)
@@ -25,7 +25,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(wake_bp)
 app.register_blueprint(health_bp)
 app.register_blueprint(chat_bp)
-app.register_blueprint(chatlog_bp)
+app.register_blueprint(anaylze_chatlog_bp)
 
 
 if __name__ == '__main__':
