@@ -12,7 +12,7 @@ function ReportCard({ date, order, routineName, duration, reason, success, feedb
       <div className="card-section routine-section">
         <div className="routine-header">
           <strong className="routine-title">
-            리아추천 루틴 {order} : {routineName}
+            추천 루틴 {order} : {routineName}
           </strong>
           <span className="routine-duration">{duration}</span>
         </div>

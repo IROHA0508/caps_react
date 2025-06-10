@@ -32,7 +32,11 @@ html, body {
 
   position: absolute;
   bottom : -0.3rem;
+  width: 85%; 
+  left: 50%;            
+  transform: translateX(-50%); 
 }
+
 /* 슬라이드 영역 */
 .report-slider {
   display: flex;
