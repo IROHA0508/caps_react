@@ -6,7 +6,6 @@ from data import data_bp
 from calender import calender_bp
 from auth import auth_bp
 from wake import wake_bp
-from health import health_bp
 from chat import chat_bp
 from analyze_chatlog import anaylze_chatlog_bp
 
@@ -23,7 +22,6 @@ app.register_blueprint(data_bp)
 app.register_blueprint(calender_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(wake_bp)
-app.register_blueprint(health_bp)
 app.register_blueprint(chat_bp)
 app.register_blueprint(anaylze_chatlog_bp)
 

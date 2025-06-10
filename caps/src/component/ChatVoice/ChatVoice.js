@@ -14,6 +14,17 @@ function ChatVoice() {
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([]); // { role: 'user'|'assistant', content }
 
+  // 1) mode state: localStorage에서 꺼내오고 기본값은 1
+  const [mode, setMode] = useState(() => {
+    const saved = localStorage.getItem('lia_mode');
+    return saved ? Number(saved) : 1;
+  });
+
+  // 2) mode 변경 시 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem('lia_mode', mode);
+  }, [mode]);
+
   // 메시지 추가
   const addMessage = useCallback((role, content) => {
     setMessages(msgs => [...msgs, { role, content }]);
@@ -28,18 +39,26 @@ function ChatVoice() {
 
   // GPT 호출 (history 포함)
   const sendToGpt = useCallback(async (userMsg) => {
+    const serverToken   = localStorage.getItem("server_jwt_token");
+    const access_token = localStorage.getItem("google_access_token");
+    const refresh_token = localStorage.getItem("google_refresh_token");
+
     const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
     // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         history: messages,
-        message: userMsg
+        message: userMsg,
+        mode,
+        server_jwt_token: serverToken,
+        access_token,
+        refresh_token
       })
     });
     const { reply } = await res.json();
     return reply;
-  }, [messages]);
+  }, [messages, mode]);
 
   // TTS 재생 (중간 끊기 감지 + 인식 재시작)
   const speak = useCallback((rawText, onEnd) => {
@@ -137,7 +156,6 @@ function ChatVoice() {
         },
         body: JSON.stringify({
           history: messages,
-          health_feedback: localStorage.getItem('today__health_feedback')  // 오늘 생성된 피드백 전달
         })
       });
       // 필요 시 리포트 페이지로 이동:
@@ -159,6 +177,7 @@ function ChatVoice() {
     if (recognitionRef.current) {
       stopRecognition();
     }
+    setMode(mode);
     // (2) 유저 메시지 추가
     const userText = `모드 ${mode}번을 선택함`;
     addMessage('user', userText);
