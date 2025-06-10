@@ -10,7 +10,7 @@ NODE_SERVER_URL = os.getenv("REACT_APP_IP_PORT", "api.talktolia.org")
 
 def fetch_raw_health(days: int = 1, token: str = None) -> dict:
   print(f"📥 [fetch_raw_health...] days={days}, token={token}")
-  url = f"{NODE_SERVER_URL}/data"
+  url = f"https://{NODE_SERVER_URL}/data"
   headers = {}
   if token:
     headers["Authorization"] = f"Bearer {token}"
@@ -62,8 +62,9 @@ def decrypt_value(encrypted_base64: str) -> str:
 # 데이터 복호화 함수
 def decrypt_data(data: dict) -> dict:
     # ✅ 내부 data 필드에 접근
-    biometrics = data.get("data", {}).get("biometrics", [])
-
+    # biometrics = data.get("data", {}).get("biometrics", [])
+    biometrics = data.get("biometrics", [])
+    
     grouped = {
         "step": [],
         "heart_rate": [],
