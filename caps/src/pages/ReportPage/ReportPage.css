@@ -29,6 +29,16 @@ html, body {
   justify-content: center;
   gap: 1rem;
   /* padding: 1rem; */
+
+  position: absolute;
+  bottom : -0.3rem;
+}
+/* 슬라이드 영역 */
+.report-slider {
+  display: flex;
+  overflow-x: hidden; /* 터치 제어로만 넘김 */
+  padding: 1rem 0;
+  padding-top: 0;
 }
 
 .quote-img-wrapper {
@@ -52,13 +62,6 @@ html, body {
   text-align: left;
 }
 
-/* 슬라이드 영역 */
-.report-slider {
-  display: flex;
-  overflow-x: hidden; /* 터치 제어로만 넘김 */
-  padding: 1rem 0;
-  padding-top: 0;
-}
 
 .report-card-wrapper {
   flex: 0 0 100vw;
