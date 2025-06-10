@@ -43,8 +43,8 @@ function ChatVoice() {
     const access_token = localStorage.getItem("google_access_token");
     const refresh_token = localStorage.getItem("google_refresh_token");
 
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    // const res = await fetch(`http://localhost:5000/chat`, {
+    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

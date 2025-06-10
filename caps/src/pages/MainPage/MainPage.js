@@ -96,6 +96,78 @@ function MainPage() {
     }
   }, []);
 
+  // useEffect(() => {
+  //   const fetchAndForwardHealthData = async () => {
+  //     const serverToken = localStorage.getItem("server_jwt_token");
+  //     const today = new Date().toISOString().slice(0, 10);
+  //     const lastExecuted = localStorage.getItem("last_health_sync");
+
+  //     // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
+  //     // if (lastExecuted === today) {
+  //     //   console.log("📅 오늘 이미 건강 데이터를 전송했습니다.");
+  //     //   return;
+  //     // }
+
+  //     if (!serverToken) {
+  //       console.warn("❌ Google 토큰이 없습니다.");
+  //       return;
+  //     }
+
+  //     try {
+  //       const nodeRes = await fetch(`https://${process.env.REACT_APP_IP_PORT}/data?days=1`, {
+  //         method: "GET",
+  //         headers: {
+  //           Authorization: `Bearer ${serverToken}`,
+  //         },
+  //       });
+
+  //       if (!nodeRes.ok) {
+  //         console.error("❌ Node 서버 응답 실패:", nodeRes.status);
+  //         return;
+  //       }
+
+  //       const nodeData = await nodeRes.json();
+  //       console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
+
+  //       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  //       // const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+  //       const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           user_id: JSON.parse(localStorage.getItem("user"))?.sub,
+  //           data: nodeData,
+  //         }),
+  //       });
+
+  //       if (!flaskRes.ok) {
+  //         console.error("❌ Flask 서버 전송 실패:", flaskRes.status);
+  //         return;
+  //       }
+
+  //       const result = await flaskRes.json();
+  //       const feedback = result.feedback;
+
+  //       if (feedback) {
+  //         console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
+  //         localStorage.setItem("today_feedback", feedback);
+
+  //         // ✅ 추천 저장 완료 후에 날짜 기록
+  //         localStorage.setItem("last_health_sync", today);
+  //         console.log("📅 오늘의 데이터 전송 완료");
+  //       }
+  //     } catch (error) {
+  //       console.error("❌ 데이터 요청 중 오류:", error);
+  //     }
+  //   };
+
+  //   if (user) {
+  //     fetchAndForwardHealthData();
+  //   }
+  // }, [user]);
+
   // const downloadJSON = (data, filename = 'user_info.json') => {
   //   const jsonStr = JSON.stringify(data, null, 2); // 보기 좋은 들여쓰기
   //   const blob = new Blob([jsonStr], { type: 'application/json' });

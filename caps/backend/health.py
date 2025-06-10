@@ -9,11 +9,13 @@ import base64
 NODE_SERVER_URL = os.getenv("REACT_APP_IP_PORT", "api.talktolia.org")
 
 def fetch_raw_health(days: int = 1, token: str = None) -> dict:
+  print(f"📥 [fetch_raw_health...] days={days}, token={token}")
   url = f"{NODE_SERVER_URL}/data"
   headers = {}
   if token:
     headers["Authorization"] = f"Bearer {token}"
 
+  print(f"📥 [fetch_raw_health] 요청 URL: {url}, 헤더: {headers}")
   resp = requests.get(
     url,
     params={"days": days},
@@ -22,16 +24,20 @@ def fetch_raw_health(days: int = 1, token: str = None) -> dict:
   )
   resp.raise_for_status()
 
+  print(f"📥 [fetch_raw_health] 응답 상태: {resp.status_code}")
   return resp.json()
 
 def get_decrypted_health(days: int = 1, token: str = None) -> dict:
+  print(f"📥 [get_decrypted_health...] days={days}, token={token}")
   body = fetch_raw_health(days, token)
   raw_data = body.get("data")
 
+  print(f"📥 [get_decrypted_health] raw_data: {raw_data}")
   if not raw_data:
     raise ValueError("Node 서버 응답에 data 필드가 없습니다.")
   # decrypt_data는 health.py에 정의된 함수
   decrypted = decrypt_data(raw_data)
+  print(f"📥 [get_decrypted_health] decrypted: {decrypted}")
   return decrypted
 
 AES_KEY = b"MySecretKey12345"  # 그대로 사용

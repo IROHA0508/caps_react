@@ -27,8 +27,13 @@ def chat():
 
     if mode == 2:
         # 1) 헬스 정보
+        health_info = ""
+        print("모드 2 선택")
         try:
+            print("📥 [헬스 정보 로드 중...]")
             health_info = get_decrypted_health(days=1, token=jwt_tok)
+            print("📥 [헬스 정보 로드 완료]")
+            print(health_info)
             messages.append({
                 "role": "system",
                 "content": f"사용자 건강 데이터:\n{health_info}"
@@ -43,11 +48,19 @@ def chat():
         try:
             if access_tok and refresh_tok:
                 events = fetch_calendar_events(access_tok, refresh_tok, days=1)
-                # 이벤트를 문자열로 정리
-                evt_str = "\n".join([
+                # 디버그용으로 원본 리스트 찍기
+                print("📥 [캘린더 원본 이벤트]")
+                print(events)
+
+                # 사람이 읽기 좋은 문자열로 정리
+                evt_str = "\n".join(
                     f"- {e['start']}~{e['end']}: {e['summary']}"
                     for e in events
-                ]) or "일정이 없습니다."
+                ) or "일정이 없습니다."
+
+                # 디버그용으로 문자열 출력
+                print("📥 [캘린더 읽기용 이벤트]")
+                print(evt_str)
                 messages.append({
                     "role": "system",
                     "content": f"사용자 일정:\n{evt_str}"
@@ -70,6 +83,6 @@ def chat():
         messages=messages,
         temperature=0.2
     )
-    
+
     reply = resp.choices[0].message.content.strip()
     return jsonify({"reply": reply}), 200
