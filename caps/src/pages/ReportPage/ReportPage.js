@@ -4,14 +4,17 @@ import Header from '../../component/Header/Header';
 import testgif from '../../pictures/iroha.gif';
 import ReportCard from '../../component/ReportCard/ReportCard';
 
-import './ReportPage.css';
+import JMLP1 from '../../pictures/JMLP1.png'
+import JMLP2 from '../../pictures/JMLP2.png'
+import JMLP3 from '../../pictures/JMLP3.png'
+import JMLP4 from '../../pictures/JMLP4.png'
 
+import './ReportPage.css';
 function ReportPage() {
-  const [isGifLoaded, setIsGifLoaded] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [healthReports, setHealthReports] = useState([]);
   const sliderRef = useRef(null);
   const touchStartX = useRef(null);
-  const [healthReports, setHealthReports] = useState([]);
 
   const MIN_CARDS = 3;
   const paddedReports = [
@@ -24,7 +27,7 @@ function ReportPage() {
   ];
 
   useEffect(() => {
-    const feedback = localStorage.getItem("today_feedback");
+    const feedback = localStorage.getItem('today_feedback');
     if (feedback) {
       const today = new Date().toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -32,23 +35,34 @@ function ReportPage() {
         day: '2-digit',
         weekday: 'short',
       });
-
       setHealthReports([
         {
           date: today,
           activities: [],
-          feedback: feedback,
-        }
+          feedback,
+        },
       ]);
     }
   }, []);
 
+  // 랜덤 이미지 로직
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const imageList = [JMLP1, JMLP2, JMLP3, JMLP4];
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    const idx = Math.floor(Math.random() * imageList.length);
+    setSelectedImage(imageList[idx]);
+  }, []);
 
   const scrollToCard = (index) => {
     const slider = sliderRef.current;
     const card = slider?.children[index];
     if (slider && card) {
-      const left = card.offsetLeft - slider.offsetLeft - (slider.offsetWidth - card.offsetWidth) / 2;
+      const left =
+        card.offsetLeft -
+        slider.offsetLeft -
+        (slider.offsetWidth - card.offsetWidth) / 2;
       slider.scrollTo({ left, behavior: 'smooth' });
     }
   };
@@ -67,28 +81,41 @@ function ReportPage() {
       } else if (diff > 0 && currentIndex > 0) {
         setCurrentIndex((prev) => prev - 1);
       } else {
-        scrollToCard(currentIndex); // 스냅백
+        scrollToCard(currentIndex);
       }
     } else {
-      scrollToCard(currentIndex); // 스냅백
+      scrollToCard(currentIndex);
     }
   };
 
   useEffect(() => {
     scrollToCard(currentIndex);
-  }, [currentIndex, isGifLoaded]);
+  }, [currentIndex, isImageLoaded]);
 
   return (
     <div>
       <Header title="통계 리포트" />
-      <div className="report-page" style={{ visibility: isGifLoaded ? 'visible' : 'hidden' }}>
+      <div
+        className="report-page"
+        style={{ visibility: isImageLoaded ? 'visible' : 'hidden' }}
+      >
         <div className="report-header">
           <div className="quote-box">
             <div className="quote-text-wrapper">
-              <p className="quote">한번 실패하는게, 아무것도 안 하는 것보다 성장하는 거야<br />충분히 잘했어!</p>
+              <p className="quote">
+                한번 실패하는게, 아무것도 안 하는 것보다 성장하는 거야<br />충분히
+                잘했어!
+              </p>
             </div>
             <div className="quote-img-wrapper">
-              <img src={testgif} alt="테스트 gif" className="character-image" onLoad={() => setIsGifLoaded(true)} />
+              {selectedImage && (
+                <img
+                  src={selectedImage}
+                  alt="통계 리포트 캐릭터"
+                  className="character-image"
+                  onLoad={() => setIsImageLoaded(true)}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -111,11 +138,9 @@ function ReportPage() {
             <span key={i} className={`dot ${currentIndex === i ? 'active' : ''}`} />
           ))}
         </div>
-
       </div>
     </div>
   );
 }
 
 export default ReportPage;
-
