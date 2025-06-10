@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../../component/Header/Header';
-import VoiceRecognizer from '../../component/VoiceRecognizer/VoiceRecognizer';
+// import VoiceRecognizer from '../../component/VoiceRecognizer/VoiceRecognizer';
 import ChatVoice from '../../component/ChatVoice/ChatVoice'
-import ChatVoice_ver2 from '../../component/ChatVoice/ChatVoice_ver2';
 import './TestPage.css';
 
 function TestPage() {
@@ -13,10 +12,10 @@ function TestPage() {
     <div className="test-page-container">
       <Header title="테스트 페이지" />
 
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
+      {/* <div style={{ padding: '2rem', textAlign: 'center' }}>
         <VoiceRecognizer onResult={(text) => setLatestResult(text)} />
 
-      </div>
+      </div> */}
       <p style={{ textAlign: 'center' }}>Web Speech API 대화 모드</p>
       <ChatVoice />
 

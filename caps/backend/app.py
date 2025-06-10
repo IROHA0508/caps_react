@@ -8,7 +8,7 @@ from auth import auth_bp
 from wake import wake_bp
 from health import health_bp
 from chat import chat_bp
-from chatlog import chatlog_bp
+from caps.backend.analyze_chatlog import chatlog_bp
 
 app = Flask(__name__)
 # CORS(app)

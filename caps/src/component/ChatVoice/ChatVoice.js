@@ -126,7 +126,7 @@ function ChatVoice() {
   const endConversation = useCallback(async () => {
     try {
       const node_serverToken = localStorage.getItem("server_jwt_token");
-      await fetch(`${process.env.REACT_APP_BACKEND_URL}/chatlog`, {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/anaylze_chatlog_bp`, {
       // await fetch(`http://localhost:5000/chatlog`, {
         method: 'POST',
          headers: {

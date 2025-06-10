@@ -7,9 +7,9 @@ from datetime import datetime
 import requests
 
 from make_report import generate_report
-chatlog_bp = Blueprint('chatlog', __name__)
+anaylze_chatlog_bp = Blueprint('anaylze_chatlog_bp', __name__)
 
-@chatlog_bp.route('/chatlog', methods=['POST'])
+@anaylze_chatlog_bp.route('/chatlog', methods=['POST'])
 @cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"])
 def chatlog():
     payload = request.get_json() or {}
