@@ -2,17 +2,20 @@
 import React from 'react';
 import './ReportCard.css';
 
-function ReportCard({ date, order, routineName, reason, success, feedback }) {
+function ReportCard({ date, order, routineName, duration, reason, success, feedback }) {
   return (
     <div className="report-card">
       {/* 1. 날짜 */}
       <div className="card-date">{date}</div>
 
-      {/* 2. 추천 루틴 + 이유 */}
+      {/* 2. 추천 루틴 + 시간 + 이유 */}
       <div className="card-section routine-section">
-        <strong className="routine-title">
-          추천 루틴 {order} : {routineName}
-        </strong>
+        <div className="routine-header">
+          <strong className="routine-title">
+            리아추천 루틴 {order} : {routineName}
+          </strong>
+          <span className="routine-duration">{duration}</span>
+        </div>
         <p className="routine-reason">{reason}</p>
       </div>
 

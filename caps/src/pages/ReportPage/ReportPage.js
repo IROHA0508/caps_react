@@ -132,6 +132,7 @@ function ReportPage() {
                 date={data.date}
                 order={i + 1}
                 routineName={data.routineName}
+                duration={`${data.duration}분`}
                 reason={data.reason}
                 success={data.success}
                 feedback={data.feedback}

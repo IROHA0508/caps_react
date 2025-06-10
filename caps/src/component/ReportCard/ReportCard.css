@@ -36,22 +36,29 @@
   font-size: clamp(1rem, 2vw, 1.2rem);
   margin-bottom: 0.5rem;
 }
-.routine-reason {
-  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-  line-height: 1.5;
-}
 
-/* 3. 성공 여부 + 피드백 섹션 */
-.result-header {
+/* 루틴 헤더: 제목 왼쪽, 시간 오른쪽 */
+.routine-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
-.result-icon {
-  font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+
+.routine-title {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.2;
 }
-.feedback-text {
+
+.routine-duration {
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  /* background-color: #e0f7fa; */
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.3rem;
+}
+
+/* 이유 텍스트 */
+.routine-reason {
   font-size: clamp(0.85rem, 1.8vw, 0.95rem);
   line-height: 1.5;
 }
