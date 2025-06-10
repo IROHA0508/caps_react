@@ -128,7 +128,14 @@ function ReportPage() {
         >
           {paddedReports.map((data, i) => (
             <div key={i} className="report-card-wrapper">
-              <ReportCard {...data} />
+              <ReportCard
+                date={data.date}
+                order={i + 1}
+                routineName={data.routineName}
+                reason={data.reason}
+                success={data.success}
+                feedback={data.feedback}
+              />
             </div>
           ))}
         </div>

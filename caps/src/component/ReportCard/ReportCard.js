@@ -2,39 +2,28 @@
 import React from 'react';
 import './ReportCard.css';
 
-function ReportCard({ date, activities, feedback}) {
+function ReportCard({ date, order, routineName, reason, success, feedback }) {
   return (
     <div className="report-card">
-      <h3 className="card-date">{date}</h3>
+      {/* 1. 날짜 */}
+      <div className="card-date">{date}</div>
 
-      {activities.map((activity, index) => (
-        <div className="card-section" key={index}>
-          <div className="activity-header">
-            <strong>{activity.title}</strong>
-            <span>{activity.time}</span>
-          </div>
-          <p>{activity.comment}</p>
-          <span className="activity-icon">{activity.icon}</span>
+      {/* 2. 추천 루틴 + 이유 */}
+      <div className="card-section routine-section">
+        <strong className="routine-title">
+          추천 루틴 {order} : {routineName}
+        </strong>
+        <p className="routine-reason">{reason}</p>
+      </div>
+
+      {/* 3. 성공 여부 + 캐릭터 피드백 */}
+      <div className="card-section result-section">
+        <div className="result-header">
+          <strong>루틴 성공 여부</strong>
+          <span className="result-icon">{success ? '✓' : '✕'}</span>
         </div>
-      ))}
-
-      {feedback && (
-        <div className="card-section">
-          <strong>오늘의 추천 루틴</strong>
-          <div className="feedback-text">
-            {feedback
-              .replace(/\n{2,}/g, '\n') // ✅ 두 줄 이상 개행 → 한 줄로 통일
-              .split('\n')
-              .map((line, i) => (
-                <React.Fragment key={i}>
-                  {line.trim()}
-                  <br />
-                </React.Fragment>
-              ))}
-          </div>
-        </div>
-      )}
-
+        <p className="feedback-text">{feedback}</p>
+      </div>
     </div>
   );
 }

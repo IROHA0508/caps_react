@@ -1,51 +1,57 @@
-/* 반응형 카드 */
+/* src/component/ReportCard/ReportCard.css */
+
+/* 카드 전체 */
 .report-card {
   width: 100%;
-  height: 100%; 
-  min-height: 300px;
   max-width: 360px;
   background-color: #fff8dd;
   border-radius: 1rem;
   padding: clamp(1rem, 3vw, 1.5rem);
-  min-height: clamp(180px, 32vh, 280px);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-
-  
+  display: flex;
+  flex-direction: column;
 }
 
-
-/* 날짜 헤더 */
+/* 1. 날짜 */
 .card-date {
   font-weight: bold;
   font-size: clamp(1rem, 2.5vw, 1.2rem);
-  margin-bottom: 1rem;
   text-align: center;
   background-color: #d5edff;
   display: inline-block;
   padding: 0.3rem 0.8rem;
   border-radius: 0.4rem;
+  margin: 0 auto 1rem;
 }
 
-/* 활동 섹션 */
+/* 공통 section */
 .card-section {
   margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
 }
 
-.activity-header {
+/* 2. 추천 루틴 섹션 */
+.routine-title {
+  display: block;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin-bottom: 0.5rem;
+}
+.routine-reason {
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+  line-height: 1.5;
+}
+
+/* 3. 성공 여부 + 피드백 섹션 */
+.result-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
-
-.card-section p {
-  margin-top: 0.4rem;
+.result-icon {
+  font-size: clamp(1.2rem, 2.5vw, 1.4rem);
+}
+.feedback-text {
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
   line-height: 1.5;
-  font-size: clamp(0.85rem, 2vw, 0.95rem);
-}
-
-.activity-icon {
-  display: inline-block;
-  margin-top: 0.3rem;
-  font-size: clamp(1rem, 3vw, 1.2rem);
 }
