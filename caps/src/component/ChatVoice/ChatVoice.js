@@ -14,6 +14,10 @@ function ChatVoice() {
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([]); // { role: 'user'|'assistant', content }
 
+  const [healthInfo, setHealthInfo] = useState(null);
+  const [calendarEvents, setCalendarEvents] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
   // 1) mode state: localStorage에서 꺼내오고 기본값은 1
   const [mode, setMode] = useState(() => {
     const saved = localStorage.getItem('lia_mode');
@@ -23,7 +27,60 @@ function ChatVoice() {
   // 2) mode 변경 시 localStorage에 저장
   useEffect(() => {
     localStorage.setItem('lia_mode', mode);
+    console.log(`모드 ${mode}번을 선택함`);
   }, [mode]);
+
+  const loadMode2Data = async () => {
+    const serverToken   = localStorage.getItem("server_jwt_token");
+    const access_token  = localStorage.getItem("google_access_token");
+    const refresh_token = localStorage.getItem("google_refresh_token");
+
+    try {
+      // 헬스 데이터만 불러오는 엔드포인트
+      const res1 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/health/from-node`, {
+      // const res1 = await fetch(`http://localhost:5000/health/from-node`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          server_jwt_token: serverToken,  // Python 에서 기대하는 필드명
+          days: 3                         // 조회 기간
+        })
+      });
+
+      if (!res1.ok) {
+        console.error("❌ 헬스 API 응답 실패:", res1.status);
+        return;
+      }
+
+      // Python에서 {"status":"success","data":{...}} 형태로 리턴하므로
+      const { data: decryptedHealth } = await res1.json();
+      console.log("헬스 데이터 요청 응답:", res1.status)
+      console.log("🔐 복호화된 헬스 데이터:", decryptedHealth);
+      setHealthInfo(decryptedHealth);
+
+      // 캘린더 일정만 불러오는 엔드포인트
+      const res2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/calendar/events`, {
+      // const res2 = await fetch(`http://localhost:5000/calendar/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token, refresh_token })
+      });
+      const { events } = await res2.json();
+      console.log("일정 데이터 요청 응답:", res2.status)
+      console.log("일정 데이터:", events);
+      setCalendarEvents(events);
+
+      setDataLoaded(true);
+    } catch (err) {
+      console.error("모드2 데이터 로드 실패", err);
+    }
+  };
+
+  useEffect(() => {
+    if (mode === 2 && !dataLoaded) {
+      loadMode2Data();
+    }
+  }, [mode, dataLoaded]);
 
   // 메시지 추가
   const addMessage = useCallback((role, content) => {
@@ -39,26 +96,40 @@ function ChatVoice() {
 
   // GPT 호출 (history 포함)
   const sendToGpt = useCallback(async (userMsg) => {
-    const serverToken   = localStorage.getItem("server_jwt_token");
-    const access_token = localStorage.getItem("google_access_token");
-    const refresh_token = localStorage.getItem("google_refresh_token");
+    // const serverToken   = localStorage.getItem("server_jwt_token");
+    // const access_token = localStorage.getItem("google_access_token");
+    // const refresh_token = localStorage.getItem("google_refresh_token");
+
+
+    const payload = {
+      history: messages,
+      message: userMsg,
+      mode,
+      // 모드2일 때만, 이미 받아온 데이터를 함께 전송
+      ...(mode === 2 && dataLoaded ? {
+        health_info: healthInfo,
+        calendar_events: calendarEvents
+      } : {})
+    };
+
 
     const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
     // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        history: messages,
-        message: userMsg,
-        mode,
-        server_jwt_token: serverToken,
-        access_token,
-        refresh_token
-      })
+      body: JSON.stringify({payload})
+      // body: JSON.stringify({
+      //   history: messages,
+      //   message: userMsg,
+      //   mode,
+      //   server_jwt_token: serverToken,
+      //   access_token,
+      //   refresh_token
+      // })
     });
     const { reply } = await res.json();
     return reply;
-  }, [messages, mode]);
+  }, [messages, mode, dataLoaded, healthInfo, calendarEvents]);
 
   // TTS 재생 (중간 끊기 감지 + 인식 재시작)
   const speak = useCallback((rawText, onEnd) => {

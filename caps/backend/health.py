@@ -8,37 +8,50 @@ import base64
 
 NODE_SERVER_URL = os.getenv("REACT_APP_IP_PORT", "api.talktolia.org")
 
-def fetch_raw_health(days: int = 1, token: str = None) -> dict:
-  print(f"📥 [fetch_raw_health...] days={days}, token={token}")
-  url = f"https://{NODE_SERVER_URL}/data"
-  headers = {}
-  if token:
-    headers["Authorization"] = f"Bearer {token}"
+health_bp = Blueprint('health', __name__)
 
-  print(f"📥 [fetch_raw_health] 요청 URL: {url}, 헤더: {headers}")
-  resp = requests.get(
-    url,
-    params={"days": days},
-    headers=headers,
-    timeout=5
-  )
-  resp.raise_for_status()
+@health_bp.route('/health/from-node', methods=['POST', 'OPTIONS'])
+@cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"], supports_credentials=True) 
+def receive_node_data():
+    print(f"🔍 Method: {request.method}")
+    if request.method == 'OPTIONS':
+        return '', 200  # ✅ 명시적으로 OPTIONS 응답 처리 (보완적)
 
-  print(f"📥 [fetch_raw_health] 응답 상태: {resp.status_code}")
-  return resp.json()
+    data = request.get_json() or {}
+    token = data.get("server_jwt_token")
+    days  = data.get("days", 1)
 
-def get_decrypted_health(days: int = 1, token: str = None) -> dict:
-  print(f"📥 [get_decrypted_health...] days={days}, token={token}")
-  body = fetch_raw_health(days, token)
-  raw_data = body.get("data")
+    if not token:
+        return jsonify({"error": "Missing server_jwt_token"}), 400
+    
+    # 1) Node 서버에서 암호화된 헬스 데이터 가져오기
+    try:
+        node_res = requests.get(
+            f'https://{NODE_SERVER_URL}/data?days={days}',
+            headers={'Authorization': f'Bearer {token}'},
+            timeout=5
+        )
+        node_res.raise_for_status()
+    except Exception as e:
+        return jsonify({"error": f"Node 서버 요청 실패: {e}"}), 502
 
-  print(f"📥 [get_decrypted_health] raw_data: {raw_data}")
-  if not raw_data:
-    raise ValueError("Node 서버 응답에 data 필드가 없습니다.")
-  # decrypt_data는 health.py에 정의된 함수
-  decrypted = decrypt_data(raw_data)
-  print(f"📥 [get_decrypted_health] decrypted: {decrypted}")
-  return decrypted
+    encrypted_data = node_res.json()
+    print("📥 Node 서버로부터 받은 암호화 데이터:", encrypted_data)
+
+    # 2) AES-ECB 방식으로 복호화
+    try:
+      print("🔐 데이터 복호화 중...")
+      decrypted_data = decrypt_data(encrypted_data)
+      print("🔐 복호화 완료")
+    
+    except Exception as e:
+      return jsonify({"error": f"데이터 복호화 실패: {e}"}), 500
+
+    print_data(decrypted_data)
+
+    return jsonify({"status": "success", 
+                    "message": "데이터 수신 및 복호화 완료",
+                    "data": decrypted_data}), 200
 
 AES_KEY = b"MySecretKey12345"  # 그대로 사용
 IV = b'\x00' * 16  # CBC 모드용 IV
@@ -60,10 +73,10 @@ def decrypt_value(encrypted_base64: str) -> str:
 
 
 # 데이터 복호화 함수
-def decrypt_data(data: dict) -> dict:
+def decrypt_data(response: dict) -> dict:
     # ✅ 내부 data 필드에 접근
     # biometrics = data.get("data", {}).get("biometrics", [])
-    biometrics = data.get("biometrics", [])
+    biometrics = response.get("data", {}).get("biometrics", [])
     
     grouped = {
         "step": [],
@@ -178,3 +191,36 @@ dummy_data = {
     }
   ]
 }
+
+
+# def fetch_raw_health(days: int = 1, token: str = None) -> dict:
+#   print(f"📥 [fetch_raw_health...] days={days}, token={token}")
+#   url = f"https://{NODE_SERVER_URL}/data"
+#   headers = {}
+#   if token:
+#     headers["Authorization"] = f"Bearer {token}"
+
+#   print(f"📥 [fetch_raw_health] 요청 URL: {url}, 헤더: {headers}")
+#   resp = requests.get(
+#     url,
+#     params={"days": days},
+#     headers=headers,
+#     timeout=5
+#   )
+#   resp.raise_for_status()
+
+#   print(f"📥 [fetch_raw_health] 응답 상태: {resp.status_code}")
+#   return resp.json()
+
+# def get_decrypted_health(days: int = 1, token: str = None) -> dict:
+#   print(f"📥 [get_decrypted_health...] days={days}, token={token}")
+#   body = fetch_raw_health(days, token)
+#   raw_data = body.get("data")
+
+#   print(f"📥 [get_decrypted_health] raw_data: {raw_data}")
+#   if not raw_data:
+#     raise ValueError("Node 서버 응답에 data 필드가 없습니다.")
+#   # decrypt_data는 health.py에 정의된 함수
+#   decrypted = decrypt_data(raw_data)
+#   print(f"📥 [get_decrypted_health] decrypted: {decrypted}")
+#   return decrypted

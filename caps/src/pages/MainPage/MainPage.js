@@ -10,6 +10,10 @@ import './MainPage.css';
 function MainPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
 
+  // Chatvoice에서 사용할 mode 초기화
+  localStorage.setItem('lia_mode', 1);
+  console.log(`MainPage: 모드 1번으로 초기화`);
+  
   // ✅ user를 초기 렌더링 시 localStorage에서 바로 불러옴
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
