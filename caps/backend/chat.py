@@ -5,6 +5,7 @@ import os, openai
 from lia_chat_prompt import LIA_PROMPT
 
 openai.api_key = os.getenv("API_KEY")  
+
 chat_bp = Blueprint("chat", __name__)  
 
 @chat_bp.route("/chat", methods=["POST"])  
@@ -93,8 +94,11 @@ def chat():
 
     messages.append({"role": "user", "content": user_msg})
 
+    finetuning_model = os.getenv("OPENAI_FINETUNED_MODEL")
+
     resp = openai.chat.completions.create(
-        model="gpt-4o",
+        # model="gpt-4o"
+        model=finetuning_model,
         messages=messages,
         temperature=0.2
     )
