@@ -103,22 +103,23 @@ function ChatVoice() {
   }, []);
 
   // GPT 호출 (history 포함)
-  const sendToGpt = useCallback(async (historyList, userMsg) => {
+  const sendToGpt = useCallback(async (historyList, userMsg, overrideMode = null) => {
     // // ① UI 상의 현재 모든 메시지 + 방금 온 userMsg 까지 합쳐서
     // const historyForPayload = [
     //   ...messages,
     //   { role: 'user', content: userMsg }
     // ];
 
+    const currentMode = overrideMode !== null ? overrideMode : mode;
+
     const payload = {
       history: historyList,
-      // history: historyForPayload,
       message: userMsg,
-      mode
+      mode: currentMode
     };
 
     // 모드2일 때만, 이미 받아온 데이터를 함께 전송
-    if (mode === 2) {
+    if (currentMode  === 2) {
       if (healthInfo != null) {
         payload.health_info = healthInfo;
       }
@@ -272,15 +273,15 @@ function ChatVoice() {
   }, [startRecognition, stopRecognition]);
 
   // 버튼 클릭 시 “모드 n번을 선택함” 처리
-  const handleModeSelect = useCallback(async (mode) => {
+  const handleModeSelect = useCallback(async (selectedMode) => {
     // (1) 현재 듣기 중이면 멈추고
     if (recognitionRef.current) {
       stopRecognition();
     }
-    setMode(mode);
+    setMode(selectedMode);
 
     // (2) 유저 메시지 추가
-    const userText = `모드 ${mode}번을 선택함`;
+    const userText = `모드 ${selectedMode}번을 선택함`;
     // addMessage('user', userText);
 
     // // (3) GPT에 보내고
@@ -288,14 +289,14 @@ function ChatVoice() {
     // addMessage('assistant', reply);
 
     // 버튼일 때도 동일 패턴: 전체 히스토리 계산 → sendToGpt 호출
-    const historyAfterMode = [...messages, { role: 'user', content: userText }];
+    const historyAfterMode = [...messagesRef.current, { role: 'user', content: userText }];
     setMessages(historyAfterMode);
-    const reply = await sendToGpt(historyAfterMode, userText);
+    const reply = await sendToGpt(historyAfterMode, userText, selectedMode);
     setMessages(prev => [...historyAfterMode, { role: 'assistant', content: reply }]);
 
     // (4) TTS 후 다시 듣기 재시작
     speak(reply, startRecognition);
-  }, [stopRecognition, addMessage, sendToGpt, speak, startRecognition]);
+  }, [stopRecognition, sendToGpt, speak, startRecognition]);
 
   return (
     <div className="chat-voice">

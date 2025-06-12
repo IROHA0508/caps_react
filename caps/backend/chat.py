@@ -20,7 +20,7 @@ def chat():
     events_in = payload.get("calendar_events")
 
     print(f"Data received: {data}")
-    print("----- 대화 히스토리 시작 -----")
+    print("\n----- 대화 히스토리 시작 -----")
     if history:
         for msg in history:
             role = msg.get("role","").lower()
