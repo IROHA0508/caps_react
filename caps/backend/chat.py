@@ -19,12 +19,26 @@ def chat():
     health_in = payload.get("health_info")
     events_in = payload.get("calendar_events")
 
+    print(f"Data received: {data}")
+    print("----- 대화 히스토리 시작 -----")
+    if history:
+        for msg in history:
+            role = msg.get("role","").lower()
+            label = "LIA" if role=="assistant" else role.upper()
+            print(f"[{label}] {msg.get('content')}")
+    else:
+        print("대화 히스토리가 없습니다.")
+    print("----- 대화 히스토리 끝 -----\n")
+
+    print(f"전달 받은 건강 정보: {health_in}")
+    print(f"전달 받은 캘린더 정보: {events_in}")
+
     if not user_msg:
         return jsonify({"error": "No message provided"}), 400
     # access_tok = data.get("access_token")
     # refresh_tok = data.get("refresh_token")
 
-    messages = [{"role": "system", "content": LIA_PROMPT}] + data.get("history", [])
+    messages = [{"role": "system", "content": LIA_PROMPT}] + history
 
     if mode == 2:
         if health_in is not None:
