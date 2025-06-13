@@ -208,13 +208,12 @@ function MainPage() {
                 LIA와 이야기하기
               </button>
 
-              {/* ⬇️ 테스트 페이지로 이동하는 버튼 추가 */}
-              <button
+              {/* <button
                 className="button test-button"
                 onClick={() => navigate("/test")}
               >
                 테스트 페이지로 이동
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
