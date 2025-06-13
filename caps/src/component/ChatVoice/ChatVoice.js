@@ -305,7 +305,11 @@ function ChatVoice() {
       // fetch('http://localhost:5000/make_reportcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ history: mode2History })
+        body: JSON.stringify({ 
+          history: mode2History,
+          health_info: health,
+          calendar_events: events
+        })
       })
       .then(res => {
         if (!res.ok) console.error('리포트 생성 실패:', res.status);
