@@ -32,10 +32,13 @@ function ChatVoice() {
   });
   
   const prevModeRef = useRef(mode);
+
   // 2) mode 변경 시 localStorage에 저장
   useEffect(() => {
     localStorage.setItem('lia_mode', mode);
     console.log(`모드 ${mode}번을 선택함`);
+    console.log("현재 모드:", mode);
+    console.log("이전 모드:", prevModeRef.current);
     prevModeRef.current = mode;
   }, [mode]);
 
@@ -68,7 +71,6 @@ function ChatVoice() {
         return;
       }
 
-      // Python에서 {"status":"success","data":{...}} 형태로 리턴하므로
       const { data: decryptedHealth } = await res1.json();
       console.log("헬스 데이터 요청 응답:", res1.status)
       console.log("🔐 복호화된 헬스 데이터:", decryptedHealth);
@@ -115,23 +117,16 @@ function ChatVoice() {
   }, []);
 
   // GPT 호출 (history 포함)
-  const sendToGpt = useCallback(async (historyList, userMsg) => {
-    // // ① UI 상의 현재 모든 메시지 + 방금 온 userMsg 까지 합쳐서
-    // const historyForPayload = [
-    //   ...messages,
-    //   { role: 'user', content: userMsg }
-    // ];
-
-    // const currentMode = overrideMode !== null ? overrideMode : mode;
+  const sendToGpt = useCallback(async (historyList, userMsg, overrideMode) => {
+    const usedMode = overrideMode !== undefined ? overrideMode : mode;
 
     const payload = {
       history: historyList,
       message: userMsg,
-      mode
+      mode: usedMode 
     };
 
     console.log('👉 보내는 payload의 mode:', payload.mode);
-    // 모드2일 때만, 이미 받아온 데이터를 함께 전송
     if (mode  === 2) {
       if (healthInfo != null) {
         payload.health_info = healthInfo;
@@ -148,14 +143,6 @@ function ChatVoice() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-      // body: JSON.stringify({
-      //   history: messages,
-      //   message: userMsg,
-      //   mode,
-      //   server_jwt_token: serverToken,
-      //   access_token,
-      //   refresh_token
-      // })
     });
 
     const { reply, emotion } = await res.json();
@@ -237,18 +224,9 @@ function ChatVoice() {
       if (best.confidence < 0.85 || text.length < 3) return;
 
       rec.stop();
-      // addMessage('user', text);
-      // const reply = await sendToGpt(text);
-      // addMessage('assistant', reply);
-
-      // ① UI와 payload용 히스토리 생성
-      // const newHistory = [...messages, { role: 'user', content: text }];
       const newHistory = [...messagesRef.current, { role: 'user', content: text }];
       setMessages(newHistory);
-      // ② 전체 히스토리 + 메시지를 sendToGpt에 넘겨줌
       const {reply} = await sendToGpt(newHistory, text);
-      // ③ 리아 응답을 한 번만 반영
-      // setMessages(prev => [...newHistory, { role: 'assistant', content: reply }]);
 
       const withReply = [...newHistory, { role: 'assistant', content: reply }];
       setMessages(withReply);
@@ -259,7 +237,6 @@ function ChatVoice() {
     recognitionRef.current = rec;
     rec.start();
   }, [sendToGpt, speak, stopRecognition]);
-  // }, [addMessage, sendToGpt, speak]);
 
   // 대화 종료 시 서버에 로그 전송
   const endConversation = useCallback(async () => {
@@ -298,6 +275,7 @@ function ChatVoice() {
       stopRecognition();
     }
     setMode(selectedMode);
+    localStorage.setItem('lia_mode', selectedMode);
 
     // (3) 모드2에서 벗어나는 경우, mode2 히스토리만 백엔드로 전송 (비동기)
     if (prevMode === 2 && selectedMode !== 2) {
@@ -333,7 +311,7 @@ function ChatVoice() {
     const historyAfterMode = [...messagesRef.current, { role: 'user', content: userText }];
     setMessages(historyAfterMode);
 
-    const {reply} = await sendToGpt(historyAfterMode, userText);
+    const {reply} = await sendToGpt(historyAfterMode, userText, selectedMode);
     setMessages(prev => [...historyAfterMode, { role: 'assistant', content: reply }]);
 
     // (4) TTS 후 다시 듣기 재시작
