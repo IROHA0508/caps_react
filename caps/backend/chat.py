@@ -120,3 +120,37 @@ def chat():
 
     reply = resp.choices[0].message.content.strip()
     return jsonify({"reply": reply}), 200
+
+@chat_bp.route("/analyze-emotion", methods=["POST"])
+@cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"])
+def analyze_emotion():
+    data = request.get_json() or {}
+    message = data.get("message", "").strip()
+    
+    if not message:
+        return jsonify({"error": "No message provided"}), 400
+
+    # 감정 분석을 위한 프롬프트
+    emotion_prompt = f"""다음 메시지의 감정을 분석하여 다음 중 하나로 분류해주세요: anger, dance, cheering, joy, surprise
+    메시지: {message}
+    감정:"""
+
+    messages = [
+        {"role": "system", "content": "You are an emotion analysis system. Respond with only one of these emotions: anger, dance, cheering, joy, surprise"},
+        {"role": "user", "content": emotion_prompt}
+    ]
+
+    resp = openai.chat.completions.create(
+        model=os.getenv("OPENAI_FINETUNED_MODEL"),
+        messages=messages,
+        temperature=0.1
+    )
+
+    emotion = resp.choices[0].message.content.strip().lower()
+    
+    # 응답이 예상된 감정 중 하나인지 확인
+    valid_emotions = ["anger", "dance", "cheering", "joy", "surprise"]
+    if emotion not in valid_emotions:
+        emotion = "joy"  # 기본값으로 joy 설정
+    
+    return jsonify({"emotion": emotion}), 200

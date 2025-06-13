@@ -164,6 +164,35 @@ function HologramPage() {
     sendMessageToUnity('SetEmotion', 'surprise');
   };
 
+  // 감정 분석 함수 추가
+  const analyzeEmotion = async (message) => {
+    try {
+      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/analyze-emotion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        throw new Error('감정 분석 실패');
+      }
+
+      const data = await response.json();
+      return data.emotion;
+    } catch (error) {
+      console.error('감정 분석 중 오류:', error);
+      return 'joy'; // 오류 발생 시 기본값
+    }
+  };
+
+  // ChatVoice로부터 메시지를 받아 처리하는 함수
+  const handleChatMessage = async (message) => {
+    const emotion = await analyzeEmotion(message);
+    sendMessageToUnity('SetEmotion', emotion);
+  };
+
   return (
     <div className="hologram-page">
       <Header user={user} onLogout={handleLogout} />
@@ -211,7 +240,7 @@ function HologramPage() {
           </button>
         </div>
         <div className="chat-voice-container">
-          <ChatVoice />
+          <ChatVoice onMessage={handleChatMessage} />
         </div>
       </div>
     </div>
