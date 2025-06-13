@@ -167,7 +167,7 @@ function HologramPage() {
   // 감정 분석 함수 추가
   const analyzeEmotion = async (message) => {
     try {
-      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/analyze-emotion', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/analyze-emotion`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,9 +188,32 @@ function HologramPage() {
   };
 
   // ChatVoice로부터 메시지를 받아 처리하는 함수
-  const handleChatMessage = async (message) => {
-    const emotion = await analyzeEmotion(message);
-    sendMessageToUnity('SetEmotion', emotion);
+  const handleChatMessage = async () => {
+    const message = localStorage.getItem('lia_emotion');
+    console.log('message', message);
+    if (!message) return;
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/analyze-emotion`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        throw new Error('감정 분석 실패');
+      }
+
+      const data = await response.json();
+      const emotion = data.emotion;
+      console.log('분석된 감정:', emotion);
+      sendMessageToUnity('SetEmotion', emotion);
+    } catch (error) {
+      console.error('감정 분석 중 오류:', error);
+      sendMessageToUnity('SetEmotion', 'joy'); // 오류 발생 시 기본값
+    }
   };
 
   return (
