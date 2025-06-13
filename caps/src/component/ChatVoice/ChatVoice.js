@@ -42,7 +42,7 @@ function ChatVoice() {
     prevModeRef.current = mode;
   }, [mode]);
 
-  async function loadMode2Data() {
+  const loadMode2Data = useCallback(async () => {
     const serverToken   = localStorage.getItem("server_jwt_token");
     const access_token  = localStorage.getItem("google_access_token");
     const refresh_token = localStorage.getItem("google_refresh_token");
@@ -112,17 +112,6 @@ function ChatVoice() {
     // setDataLoaded(true);
 
     return { health, events };
-  };
-
-  // useEffect(() => {
-  //   if (mode === 2 && !dataLoaded) {
-  //     loadMode2Data();
-  //   }
-  // }, [mode, dataLoaded]);
-
-  // 메시지 추가
-  const addMessage = useCallback((role, content) => {
-    setMessages(msgs => [...msgs, { role, content }]);
   }, []);
 
   // 음성 인식 중단
@@ -252,7 +241,7 @@ function ChatVoice() {
 
     recognitionRef.current = rec;
     rec.start();
-  }, [sendToGpt, speak, stopRecognition]);
+  }, [sendToGpt, speak]);
 
   // 대화 종료 시 서버에 로그 전송
   const endConversation = useCallback(async () => {
@@ -349,7 +338,7 @@ function ChatVoice() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const {reply, emotion} = await res.json();
+    const {reply} = await res.json();
 
     setMessages(prev => [...historyAfterMode, { role: 'assistant', content: reply }]);
 
