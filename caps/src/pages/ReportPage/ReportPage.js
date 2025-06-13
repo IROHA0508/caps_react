@@ -142,7 +142,7 @@ function ReportPage() {
                 date={dayjs(report.created_at).format('YYYY-MM-DD')}
                 order={i + 1}
                 routineName={report.recommended_routine}
-                duration={`${report.duration}분`}
+                duration={`${report.duration}`}
                 reason={report.reason}
                 success={report.success}
                 feedback={report.feedback}
