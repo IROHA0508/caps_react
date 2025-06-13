@@ -1,7 +1,7 @@
 // src/components/ChatVoice/ChatVoice.js
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './ChatVoice.css';
-import ModeSelect from '../ModeSelect/ModeSelect.js';          // ★ 추가
+import ModeSelect from '../ModeSelect/ModeSelect.js';          
 import '../ModeSelect/ModeSelect.css';
 import dayjs from 'dayjs';
 
@@ -17,7 +17,6 @@ function ChatVoice() {
 
   const [healthInfo, setHealthInfo] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState(null);
-  // const [dataLoaded, setDataLoaded] = useState(false);
 
   // messages의 최신 값을 저장할 ref
   const messagesRef = useRef(messages);
@@ -301,26 +300,49 @@ function ChatVoice() {
       const mode2History = hist.slice(start);
 
       console.log('모드2 히스토리:', mode2History);
-      fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`, {
-      // fetch('http://localhost:5000/make_reportcard', {
+
+    try{
+      // const reportRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`), {
+      const reportRes = await fetch('http://localhost:5000/make_reportcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          history: mode2History,
-          health_info: health,
-          calendar_events: events
-        })
-      })
-      .then(res => {
-        if (!res.ok) console.error('리포트 생성 실패:', res.status);
-        return res.json();
-      })
-      .then(reportJson => {
+          body: JSON.stringify({
+            history: messagesRef.current,
+            health_info: health,
+            calendar_events: events,
+          }),
+        }
+      );
+      if (!reportRes.ok) {
+        console.error('리포트 생성 실패:', reportRes.status);
+      } else {
+        const reportJson = await reportRes.json();
         console.log('ReportCard JSON:', reportJson);
-        // 필요 시 상태로 저장하거나 화면에 표시
-      })
-      .catch(err => console.error(err));
+
+        // (3-2) Node 서버로 생성된 리포트 전송
+        const nodeServerUrl = process.env.REACT_APP_IP_PORT;
+        const nodeServerToken = localStorage.getItem('server_jwt_token');
+        const nodeRes = await fetch(
+          `https://${nodeServerUrl}/reports`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${nodeServerToken}`,
+            },
+            body: JSON.stringify(reportJson),
+          }
+        );
+        if (!nodeRes.ok) {
+          console.error('리포트 카드 전송 실패:', nodeRes.status);
+        } else {
+          console.log('리포트 카드 전송 성공');
+        }
+      }
+    } catch (err) {
+      console.error('리포트 처리 중 예외 발생:', err);
     }
+  }
 
     // (2) 유저 메시지 추가
     const userText = `모드 ${selectedMode}번을 선택함`;
@@ -336,8 +358,8 @@ function ChatVoice() {
       ...(selectedMode === 2 && { health_info: health, calendar_events: events })
     };
 
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    // const res = await fetch(`http://localhost:5000/chat`, {
+    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
