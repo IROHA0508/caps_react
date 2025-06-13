@@ -19,7 +19,8 @@ def chat():
     health_in = payload.get("health_info")
     events_in = payload.get("calendar_events")
 
-    print(f"Data received: {data}")
+    # print(f"Data received: {data}")
+    print(f"\n선택된 모드: {mode}\n")
     print("\n----- 대화 히스토리 시작 -----")
     if history:
         for msg in history:
@@ -30,8 +31,8 @@ def chat():
         print("대화 히스토리가 없습니다.")
     print("----- 대화 히스토리 끝 -----\n")
 
-    print(f"전달 받은 건강 정보: {health_in}")
-    print(f"전달 받은 캘린더 정보: {events_in}")
+    print(f"\n전달 받은 건강 정보: {health_in}\n")
+    print(f"\n전달 받은 캘린더 정보: {events_in}\n")
 
     if not user_msg:
         return jsonify({"error": "No message provided"}), 400

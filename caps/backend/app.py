@@ -9,6 +9,7 @@ from wake import wake_bp
 from chat import chat_bp
 from analyze_chatlog import anaylze_chatlog_bp
 from health import health_bp
+from make_reportcard import make_reportcardbp
 
 app = Flask(__name__)
 # CORS(app)
@@ -26,7 +27,7 @@ app.register_blueprint(wake_bp)
 app.register_blueprint(chat_bp)
 app.register_blueprint(anaylze_chatlog_bp)
 app.register_blueprint(health_bp)
-
+app.register_blueprint(make_reportcardbp)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
