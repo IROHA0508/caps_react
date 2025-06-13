@@ -17,7 +17,7 @@ function ChatVoice() {
 
   const [healthInfo, setHealthInfo] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
+  // const [dataLoaded, setDataLoaded] = useState(false);
 
   // messages의 최신 값을 저장할 ref
   const messagesRef = useRef(messages);
@@ -42,11 +42,15 @@ function ChatVoice() {
     prevModeRef.current = mode;
   }, [mode]);
 
-  const loadMode2Data = async () => {
+  async function loadMode2Data() {
     const serverToken   = localStorage.getItem("server_jwt_token");
     const access_token  = localStorage.getItem("google_access_token");
     const refresh_token = localStorage.getItem("google_refresh_token");
 
+    // 결과 담을 변수
+    let health = "";
+    let events = [];
+    
     // 현재 날짜 기준으로 이번 달의 시작과 끝 날짜 계산
     const now = dayjs();
     const startOfMonth = now.startOf('month').toDate();
@@ -66,16 +70,21 @@ function ChatVoice() {
         })
       });
 
-      if (!res1.ok) {
-        console.error("❌ 헬스 API 응답 실패:", res1.status);
-        return;
+      console.log("헬스 API 응답:", res1.status);
+      if (res1.ok) {
+        const { data: decryptedHealth } = await res1.json();
+        console.log("🔐 복호화된 헬스 데이터:", decryptedHealth);
+        health = decryptedHealth ?? "";
+        setHealthInfo(health);
+      } else {
+        console.error("❌ 헬스 API 오류:", res1.status);
       }
+    } catch (e) {
+      console.error("💥 헬스 로드 실패:", e);
+      health = "";
+    }
 
-      const { data: decryptedHealth } = await res1.json();
-      console.log("헬스 데이터 요청 응답:", res1.status)
-      console.log("🔐 복호화된 헬스 데이터:", decryptedHealth);
-      setHealthInfo(decryptedHealth);
-
+    try{
       // 캘린더 일정만 불러오는 엔드포인트
       const res2 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/calendar/events`, {
       // const res2 = await fetch(`http://localhost:5000/calendar/events`, {
@@ -86,23 +95,30 @@ function ChatVoice() {
           timeMin: startOfMonth.toISOString(),
           timeMax: endOfMonth.toISOString() })
       });
-      const { events } = await res2.json();
-
-      console.log("일정 데이터 요청 응답:", res2.status)
-      console.log("일정 데이터:", events);
-      setCalendarEvents(events);
-
-      setDataLoaded(true);
-    } catch (err) {
-      console.error("모드2 데이터 로드 실패", err);
+      console.log("캘린더 API 응답:", res2.status);
+      if (res2.ok) {
+        const { events: returnedEvents } = await res2.json();
+        console.log("일정 데이터:", returnedEvents);
+        events = returnedEvents ?? [];
+        setCalendarEvents(events);
+      } else {
+        console.error("❌ 캘린더 API 오류:", res2.status);
+      }
+    } catch (e) {
+      console.error("💥 캘린더 로드 실패:", e);
+      events = [];
     }
+
+    // setDataLoaded(true);
+
+    return { health, events };
   };
 
-  useEffect(() => {
-    if (mode === 2 && !dataLoaded) {
-      loadMode2Data();
-    }
-  }, [mode, dataLoaded]);
+  // useEffect(() => {
+  //   if (mode === 2 && !dataLoaded) {
+  //     loadMode2Data();
+  //   }
+  // }, [mode, dataLoaded]);
 
   // 메시지 추가
   const addMessage = useCallback((role, content) => {
@@ -117,7 +133,7 @@ function ChatVoice() {
   }, []);
 
   // GPT 호출 (history 포함)
-  const sendToGpt = useCallback(async (historyList, userMsg, overrideMode) => {
+  const sendToGpt = useCallback(async (historyList, userMsg, overrideMode, overrideHealth, overrideEvents) => {
     const usedMode = overrideMode !== undefined ? overrideMode : mode;
 
     const payload = {
@@ -127,19 +143,19 @@ function ChatVoice() {
     };
 
     console.log('👉 보내는 payload의 mode:', payload.mode);
-    if (mode  === 2) {
+    if (usedMode  === 2) {
       if (healthInfo != null) {
-        payload.health_info = healthInfo;
+        payload.health_info     = overrideHealth ?? healthInfo ?? "";
       }
       if (calendarEvents != null) {
-        payload.calendar_events = calendarEvents;
+        payload.calendar_events = overrideEvents ?? calendarEvents ?? [];
       }
     }
 
     console.log('👉 보내는 payload.history:', historyList);
 
-    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    const res = await fetch(`http://localhost:5000/chat`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -277,6 +293,15 @@ function ChatVoice() {
     setMode(selectedMode);
     localStorage.setItem('lia_mode', selectedMode);
 
+    // (2) 모드 2 전용: 데이터 로드
+    let health = "";
+    let events = [];
+    if (selectedMode === 2) {
+      const data = await loadMode2Data();
+      health = data.health;
+      events = data.events;
+    }
+
     // (3) 모드2에서 벗어나는 경우, mode2 히스토리만 백엔드로 전송 (비동기)
     if (prevMode === 2 && selectedMode !== 2) {
       const hist = messagesRef.current;
@@ -287,8 +312,8 @@ function ChatVoice() {
       const mode2History = hist.slice(start);
 
       console.log('모드2 히스토리:', mode2History);
-      // fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`, {
-      fetch('http://localhost:5000/make_reportcard', {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`, {
+      // fetch('http://localhost:5000/make_reportcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ history: mode2History })
@@ -311,12 +336,26 @@ function ChatVoice() {
     const historyAfterMode = [...messagesRef.current, { role: 'user', content: userText }];
     setMessages(historyAfterMode);
 
-    const {reply} = await sendToGpt(historyAfterMode, userText, selectedMode);
+    const payload = {
+      history: historyAfterMode,
+      message: userText,
+      mode: selectedMode,
+      ...(selectedMode === 2 && { health_info: health, calendar_events: events })
+    };
+
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const {reply, emotion} = await res.json();
+
     setMessages(prev => [...historyAfterMode, { role: 'assistant', content: reply }]);
 
     // (4) TTS 후 다시 듣기 재시작
     speak(reply, startRecognition);
-  }, [stopRecognition, sendToGpt, speak, startRecognition]);
+  }, [stopRecognition, loadMode2Data, speak, startRecognition]);
 
   return (
     <div className="chat-voice">
