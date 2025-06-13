@@ -142,8 +142,8 @@ function ChatVoice() {
 
     console.log('👉 보내는 payload.history:', historyList);
 
-    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    const res = await fetch(`http://localhost:5000/chat`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -156,6 +156,7 @@ function ChatVoice() {
       //   refresh_token
       // })
     });
+
     const { reply } = await res.json();
     return reply
   }, [mode, healthInfo, calendarEvents]);
