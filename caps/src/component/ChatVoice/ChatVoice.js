@@ -10,7 +10,7 @@ function stripMarkdown(text) {
   return text.replace(/\*\*(.*?)\*\*/g, '$1');
 }
 
-function ChatVoice() {
+function ChatVoice({ onMessage }) {
   const recognitionRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([]); // { role: 'user'|'assistant', content }
@@ -152,6 +152,7 @@ function ChatVoice() {
     const { reply, emotion } = await res.json();
     console.log('GPT 응답:', emotion);
     localStorage.setItem('lia_emotion', emotion);
+    onMessage();
     return { reply, emotion };
   }, [mode, healthInfo, calendarEvents]);
 
@@ -302,8 +303,8 @@ function ChatVoice() {
       console.log('모드2 히스토리:', mode2History);
 
     try{
-      // const reportRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`), {
-      const reportRes = await fetch('http://localhost:5000/make_reportcard', {
+      const reportRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`, {
+      // const reportRes = await fetch('http://localhost:5000/make_reportcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -358,8 +359,8 @@ function ChatVoice() {
       ...(selectedMode === 2 && { health_info: health, calendar_events: events })
     };
 
-    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    const res = await fetch(`http://localhost:5000/chat`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -374,13 +375,13 @@ function ChatVoice() {
 
   return (
     <div className="chat-voice">
-      <div className="messages">
+      {/* <div className="messages">
         {messages.map((m, i) => (
           <div key={i} className={m.role}>
             {m.content}
           </div>
         ))}
-      </div>
+      </div> */}
 
       <button
         className="voice-button"
@@ -389,12 +390,12 @@ function ChatVoice() {
         {isListening ? '⏹ 일시정지' : '🎤 대화 시작'}
       </button>
 
-      <button
+      {/* <button
         className="end-button"
         onClick={endConversation}
       >
         대화 종료 &amp; 리포트 생성
-      </button>
+      </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
       <p style={{ textAlign: 'center' }}>모드 선택</p>
