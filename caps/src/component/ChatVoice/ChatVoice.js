@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './ChatVoice.css';
 import ModeSelect from '../ModeSelect/ModeSelect.js';          // ★ 추가
 import '../ModeSelect/ModeSelect.css';
+import dayjs from 'dayjs';
 
 // 마크다운 제거
 function stripMarkdown(text) {
@@ -43,6 +44,13 @@ function ChatVoice() {
     const access_token  = localStorage.getItem("google_access_token");
     const refresh_token = localStorage.getItem("google_refresh_token");
 
+    // 현재 날짜 기준으로 이번 달의 시작과 끝 날짜 계산
+    const now = dayjs();
+    const startOfMonth = now.startOf('month').toDate();
+    const endOfMonth = now.endOf('month').toDate();
+
+    console.log("timeMin:", startOfMonth.toISOString());
+    console.log("timeMax:", endOfMonth.toISOString());
     try {
       // 헬스 데이터만 불러오는 엔드포인트
       const res1 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/health/from-node`, {
@@ -71,9 +79,13 @@ function ChatVoice() {
       // const res2 = await fetch(`http://localhost:5000/calendar/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ access_token, refresh_token })
+        body: JSON.stringify({ access_token, 
+          refresh_token,
+          timeMin: startOfMonth.toISOString(),
+          timeMax: endOfMonth.toISOString() })
       });
       const { events } = await res2.json();
+
       console.log("일정 데이터 요청 응답:", res2.status)
       console.log("일정 데이터:", events);
       setCalendarEvents(events);
@@ -130,8 +142,8 @@ function ChatVoice() {
 
     console.log('👉 보내는 payload.history:', historyList);
 
-    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    // const res = await fetch(`http://localhost:5000/chat`, {
+    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
