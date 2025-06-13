@@ -158,8 +158,10 @@ function ChatVoice() {
       // })
     });
 
-    const { reply } = await res.json();
-    return reply
+    const { reply, emotion } = await res.json();
+    console.log('GPT 응답:', emotion);
+    localStorage.setItem('lia_emotion', emotion);
+    return { reply, emotion };
   }, [mode, healthInfo, calendarEvents]);
 
   // TTS 재생 (중간 끊기 감지 + 인식 재시작)
@@ -244,7 +246,7 @@ function ChatVoice() {
       const newHistory = [...messagesRef.current, { role: 'user', content: text }];
       setMessages(newHistory);
       // ② 전체 히스토리 + 메시지를 sendToGpt에 넘겨줌
-      const reply = await sendToGpt(newHistory, text);
+      const {reply} = await sendToGpt(newHistory, text);
       // ③ 리아 응답을 한 번만 반영
       // setMessages(prev => [...newHistory, { role: 'assistant', content: reply }]);
 
@@ -256,7 +258,8 @@ function ChatVoice() {
 
     recognitionRef.current = rec;
     rec.start();
-  }, [addMessage, sendToGpt, speak]);
+  }, [sendToGpt, speak, stopRecognition]);
+  // }, [addMessage, sendToGpt, speak]);
 
   // 대화 종료 시 서버에 로그 전송
   const endConversation = useCallback(async () => {
@@ -330,7 +333,7 @@ function ChatVoice() {
     const historyAfterMode = [...messagesRef.current, { role: 'user', content: userText }];
     setMessages(historyAfterMode);
 
-    const reply = await sendToGpt(historyAfterMode, userText);
+    const {reply} = await sendToGpt(historyAfterMode, userText);
     setMessages(prev => [...historyAfterMode, { role: 'assistant', content: reply }]);
 
     // (4) TTS 후 다시 듣기 재시작

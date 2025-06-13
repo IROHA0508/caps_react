@@ -119,7 +119,12 @@ def chat():
     )
 
     reply = resp.choices[0].message.content.strip()
-    return jsonify({"reply": reply}), 200
+    emotion = analyze_emotion(reply) 
+    
+    return jsonify({
+        "reply": reply,
+        "emotion": emotion
+    }), 200
 
 @chat_bp.route("/analyze-emotion", methods=["POST"])
 @cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"])
@@ -154,3 +159,7 @@ def analyze_emotion():
         emotion = "joy"  # 기본값으로 joy 설정
     
     return jsonify({"emotion": emotion}), 200
+
+
+def analyze_emotion(reply):
+    return (reply + "으아아악")
