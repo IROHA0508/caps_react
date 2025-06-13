@@ -88,10 +88,13 @@ function HologramPage() {
                   // 로딩 진행률 표시
                   console.log(`Unity 로딩 진행률: ${progress * 100}%`);
                   if (progress === 1) {
+                    console.log('Unity 로딩 완료, isUnityLoaded를 true로 설정');
                     setIsUnityLoaded(true);
                   }
                 }
               );
+              console.log('Unity 인스턴스 생성 완료:', window.unityInstance);
+              setIsUnityLoaded(true); // 인스턴스 생성 직후에도 true로 설정
             } catch (error) {
               console.error('Unity 인스턴스 생성 중 오류:', error);
             }
@@ -189,32 +192,38 @@ function HologramPage() {
 
   // ChatVoice로부터 메시지를 받아 처리하는 함수
   const handleChatMessage = async () => {
-    const message = localStorage.getItem('lia_emotion');
-    console.log('message', message);
-    if (!message) return;
+    const emotion = localStorage.getItem('lia_emotion');
+    if (!emotion) return;
 
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/analyze-emotion`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-      });
+    console.log('handleChatMessage 감정 분석 결과:', emotion);
+    console.log('Unity 로딩 상태:', isUnityLoaded);
+    console.log('Unity 인스턴스:', window.unityInstance);
 
-      if (!response.ok) {
-        throw new Error('감정 분석 실패');
-      }
-
-      const data = await response.json();
-      const emotion = data.emotion;
-      console.log('분석된 감정:', emotion);
+    // Unity 인스턴스가 있으면 바로 전송
+    if (window.unityInstance) {
       sendMessageToUnity('SetEmotion', emotion);
-    } catch (error) {
-      console.error('감정 분석 중 오류:', error);
-      sendMessageToUnity('SetEmotion', 'joy'); // 오류 발생 시 기본값
+    } else {
+      console.warn('Unity instance not found');
     }
   };
+
+  // localStorage 변경 감지를 위한 useEffect
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'lia_emotion') {
+        const emotion = e.newValue;
+        if (emotion) {
+          console.log('감정 분석 결과:', emotion);
+          sendMessageToUnity('SetEmotion', emotion);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <div className="hologram-page">
