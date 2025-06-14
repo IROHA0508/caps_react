@@ -8,6 +8,7 @@ import './HologramPage.css';
 function HologramPage() {
   const [user, setUser] = useState(null);
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
+  const [isChatVoiceVisible, setIsChatVoiceVisible] = useState(false);
   const unityContainerRef = useRef(null);
 
   useEffect(() => {
@@ -241,12 +242,16 @@ function HologramPage() {
 
     // 컴포넌트 언마운트 시 전체 화면 모드 비활성화
     return () => {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
+      if (document.fullscreenElement || 
+          document.webkitFullscreenElement || 
+          document.msFullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
       }
     };
   }, []);
@@ -254,15 +259,20 @@ function HologramPage() {
   return (
     <div className="hologram-page">
       <Header user={user} onLogout={handleLogout} />
-      <div className="unity-container">
+      <div 
+        className="unity-container"
+        onClick={() => setIsChatVoiceVisible(!isChatVoiceVisible)}
+      >
         <canvas 
           ref={unityContainerRef} 
           id="unity-canvas"
           className="unity-canvas"
         />
-        <div className="chat-voice-container">
-          <ChatVoice onMessage={handleChatMessage} />
-        </div>
+        {isChatVoiceVisible && (
+          <div className="chat-voice-container">
+            <ChatVoice onMessage={handleChatMessage} />
+          </div>
+        )}
       </div>
     </div>
   );
