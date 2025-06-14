@@ -139,10 +139,26 @@ function HologramPage() {
 
   // Unity로 메시지 전송하는 함수
   const sendMessageToUnity = (functionName, parameter) => {
-    if (window.unityInstance && isUnityLoaded) {
-      window.unityInstance.SendMessage('Mishe', 'SetEmotion', parameter);
+    console.log('sendMessageToUnity called with:', { functionName, parameter });
+    console.log('Unity instance status:', {
+      unityInstance: window.unityInstance,
+      isUnityLoaded,
+      hasModule: window.unityInstance?.Module ? true : false
+    });
+
+    if (window.unityInstance && window.unityInstance.Module) {
+      try {
+        window.unityInstance.SendMessage('Mishe', functionName, parameter);
+        console.log('Message sent successfully to Unity');
+      } catch (error) {
+        console.error('Error sending message to Unity:', error);
+      }
     } else {
-      console.warn('Unity is not fully loaded yet');
+      console.warn('Unity is not fully loaded yet. Current state:', {
+        unityInstance: window.unityInstance,
+        isUnityLoaded,
+        hasModule: window.unityInstance?.Module ? true : false
+      });
     }
   };
 
@@ -152,15 +168,39 @@ function HologramPage() {
     if (!emotion) return;
 
     console.log('handleChatMessage 감정 분석 결과:', emotion);
-    console.log('Unity 로딩 상태:', isUnityLoaded);
-    console.log('Unity 인스턴스:', window.unityInstance);
+    console.log('Unity 상태 체크:', {
+      isUnityLoaded,
+      unityInstance: window.unityInstance,
+      hasModule: window.unityInstance?.Module ? true : false
+    });
 
-    // Unity 인스턴스가 있으면 바로 전송
-    if (window.unityInstance) {
-      sendMessageToUnity('SetEmotion', emotion);
-    } else {
-      console.warn('Unity instance not found');
+    // Unity가 완전히 로드될 때까지 최대 3번 재시도
+    let retryCount = 0;
+    const maxRetries = 3;
+    const retryDelay = 1000; // 1초
+
+    const trySendMessage = () => {
+      if (window.unityInstance && window.unityInstance.Module) {
+        sendMessageToUnity('SetEmotion', emotion);
+        return true;
+      }
+      return false;
+    };
+
+    // 즉시 시도
+    if (trySendMessage()) return;
+
+    // 재시도 로직
+    while (retryCount < maxRetries) {
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+      console.log(`Unity 메시지 전송 재시도 ${retryCount + 1}/${maxRetries}`);
+      
+      if (trySendMessage()) return;
+      
+      retryCount++;
     }
+
+    console.error('Unity 메시지 전송 실패: 최대 재시도 횟수 초과');
   };
 
   // localStorage 변경 감지를 위한 useEffect
