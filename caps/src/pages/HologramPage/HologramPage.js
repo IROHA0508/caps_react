@@ -221,6 +221,36 @@ function HologramPage() {
     };
   }, []);
 
+  useEffect(() => {
+    // 전체 화면 모드 활성화
+    const enterFullScreen = async () => {
+      try {
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          await document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+          await document.documentElement.msRequestFullscreen();
+        }
+      } catch (error) {
+        console.log('전체 화면 모드 활성화 실패:', error);
+      }
+    };
+
+    enterFullScreen();
+
+    // 컴포넌트 언마운트 시 전체 화면 모드 비활성화
+    return () => {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    };
+  }, []);
+
   return (
     <div className="hologram-page">
       <Header user={user} onLogout={handleLogout} />

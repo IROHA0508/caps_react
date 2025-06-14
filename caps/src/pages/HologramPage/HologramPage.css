@@ -1,8 +1,48 @@
 .hologram-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: -webkit-fill-available; /* iOS Safari를 위한 설정 */
   background-color: #000;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  height: -webkit-fill-available; /* iOS Safari를 위한 설정 */
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+/* Webkit 브라우저(Chrome, Safari 등)의 스크롤바 숨김 */
+.hologram-page::-webkit-scrollbar {
+  display: none;
+}
+
+/* HologramPage에서만 적용되는 헤더 스타일 */
+.hologram-page .header-container,
+.hologram-page .header-sub {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #000 !important;
+}
+
+.hologram-page .header-container *,
+.hologram-page .header-sub * {
+  color: #fff !important;
+}
+
+/* 헤더의 모든 border 요소를 검은색으로 변경 */
+.hologram-page .header-container,
+.hologram-page .header-sub,
+.hologram-page .header-container *,
+.hologram-page .header-sub * {
+  border-color: #000 !important;
 }
 
 .unity-container {
@@ -91,7 +131,7 @@
 
 .chat-voice-container {
   position: absolute;
-  bottom: 80px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
