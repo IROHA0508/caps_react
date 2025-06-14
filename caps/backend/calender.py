@@ -3,7 +3,7 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.exceptions import RefreshError
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import requests
 from flask_cors import cross_origin
@@ -189,16 +189,13 @@ def parse_korean_time(korean_str):
 
 
 def parse_duration(duration_str):
-    """
-    예: "30분" → timedelta(minutes=30), "1시간" → timedelta(hours=1)
-    """
     import re
     if not duration_str:
-        return datetime.timedelta(minutes=30)
+        return timedelta(minutes=30)
     
     h_match = re.search(r"(\d+)시간", duration_str)
     m_match = re.search(r"(\d+)분", duration_str)
 
     hours = int(h_match.group(1)) if h_match else 0
     minutes = int(m_match.group(1)) if m_match else 0
-    return datetime.timedelta(hours=hours, minutes=minutes)
+    return timedelta(hours=hours, minutes=minutes)
