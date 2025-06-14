@@ -262,6 +262,7 @@ function HologramPage() {
       <div 
         className="unity-container"
         onClick={() => setIsChatVoiceVisible(!isChatVoiceVisible)}
+        onTouchStart={() => setIsChatVoiceVisible(!isChatVoiceVisible)}
       >
         <canvas 
           ref={unityContainerRef} 
