@@ -82,7 +82,6 @@ def analyze_emotion(reply):
     emotion_prompt = f"""다음 메시지의 감정을 분석하여 다음 중 하나로 분류해주세요: anger, dance, cheering, joy, surprise, Nothing associated
     메시지: {reply}
     감정:"""
-
     messages = [
         {"role": "system", "content": "You are an emotion analysis system. Respond with only one of these emotions: anger, dance, cheering, joy, surprise"},
         {"role": "user", "content": emotion_prompt}
