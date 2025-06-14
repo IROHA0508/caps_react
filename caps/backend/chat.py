@@ -79,7 +79,7 @@ def chat():
 
 
 def analyze_emotion(reply):
-    emotion_prompt = f"""다음 메시지의 감정을 분석하여 다음 중 하나로 분류해주세요: anger, dance, cheering, joy, surprise
+    emotion_prompt = f"""다음 메시지의 감정을 분석하여 다음 중 하나로 분류해주세요: anger, dance, cheering, joy, surprise, Nothing associated
     메시지: {reply}
     감정:"""
 
@@ -95,11 +95,7 @@ def analyze_emotion(reply):
     )
 
     emotion = resp.choices[0].message.content.strip().lower()
-    
-    # 응답이 예상된 감정 중 하나인지 확인
-    valid_emotions = ["anger", "dance", "cheering", "joy", "surprise"]
-    if emotion not in valid_emotions:
-        emotion = "joy"  # 기본값으로 joy 설정
+
     
     print(f"분석된 감정: {emotion}")
     return emotion
