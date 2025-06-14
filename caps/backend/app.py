@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 from api import api_bp
 from data import data_bp
-from calender import calender_bp
+from calender import calendar_bp
 from auth import auth_bp
 from wake import wake_bp
 from chat import chat_bp
@@ -21,7 +21,7 @@ CORS(app,
 
 app.register_blueprint(api_bp)
 app.register_blueprint(data_bp) 
-app.register_blueprint(calender_bp)
+app.register_blueprint(calendar_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(wake_bp)
 app.register_blueprint(chat_bp)

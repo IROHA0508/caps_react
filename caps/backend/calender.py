@@ -11,12 +11,12 @@ from flask_cors import cross_origin
 
 load_dotenv()
 
-calender_bp = Blueprint('calender', __name__)
+calendar_bp = Blueprint('calender', __name__)
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
-@calender_bp.route('/calendar/events', methods=['POST', 'OPTIONS'])
+@calendar_bp.route('/calendar/events', methods=['POST', 'OPTIONS'])
 @cross_origin(origins=["https://www.talktolia.org"], supports_credentials=True)
 def get_calendar_events():
     try:
@@ -96,3 +96,102 @@ def get_calendar_events():
     except Exception as e:
         print("❌ 예외 발생:", str(e))
         return jsonify({'error': str(e)}), 500
+
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+import dateutil.parser
+import pytz
+
+@calendar_bp.route('/calendar/insert', methods=['POST', 'OPTIONS'])
+@cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"], supports_credentials=True)
+def add_routine_to_calendar():
+    try:
+        data = request.get_json()
+        access_token = data.get("access_token")
+        refresh_token = data.get("refresh_token")
+        report = data.get("report")
+
+        print("📥 calendar/insert 요청 수신")
+        print("access_token:", access_token)
+        print("refresh_token:", refresh_token)
+        print("report:", report)
+        
+        if not (access_token and report):
+            return jsonify({"error": "Missing access_token or report data"}), 400
+
+        # Google 인증 설정
+        creds = Credentials(
+            token=access_token,
+            refresh_token=refresh_token,
+            token_uri='https://oauth2.googleapis.com/token',
+            client_id=os.getenv("GOOGLE_CLIENT_ID"),
+            client_secret=os.getenv("GOOGLE_CLIENT_SECRET")
+        )
+
+        service = build("calendar", "v3", credentials=creds)
+
+        # start_time: "오전 7시" 같은 표현 → datetime 변환 필요
+        now = datetime.datetime.now(pytz.timezone('Asia/Seoul'))
+        hour_min = parse_korean_time(report.get("start_time"))  # 예: "07:00"
+        start_dt = now.replace(hour=hour_min[0], minute=hour_min[1], second=0, microsecond=0)
+
+        # duration: "30분", "1시간" → timedelta 변환
+        duration = parse_duration(report.get("duration"))
+        end_dt = start_dt + duration
+
+        event_body = {
+            "summary": report.get("recommended_routine", "추천 루틴"),
+            "description": report.get("reason", ""),
+            "start": {
+                "dateTime": start_dt.isoformat(),
+                "timeZone": "Asia/Seoul"
+            },
+            "end": {
+                "dateTime": end_dt.isoformat(),
+                "timeZone": "Asia/Seoul"
+            }
+        }
+
+        event = service.events().insert(calendarId='primary', body=event_body).execute()
+        return jsonify({"status": "success", "event": event})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# --- 보조 함수 ---
+def parse_korean_time(korean_str):
+    """
+    예: "오전 7시" → (7, 0), "오후 3시 30분" → (15, 30)
+    """
+    import re
+    match = re.search(r"(오전|오후)\s*(\d{1,2})시\s*(\d{1,2})?분?", korean_str or "")
+    if not match:
+        return (9, 0)  # 기본값: 오전 9시
+
+    period, hour, minute = match.groups()
+    hour = int(hour)
+    minute = int(minute or 0)
+
+    if period == "오후" and hour != 12:
+        hour += 12
+    if period == "오전" and hour == 12:
+        hour = 0
+
+    return (hour, minute)
+
+
+def parse_duration(duration_str):
+    """
+    예: "30분" → timedelta(minutes=30), "1시간" → timedelta(hours=1)
+    """
+    import re
+    if not duration_str:
+        return datetime.timedelta(minutes=30)
+    
+    h_match = re.search(r"(\d+)시간", duration_str)
+    m_match = re.search(r"(\d+)분", duration_str)
+
+    hours = int(h_match.group(1)) if h_match else 0
+    minutes = int(m_match.group(1)) if m_match else 0
+    return datetime.timedelta(hours=hours, minutes=minutes)

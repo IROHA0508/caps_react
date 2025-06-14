@@ -10,13 +10,27 @@ function stripMarkdown(text) {
   return text.replace(/\*\*(.*?)\*\*/g, '$1');
 }
 
-function ChatVoice({ onMessage }) {
+function ChatVoice({ onMessage = () => {} }) {
   const recognitionRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([]); // { role: 'user'|'assistant', content }
 
   const [healthInfo, setHealthInfo] = useState(null);
   const [calendarEvents, setCalendarEvents] = useState(null);
+
+
+  // JSON 다운로드 함수
+  const downloadJSON = (data) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reports.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   // messages의 최신 값을 저장할 ref
   const messagesRef = useRef(messages);
@@ -122,8 +136,19 @@ function ChatVoice({ onMessage }) {
 
   // GPT 호출 (history 포함)
   const sendToGpt = useCallback(async (historyList, userMsg, overrideMode, overrideHealth, overrideEvents) => {
-    const usedMode = overrideMode !== undefined ? overrideMode : mode;
+    let  usedMode = overrideMode !== undefined ? overrideMode : mode;
+    const selectedMode = localStorage.getItem('lia_mode');
+    
+    if (selectedMode !== usedMode.toString()) {
+      console.warn(`선택된 모드(${selectedMode})와 사용 모드(${usedMode})가 다릅니다!`);
+      console.warn(`선택된 모드: ${selectedMode}, 사용 모드: ${usedMode}`);
+      usedMode = Number(selectedMode);
+      console.log('👉 사용 모드가 선택된 모드로 변경됨:', usedMode);
+    }
 
+    const usedMode2 = localStorage.getItem('lia_mode');
+    console.log('👉 userMode2:', usedMode2);
+    
     const payload = {
       history: historyList,
       message: userMsg,
@@ -131,6 +156,7 @@ function ChatVoice({ onMessage }) {
     };
 
     console.log('👉 보내는 payload의 mode:', payload.mode);
+
     if (usedMode  === 2) {
       if (healthInfo != null) {
         payload.health_info     = overrideHealth ?? healthInfo ?? "";
@@ -281,6 +307,7 @@ function ChatVoice({ onMessage }) {
     }
     setMode(selectedMode);
     localStorage.setItem('lia_mode', selectedMode);
+    console.log(` 299줄 : 모드 ${selectedMode}번을 선택함`);
 
     // (2) 모드 2 전용: 데이터 로드
     let health = "";
@@ -320,6 +347,9 @@ function ChatVoice({ onMessage }) {
         const reportJson = await reportRes.json();
         console.log('ReportCard JSON:', reportJson);
 
+        // 4) 받은 JSON 자동 다운로드
+        downloadJSON(reportJson);
+
         // (3-2) Node 서버로 생성된 리포트 전송
         const nodeServerUrl = process.env.REACT_APP_IP_PORT;
         const nodeServerToken = localStorage.getItem('server_jwt_token');
@@ -338,6 +368,26 @@ function ChatVoice({ onMessage }) {
           console.error('리포트 카드 전송 실패:', nodeRes.status);
         } else {
           console.log('리포트 카드 전송 성공');
+            
+          // (3-3) 리포트 카드 전송 이후에 구글 캘린더에 등록
+          // const calenderRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/calendar/insert`, {
+          const calenderRes = await fetch('http://localhost:5000/calendar/insert', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              access_token: localStorage.getItem("google_access_token"),
+              refresh_token: localStorage.getItem("google_refresh_token"),
+              report: reportJson,
+            }),
+          })
+          if (!calenderRes.ok) {
+            console.error('📅 캘린더 등록 실패:', calenderRes.status);
+          } else {
+            console.log('📅 캘린더 등록 성공');
+
+            const calendarJson = await calenderRes.json();
+            downloadJSON(calendarJson); 
+          }
         }
       }
     } catch (err) {
@@ -375,13 +425,13 @@ function ChatVoice({ onMessage }) {
 
   return (
     <div className="chat-voice">
-      {/* <div className="messages">
+      <div className="messages">
         {messages.map((m, i) => (
           <div key={i} className={m.role}>
             {m.content}
           </div>
         ))}
-      </div> */}
+      </div>
 
       <button
         className="voice-button"

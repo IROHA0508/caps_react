@@ -13,10 +13,14 @@ python-dotenv==1.0.1
 requests==2.31.0
 openai==1.82.0
 
+google-api-core==2.24.2
 google-auth==2.40.2
 google-auth-oauthlib==1.2.2
 google-api-python-client==2.170.0
 pycryptodome==3.23.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.2
+pytz==2025.2
 # openai-whisper==20240930
 
 numpy==1.26.4

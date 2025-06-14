@@ -8,7 +8,6 @@ openai.api_key = os.getenv("API_KEY")
 
 chat_bp = Blueprint("chat", __name__)  
 
-
 @chat_bp.route("/chat", methods=["POST"])  
 @cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"])  
 def chat():
