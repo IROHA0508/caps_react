@@ -94,11 +94,11 @@
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 600px;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 15px;
-  padding: 20px;
-  backdrop-filter: blur(10px);
+  background-color: transparent;
+  padding: 0;
+  width: auto;
+  max-width: none;
+  border-radius: 0;
+  backdrop-filter: none;
 }

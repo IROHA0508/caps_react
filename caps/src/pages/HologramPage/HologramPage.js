@@ -146,50 +146,6 @@ function HologramPage() {
     }
   };
 
-  // 감정 메시지 전송 함수들
-  const sendAngerMessage = () => {
-    sendMessageToUnity('SetEmotion', 'anger');
-  };
-
-  const sendDanceMessage = () => {
-    sendMessageToUnity('SetEmotion', 'dance');
-  };
-
-  const sendCheeringMessage = () => {
-    sendMessageToUnity('SetEmotion', 'cheering');
-  };
-
-  const sendJoyMessage = () => {
-    sendMessageToUnity('SetEmotion', 'joy');
-  };
-
-  const sendSurpriseMessage = () => {
-    sendMessageToUnity('SetEmotion', 'surprise');
-  };
-
-  // 감정 분석 함수 추가
-  const analyzeEmotion = async (message) => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/analyze-emotion`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-      });
-
-      if (!response.ok) {
-        throw new Error('감정 분석 실패');
-      }
-
-      const data = await response.json();
-      return data.emotion;
-    } catch (error) {
-      console.error('감정 분석 중 오류:', error);
-      return 'joy'; // 오류 발생 시 기본값
-    }
-  };
-
   // ChatVoice로부터 메시지를 받아 처리하는 함수
   const handleChatMessage = async () => {
     const emotion = localStorage.getItem('lia_emotion');
@@ -234,43 +190,6 @@ function HologramPage() {
           id="unity-canvas"
           className="unity-canvas"
         />
-        <div className="emotion-buttons">
-          <button 
-            onClick={sendAngerMessage}
-            className="emotion-button"
-            disabled={!isUnityLoaded}
-          >
-            {isUnityLoaded ? 'Anger' : 'Loading...'}
-          </button>
-          <button 
-            onClick={sendDanceMessage}
-            className="emotion-button"
-            disabled={!isUnityLoaded}
-          >
-            {isUnityLoaded ? 'Dance' : 'Loading...'}
-          </button>
-          <button 
-            onClick={sendCheeringMessage}
-            className="emotion-button"
-            disabled={!isUnityLoaded}
-          >
-            {isUnityLoaded ? 'Cheering' : 'Loading...'}
-          </button>
-          <button 
-            onClick={sendJoyMessage}
-            className="emotion-button"
-            disabled={!isUnityLoaded}
-          >
-            {isUnityLoaded ? 'Joy' : 'Loading...'}
-          </button>
-          <button 
-            onClick={sendSurpriseMessage}
-            className="emotion-button"
-            disabled={!isUnityLoaded}
-          >
-            {isUnityLoaded ? 'Surprise' : 'Loading...'}
-          </button>
-        </div>
         <div className="chat-voice-container">
           <ChatVoice onMessage={handleChatMessage} />
         </div>
