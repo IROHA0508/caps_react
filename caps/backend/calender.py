@@ -134,7 +134,7 @@ def add_routine_to_calendar():
         service = build("calendar", "v3", credentials=creds)
 
         # start_time: "오전 7시" 같은 표현 → datetime 변환 필요
-        now = datetime.datetime.now(pytz.timezone('Asia/Seoul'))
+        now = datetime.now(pytz.timezone('Asia/Seoul'))
 
         print("🕒 start_time 원본:", report.get("start_time"))
         hour_min = parse_korean_time(report.get("start_time"))
