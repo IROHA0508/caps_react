@@ -58,7 +58,6 @@ def make_reportcard():
         temperature=0.3
     )
     content = resp.choices[0].message.content
-    print(f"\nOpenAI 응답: {content}\n")
 
     raw = content.strip()
     if raw.startswith("```"):

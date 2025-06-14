@@ -101,6 +101,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 import dateutil.parser
 import pytz
+import traceback
 
 @calendar_bp.route('/calendar/insert', methods=['POST', 'OPTIONS'])
 @cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"], supports_credentials=True)
@@ -115,7 +116,9 @@ def add_routine_to_calendar():
         print("access_token:", access_token)
         print("refresh_token:", refresh_token)
         print("report:", report)
-        
+        print("🔑 client_id:", os.getenv("GOOGLE_CLIENT_ID"))
+        print("🔑 client_secret:", os.getenv("GOOGLE_CLIENT_SECRET"))
+
         if not (access_token and report):
             return jsonify({"error": "Missing access_token or report data"}), 400
 
@@ -132,7 +135,11 @@ def add_routine_to_calendar():
 
         # start_time: "오전 7시" 같은 표현 → datetime 변환 필요
         now = datetime.datetime.now(pytz.timezone('Asia/Seoul'))
-        hour_min = parse_korean_time(report.get("start_time"))  # 예: "07:00"
+
+        print("🕒 start_time 원본:", report.get("start_time"))
+        hour_min = parse_korean_time(report.get("start_time"))
+        print("🕒 파싱된 시간:", hour_min)
+
         start_dt = now.replace(hour=hour_min[0], minute=hour_min[1], second=0, microsecond=0)
 
         # duration: "30분", "1시간" → timedelta 변환
@@ -152,18 +159,18 @@ def add_routine_to_calendar():
             }
         }
 
+        print("📤 이벤트 바디:", event_body)
         event = service.events().insert(calendarId='primary', body=event_body).execute()
         return jsonify({"status": "success", "event": event})
 
     except Exception as e:
+        print("❌ 예외 발생:")
+        traceback.print_exc()  # 전체 스택트레이스 콘솔 출력
         return jsonify({"error": str(e)}), 500
 
 
 # --- 보조 함수 ---
 def parse_korean_time(korean_str):
-    """
-    예: "오전 7시" → (7, 0), "오후 3시 30분" → (15, 30)
-    """
     import re
     match = re.search(r"(오전|오후)\s*(\d{1,2})시\s*(\d{1,2})?분?", korean_str or "")
     if not match:

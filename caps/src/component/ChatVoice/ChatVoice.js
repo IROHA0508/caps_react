@@ -73,8 +73,8 @@ function ChatVoice({ onMessage = () => {} }) {
     // console.log("timeMax:", endOfMonth.toISOString());
     try {
       // 헬스 데이터만 불러오는 엔드포인트
-      // const res1 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/health/from-node`, {
-      const res1 = await fetch(`http://localhost:5000/health/from-node`, {
+      const res1 = await fetch(`${process.env.REACT_APP_BACKEND_URL}/health/from-node`, {
+      // const res1 = await fetch(`http://localhost:5000/health/from-node`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -168,8 +168,8 @@ function ChatVoice({ onMessage = () => {} }) {
 
     console.log('👉 보내는 payload.history:', historyList);
 
-    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    const res = await fetch(`http://localhost:5000/chat`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -330,8 +330,8 @@ function ChatVoice({ onMessage = () => {} }) {
       console.log('모드2 히스토리:', mode2History);
 
     try{
-      // const reportRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`, {
-      const reportRes = await fetch('http://localhost:5000/make_reportcard', {
+      const reportRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/make_reportcard`, {
+      // const reportRes = await fetch('http://localhost:5000/make_reportcard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -409,8 +409,8 @@ function ChatVoice({ onMessage = () => {} }) {
       ...(selectedMode === 2 && { health_info: health, calendar_events: events })
     };
 
-    // const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
-    const res = await fetch(`http://localhost:5000/chat`, {
+    const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat`, {
+    // const res = await fetch(`http://localhost:5000/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
