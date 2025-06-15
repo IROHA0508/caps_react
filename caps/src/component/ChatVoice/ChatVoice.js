@@ -237,6 +237,12 @@ function ChatVoice({ onMessage = () => {} }) {
     rec.interimResults = true;
     rec.continuous = true;
     rec.maxAlternatives = 7;
+    
+    // 음성 인식 인스턴스에 데이터 속성 추가
+    rec.setAttribute = function(attr, value) {
+      this[attr] = value;
+    };
+    rec.setAttribute('data-recognition-instance', 'true');
 
     rec.onstart = () => setIsListening(true);
     rec.onend   = () => setIsListening(false);
@@ -294,10 +300,25 @@ function ChatVoice({ onMessage = () => {} }) {
   // 마운트 시 자동 시작, 언마운트 시 정리
   useEffect(() => {
     startRecognition();
-    return () => stopRecognition();
+    return () => {
+      stopRecognition();
+      // TTS 중지
+      window.speechSynthesis.cancel();
+      
+      // 오디오 컨텍스트 정리
+      if (window.audioContext) {
+        window.audioContext.close();
+      }
+      
+      // 음성 인식 정리
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      }
+    };
   }, [startRecognition, stopRecognition]);
 
-  // 버튼 클릭 시 “모드 n번을 선택함” 처리
+  // 버튼 클릭 시 "모드 n번을 선택함" 처리
   const handleModeSelect = useCallback(async (selectedMode) => {
     const prevMode = prevModeRef.current;
 

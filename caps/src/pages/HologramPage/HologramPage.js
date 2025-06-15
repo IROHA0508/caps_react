@@ -58,6 +58,20 @@ function HologramPage() {
     }
   };
 
+  // ChatVoice 컴포넌트 정리를 위한 함수
+  const cleanupChatVoice = () => {
+    // TTS 중지
+    window.speechSynthesis.cancel();
+    
+    // 음성 인식 중지 - 현재 실행 중인 모든 음성 인식 인스턴스 중지
+    const recognitionInstances = document.querySelectorAll('[data-recognition-instance]');
+    recognitionInstances.forEach(instance => {
+      if (instance.stop) {
+        instance.stop();
+      }
+    });
+  };
+
   useEffect(() => {
     const loadUnity = async () => {
       try {
@@ -124,15 +138,20 @@ function HologramPage() {
   useEffect(() => {
     const handleBeforeUnload = () => {
       cleanupUnity();
+      cleanupChatVoice();
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      cleanupUnity();
+      cleanupChatVoice();
     };
   }, []);
 
   const handleLogout = () => {
+    cleanupUnity();
+    cleanupChatVoice();
     localStorage.removeItem('user');
     setUser(null);
     window.location.href = '/onboarding';
