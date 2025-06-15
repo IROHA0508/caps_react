@@ -113,11 +113,11 @@ def add_routine_to_calendar():
         report = data.get("report")
 
         print("📥 calendar/insert 요청 수신")
-        print("access_token:", access_token)
-        print("refresh_token:", refresh_token)
+        # print("access_token:", access_token)
+        # print("refresh_token:", refresh_token)
         print("report:", report)
-        print("🔑 client_id:", os.getenv("GOOGLE_CLIENT_ID"))
-        print("🔑 client_secret:", os.getenv("GOOGLE_CLIENT_SECRET"))
+        # print("🔑 client_id:", os.getenv("GOOGLE_CLIENT_ID"))
+        # print("🔑 client_secret:", os.getenv("GOOGLE_CLIENT_SECRET"))
 
         if not (access_token and report):
             return jsonify({"error": "Missing access_token or report data"}), 400

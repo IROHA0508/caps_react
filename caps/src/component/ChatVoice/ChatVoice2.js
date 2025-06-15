@@ -316,28 +316,6 @@ function ChatVoice({ onMessage = () => {} }) {
     rec.start();
   }, [sendToGpt, speak]);
 
-  // 대화 종료 시 서버에 로그 전송
-  const endConversation = useCallback(async () => {
-    try {
-      const node_serverToken = localStorage.getItem("server_jwt_token");
-      await fetch(`${process.env.REACT_APP_BACKEND_URL}/anaylze_chatlog_bp`, {
-      // await fetch(`http://localhost:5000/chatlog`, {
-        method: 'POST',
-         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${node_serverToken}`
-        },
-        body: JSON.stringify({
-          history: messages,
-        })
-      });
-      // 필요 시 리포트 페이지로 이동:
-      // navigate('/report');
-    } catch (err) {
-      console.error('대화 로그 전송 실패', err);
-    }
-  }, [messages]);
-
   // 마운트 시 자동 시작, 언마운트 시 정리
   useEffect(() => {
     startRecognition();
@@ -362,6 +340,9 @@ function ChatVoice({ onMessage = () => {} }) {
   // 버튼 클릭 시 "모드 n번을 선택함" 처리
   const handleModeSelect = useCallback(async (selectedMode) => {
     const prevMode = prevModeRef.current;
+
+    console.log('👉 handleModeSelect 호출됨');
+    console.log(`모드 변경: 이전 모드 ${prevMode}, 새 모드 ${selectedMode}`);
 
     // (1) 현재 듣기 중이면 멈추고
     if (recognitionRef.current) {
@@ -501,13 +482,6 @@ function ChatVoice({ onMessage = () => {} }) {
       >
         {isListening ? '⏹ 일시정지' : '🎤 대화 시작'}
       </button>
-
-      {/* <button
-        className="end-button"
-        onClick={endConversation}
-      >
-        대화 종료 &amp; 리포트 생성
-      </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
       <ModeSelect onSelect={handleModeSelect} />
