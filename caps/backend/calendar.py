@@ -11,7 +11,7 @@ from flask_cors import cross_origin
 
 load_dotenv()
 
-calendar_bp = Blueprint('calender', __name__)
+calendar_bp = Blueprint('calendar', __name__)
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")

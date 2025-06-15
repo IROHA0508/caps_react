@@ -448,10 +448,6 @@ function ChatVoice({ onMessage = () => {} }) {
       </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
-<<<<<<< HEAD
-      {/* <p style={{ textAlign: 'center' }}>모드 선택</p> */}
-=======
->>>>>>> d6885e29b2a1cef9a25bc796e2659e48336407ba
       <ModeSelect onSelect={handleModeSelect} />
     </div>
   );
