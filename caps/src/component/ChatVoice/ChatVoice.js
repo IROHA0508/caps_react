@@ -238,11 +238,39 @@ function ChatVoice({ onMessage = () => {} }) {
     rec.continuous = true;
     rec.maxAlternatives = 7;
 
-    rec.onstart = () => setIsListening(true);
-    rec.onend   = () => setIsListening(false);
+    rec.onstart = () => {
+      console.log('음성 인식 시작');
+      setIsListening(true);
+    };
+
+    rec.onend = () => {
+      console.log('음성 인식 종료');
+      setIsListening(false);
+      
+      // 모바일에서 자동 종료된 경우 재시작
+      if (recognitionRef.current === rec) {
+        console.log('음성 인식 재시작 시도');
+        setTimeout(() => {
+          if (recognitionRef.current === rec) {
+            rec.start();
+          }
+        }, 100);
+      }
+    };
+
     rec.onerror = (e) => {
       console.error('Recognition error:', e.error);
       setIsListening(false);
+      
+      // 에러 발생 시 재시작 시도
+      if (recognitionRef.current === rec) {
+        console.log('에러 발생으로 인한 재시작 시도');
+        setTimeout(() => {
+          if (recognitionRef.current === rec) {
+            rec.start();
+          }
+        }, 1000);
+      }
     };
 
     rec.onresult = async (e) => {
@@ -254,7 +282,10 @@ function ChatVoice({ onMessage = () => {} }) {
       const text = best.transcript.trim();
       if (best.confidence < 0.85 || text.length < 3) return;
 
-      rec.stop();
+      // 음성 인식 중지 전에 현재 인스턴스 저장
+      const currentRec = rec;
+      currentRec.stop();
+      
       const newHistory = [...messagesRef.current, { role: 'user', content: text }];
       setMessages(newHistory);
       const {reply} = await sendToGpt(newHistory, text);
@@ -262,7 +293,12 @@ function ChatVoice({ onMessage = () => {} }) {
       const withReply = [...newHistory, { role: 'assistant', content: reply }];
       setMessages(withReply);
 
-      speak(reply, startRecognition);
+      // TTS 완료 후 음성 인식 재시작
+      speak(reply, () => {
+        if (recognitionRef.current === currentRec) {
+          startRecognition();
+        }
+      });
     };
 
     recognitionRef.current = rec;
@@ -297,7 +333,7 @@ function ChatVoice({ onMessage = () => {} }) {
     return () => stopRecognition();
   }, [startRecognition, stopRecognition]);
 
-  // 버튼 클릭 시 “모드 n번을 선택함” 처리
+  // 버튼 클릭 시 "모드 n번을 선택함" 처리
   const handleModeSelect = useCallback(async (selectedMode) => {
     const prevMode = prevModeRef.current;
 
