@@ -341,10 +341,25 @@ function ChatVoice({ onMessage = () => {} }) {
   // 마운트 시 자동 시작, 언마운트 시 정리
   useEffect(() => {
     startRecognition();
-    return () => stopRecognition();
+    return () => {
+      stopRecognition();
+      // TTS 중지
+      window.speechSynthesis.cancel();
+      
+      // 오디오 컨텍스트 정리
+      if (window.audioContext) {
+        window.audioContext.close();
+      }
+      
+      // 음성 인식 정리
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      }
+    };
   }, [startRecognition, stopRecognition]);
 
-  // 버튼 클릭 시 “모드 n번을 선택함” 처리
+  // 버튼 클릭 시 "모드 n번을 선택함" 처리
   const handleModeSelect = useCallback(async (selectedMode) => {
     const prevMode = prevModeRef.current;
 
@@ -495,7 +510,6 @@ function ChatVoice({ onMessage = () => {} }) {
       </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
-      <p>챗보이스2 구글 tts 사용</p>
       <p style={{ textAlign: 'center' }}>모드 선택</p>
       <ModeSelect onSelect={handleModeSelect} />
     </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../component/Header/Header';
-import ChatVoice from '../../component/ChatVoice/ChatVoice';
+import ChatVoice from '../../component/ChatVoice/ChatVoice2';
 import './HologramPage.css';
 
 function HologramPage() {
