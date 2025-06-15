@@ -14,11 +14,11 @@ def google_tts():
     data = request.get_json()
     raw_text = data.get("text", "")
 
-    print(f"REACT에서 받은 문자 : {raw_text}")
+    # print(f"REACT에서 받은 문자 : {raw_text}")
     # 순수 문자+공백만
     clean_text = re.sub(r'[^ㄱ-ㅎ가-힣a-zA-Z0-9\s\.\,\!\?]', ' ', raw_text)
     clean_text = re.sub(r'\s+', ' ', clean_text).strip()
-    print(f"정제된 문자 : {clean_text}")
+    # print(f"정제된 문자 : {clean_text}")
 
     if not clean_text:
         return {"error": "No text provided"}, 400
@@ -56,8 +56,8 @@ def google_tts():
             "name": voice.name
         }
     }
-    print("📤 Google TTS Request Body:")
-    print(request_body)
+    # print("📤 Google TTS Request Body:")
+    # print(request_body)
 
     # ✅ API 호출
     response = client.synthesize_speech(
