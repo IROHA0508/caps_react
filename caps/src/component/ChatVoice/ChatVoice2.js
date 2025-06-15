@@ -20,17 +20,17 @@ function ChatVoice({ onMessage = () => {} }) {
 
 
   // JSON 다운로드 함수
-  const downloadJSON = (data) => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'reports.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
+  // const downloadJSON = (data) => {
+  //   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = 'reports.json';
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  //   URL.revokeObjectURL(url);
+  // };
 
   // messages의 최신 값을 저장할 ref
   const messagesRef = useRef(messages);
@@ -134,6 +134,16 @@ function ChatVoice({ onMessage = () => {} }) {
     setIsListening(false);
   }, []);
 
+  const safeCloseAudioContext = async (ctx) => {
+    if (ctx && ctx.state !== 'closed') {
+      try {
+        await ctx.close();
+      } catch (err) {
+        console.warn("AudioContext close error:", err);
+      }
+    }
+  };
+
   // GPT 호출 (history 포함)
   const sendToGpt = useCallback(async (historyList, userMsg, overrideMode, overrideHealth, overrideEvents) => {
     let  usedMode = overrideMode !== undefined ? overrideMode : mode;
@@ -186,14 +196,27 @@ function ChatVoice({ onMessage = () => {} }) {
   const speak = useCallback(async (rawText, onEnd) => {
     stopRecognition();
 
-    const cleanText = stripMarkdown(rawText);
+    console.log("🔊 원본 텍스트 :", rawText);
+    // 1) 마크다운/코드블록 제거
+    //    (stripMarkdown 은 **굵은글씨** 정도만 지우니까, 코드펜스도 한 번 더 제거)
+    const noMd      = stripMarkdown(rawText);
+    const noCode    = noMd.replace(/```[\s\S]*?```/g, ' ');
+
+    // 2) 한글·영문·숫자·공백만 남기고 전부 스페이스로 치환 → 연속공백은 하나로
+    const pureText = noCode
+      .replace(/[^ㄱ-ㅎ가-힣a-zA-Z0-9\s.,!?]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+        
+    console.log("🔊 특수문자 제거 후 텍스트 :", pureText);
 
     try {
       // (1) Google TTS로 mp3 파일 받아오기
       const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/google_tts`, {
+      // const res = await fetch(`http://localhost:5000/google_tts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText })
+        body: JSON.stringify({ text: pureText })
       });
 
       if (!res.ok) throw new Error("TTS 요청 실패");
@@ -212,6 +235,7 @@ function ChatVoice({ onMessage = () => {} }) {
       const data = new Uint8Array(analyser.frequencyBinCount);
       const VAD_THRESHOLD = 35;
 
+      // 감지 함수 내부
       function detectVoice() {
         analyser.getByteTimeDomainData(data);
         let sum = 0;
@@ -219,22 +243,21 @@ function ChatVoice({ onMessage = () => {} }) {
         const rms = Math.sqrt(sum / data.length);
 
         if (rms > VAD_THRESHOLD) {
-          // 사용자 음성 감지 → TTS 중단
           audio.pause();
-          audio.src = ""; // 메모리 해제
-          audioCtx.close();
+          audio.src = "";
+          safeCloseAudioContext(audioCtx); // ✅ 안전하게 닫기
           onEnd();
         } else if (!audio.paused) {
           requestAnimationFrame(detectVoice);
         } else {
-          audioCtx.close();
+          safeCloseAudioContext(audioCtx); // ✅ 안전하게 닫기
         }
       }
 
-      // (3) TTS 종료 시 처리
+      // 재생 종료 시
       audio.onended = () => {
         URL.revokeObjectURL(audioUrl);
-        audioCtx.close();
+        safeCloseAudioContext(audioCtx); // ✅ 중복 방지
         onEnd();
       };
 
@@ -372,7 +395,7 @@ function ChatVoice({ onMessage = () => {} }) {
         console.log('ReportCard JSON:', reportJson);
 
         // 4) 받은 JSON 자동 다운로드
-        downloadJSON(reportJson);
+        // downloadJSON(reportJson);
 
         // (3-2) Node 서버로 생성된 리포트 전송
         const nodeServerUrl = process.env.REACT_APP_IP_PORT;
@@ -409,8 +432,8 @@ function ChatVoice({ onMessage = () => {} }) {
           } else {
             console.log('📅 캘린더 등록 성공');
 
-            const calendarJson = await calenderRes.json();
-            downloadJSON(calendarJson); 
+            // const calendarJson = await calenderRes.json();
+            // downloadJSON(calendarJson); 
           }
         }
       }
@@ -472,6 +495,7 @@ function ChatVoice({ onMessage = () => {} }) {
       </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
+      <p>챗보이스2 구글 tts 사용</p>
       <p style={{ textAlign: 'center' }}>모드 선택</p>
       <ModeSelect onSelect={handleModeSelect} />
     </div>

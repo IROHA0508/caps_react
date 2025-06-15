@@ -24,8 +24,8 @@ function TestPage() {
         <VoiceRecognizer onResult={(text) => setLatestResult(text)} />
       </div> */}
       <p style={{ textAlign: 'center' }}>Web Speech API 대화 모드</p>
-      <ChatVoice onMessage={handleMessage}/>
-      {/* <ChatVoice2 onMessage={handleMessage}/> */}
+      {/* <ChatVoice onMessage={handleMessage}/> */}
+      <ChatVoice2 onMessage={handleMessage}/>
       {/* <ChatVoice_ver2 /> */}
     </div>
   );
