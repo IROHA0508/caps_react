@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
-from analyze_chatlog import anaylze_chatlog_bp
+# from analyze_chatlog import anaylze_chatlog_bp
 
 from chat import chat_bp
 from auth import auth_bp
@@ -23,7 +23,7 @@ app.register_blueprint(calendar_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(wake_bp)
 app.register_blueprint(chat_bp)
-app.register_blueprint(anaylze_chatlog_bp)
+# app.register_blueprint(anaylze_chatlog_bp)
 app.register_blueprint(health_bp)
 app.register_blueprint(make_reportcardbp)
 app.register_blueprint(tts_bp)
