@@ -510,7 +510,6 @@ function ChatVoice({ onMessage = () => {} }) {
       </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
-      <p style={{ textAlign: 'center' }}>모드 선택</p>
       <ModeSelect onSelect={handleModeSelect} />
     </div>
   );
