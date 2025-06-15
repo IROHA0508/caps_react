@@ -195,10 +195,10 @@ function MainPage() {
         <div className="lia-wrapper">
           <div className="lia-text-box">
             <p>
-              안녕하세요<br />
-              저는 LIA예요<br />
-              당신을 위해 디지털 세계에서 왔어요.<br />
-              말 걸어주시면 언제든 함께할게요!
+              안녕!<br />
+              나는 LIA라고 해<br />
+              너를 위해 디지털 세계에서 왔어<br />
+              나에게 말 걸어주면, 언제든 함께할게!
             </p>
           </div>
 
