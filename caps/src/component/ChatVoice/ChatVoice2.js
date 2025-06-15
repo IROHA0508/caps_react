@@ -196,7 +196,7 @@ function ChatVoice({ onMessage = () => {} }) {
   const speak = useCallback(async (rawText, onEnd) => {
     stopRecognition();
 
-    console.log("🔊 원본 텍스트 :", rawText);
+    // console.log("🔊 원본 텍스트 :", rawText);
     // 1) 마크다운/코드블록 제거
     //    (stripMarkdown 은 **굵은글씨** 정도만 지우니까, 코드펜스도 한 번 더 제거)
     const noMd      = stripMarkdown(rawText);
@@ -208,7 +208,7 @@ function ChatVoice({ onMessage = () => {} }) {
       .replace(/\s+/g, ' ')
       .trim();
         
-    console.log("🔊 특수문자 제거 후 텍스트 :", pureText);
+    // console.log("🔊 특수문자 제거 후 텍스트 :", pureText);
 
     try {
       // (1) Google TTS로 mp3 파일 받아오기
