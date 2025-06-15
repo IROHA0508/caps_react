@@ -79,6 +79,17 @@ def chat():
 
 
 def analyze_emotion(reply):
+    # 하드코딩된 감정 매칭
+    if any(keyword in reply.lower() for keyword in ["안녕", "반가워", "하이"]):
+        return "waving"
+    elif any(keyword in reply.lower() for keyword in ["발표", "시험", "면접", "축하"]):
+        return "cheering"
+    elif any(keyword in reply.lower() for keyword in ["춤", "춤춰", "춤추"]):
+        return "dance"
+    elif any(keyword in reply.lower() for keyword in ["추천", "루틴", "운동", "식단"]):
+        return "joy"
+    
+    # 기존 감정 분석 로직
     emotion_prompt = f"""다음 메시지의 감정을 분석하여 다음 중 하나로 분류해주세요: anger, dance, cheering, joy, surprise, Nothing associated
     메시지: {reply}
     감정:"""
@@ -94,7 +105,6 @@ def analyze_emotion(reply):
     )
 
     emotion = resp.choices[0].message.content.strip().lower()
-
     
     print(f"분석된 감정: {emotion}")
     return emotion
