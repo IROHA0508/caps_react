@@ -20,17 +20,17 @@ function ChatVoice({ onMessage = () => {} }) {
 
 
   // JSON 다운로드 함수
-  // const downloadJSON = (data) => {
-  //   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  //   const url = URL.createObjectURL(blob);
-  //   const a = document.createElement('a');
-  //   a.href = url;
-  //   a.download = 'reports.json';
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   document.body.removeChild(a);
-  //   URL.revokeObjectURL(url);
-  // };
+  const downloadJSON = (data) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'reports.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   // messages의 최신 값을 저장할 ref
   const messagesRef = useRef(messages);
@@ -182,19 +182,28 @@ function ChatVoice({ onMessage = () => {} }) {
     return { reply, emotion };
   }, [mode, healthInfo, calendarEvents]);
 
-  // TTS 재생 (중간 끊기 감지 + 인식 재시작)
-  const speak = useCallback((rawText, onEnd) => {
+  // Google TTS 음성 출력
+  const speak = useCallback(async (rawText, onEnd) => {
     stopRecognition();
-    window.speechSynthesis.cancel();
 
     const cleanText = stripMarkdown(rawText);
-    const utter = new SpeechSynthesisUtterance(cleanText);
-    utter.lang = 'ko-KR';
-    utter.onend = onEnd;
-    window.speechSynthesis.speak(utter);
 
-    // VAD 설정
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    try {
+      // (1) Google TTS로 mp3 파일 받아오기
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/google_tts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText })
+      });
+
+      if (!res.ok) throw new Error("TTS 요청 실패");
+
+      const blob = await res.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+
+      // (2) 사용자 음성 감지(VAD)
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const audioCtx = new AudioContext();
       const analyser = audioCtx.createAnalyser();
       const source = audioCtx.createMediaStreamSource(stream);
@@ -203,25 +212,40 @@ function ChatVoice({ onMessage = () => {} }) {
       const data = new Uint8Array(analyser.frequencyBinCount);
       const VAD_THRESHOLD = 35;
 
-      function detect() {
+      function detectVoice() {
         analyser.getByteTimeDomainData(data);
         let sum = 0;
         for (let v of data) sum += (v - 128) ** 2;
         const rms = Math.sqrt(sum / data.length);
 
         if (rms > VAD_THRESHOLD) {
-          window.speechSynthesis.cancel();
+          // 사용자 음성 감지 → TTS 중단
+          audio.pause();
+          audio.src = ""; // 메모리 해제
           audioCtx.close();
           onEnd();
-        } else if (window.speechSynthesis.speaking) {
-          requestAnimationFrame(detect);
+        } else if (!audio.paused) {
+          requestAnimationFrame(detectVoice);
         } else {
           audioCtx.close();
         }
       }
 
-      detect();
-    });
+      // (3) TTS 종료 시 처리
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+        audioCtx.close();
+        onEnd();
+      };
+
+      // (4) 음성 재생 및 감지 시작
+      audio.play();
+      detectVoice();
+
+    } catch (err) {
+      console.error("🔊 TTS 오류:", err);
+      onEnd();
+    }
   }, [stopRecognition]);
 
   // 음성 인식 시작
@@ -348,7 +372,7 @@ function ChatVoice({ onMessage = () => {} }) {
         console.log('ReportCard JSON:', reportJson);
 
         // 4) 받은 JSON 자동 다운로드
-        // downloadJSON(reportJson);
+        downloadJSON(reportJson);
 
         // (3-2) Node 서버로 생성된 리포트 전송
         const nodeServerUrl = process.env.REACT_APP_IP_PORT;
@@ -386,7 +410,7 @@ function ChatVoice({ onMessage = () => {} }) {
             console.log('📅 캘린더 등록 성공');
 
             const calendarJson = await calenderRes.json();
-            // downloadJSON(calendarJson); 
+            downloadJSON(calendarJson); 
           }
         }
       }
@@ -448,7 +472,7 @@ function ChatVoice({ onMessage = () => {} }) {
       </button> */}
 
       {/* 모드 선택 버튼 그룹 */}
-      {/* <p style={{ textAlign: 'center' }}>모드 선택</p> */}
+      <p style={{ textAlign: 'center' }}>모드 선택</p>
       <ModeSelect onSelect={handleModeSelect} />
     </div>
   );

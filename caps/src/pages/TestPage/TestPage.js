@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../../component/Header/Header';
 import ChatVoice from '../../component/ChatVoice/ChatVoice'
+import ChatVoice2 from '../../component/ChatVoice/ChatVoice2';
 
 import './TestPage.css';
 
@@ -24,6 +25,7 @@ function TestPage() {
       </div> */}
       <p style={{ textAlign: 'center' }}>Web Speech API 대화 모드</p>
       <ChatVoice onMessage={handleMessage}/>
+      {/* <ChatVoice2 onMessage={handleMessage}/> */}
       {/* <ChatVoice_ver2 /> */}
     </div>
   );
