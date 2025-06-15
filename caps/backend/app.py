@@ -9,7 +9,7 @@ from wake import wake_bp
 from health import health_bp
 from make_reportcard import make_reportcardbp
 from google_tts import tts_bp
-from caps.backend.calendar import calendar_bp
+from calendar_info import calendar_bp
 
 app = Flask(__name__)
 # CORS(app)
