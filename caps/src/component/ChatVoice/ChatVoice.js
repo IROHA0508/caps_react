@@ -190,55 +190,38 @@ function ChatVoice({ onMessage = () => {} }) {
     const cleanText = stripMarkdown(rawText);
     const utter = new SpeechSynthesisUtterance(cleanText);
     utter.lang = 'ko-KR';
-    
-    // TTS 완료 이벤트 처리 개선
-    utter.onend = () => {
-      console.log('TTS 완료');
-      // 모바일에서 TTS 완료 후 약간의 지연을 두고 음성 인식 시작
-      setTimeout(() => {
-        onEnd();
-      }, 500);
-    };
-
-    // TTS 오류 처리 추가
-    utter.onerror = (event) => {
-      console.error('TTS 오류:', event);
-      onEnd();
-    };
-
+    utter.onend = onEnd;
     window.speechSynthesis.speak(utter);
 
-    // VAD 설정 - 모바일에서는 VAD를 비활성화
-    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        const audioCtx = new AudioContext();
-        const analyser = audioCtx.createAnalyser();
-        const source = audioCtx.createMediaStreamSource(stream);
-        source.connect(analyser);
+    // VAD 설정
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      const audioCtx = new AudioContext();
+      const analyser = audioCtx.createAnalyser();
+      const source = audioCtx.createMediaStreamSource(stream);
+      source.connect(analyser);
 
-        const data = new Uint8Array(analyser.frequencyBinCount);
-        const VAD_THRESHOLD = 35;
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      const VAD_THRESHOLD = 35;
 
-        function detect() {
-          analyser.getByteTimeDomainData(data);
-          let sum = 0;
-          for (let v of data) sum += (v - 128) ** 2;
-          const rms = Math.sqrt(sum / data.length);
+      function detect() {
+        analyser.getByteTimeDomainData(data);
+        let sum = 0;
+        for (let v of data) sum += (v - 128) ** 2;
+        const rms = Math.sqrt(sum / data.length);
 
-          if (rms > VAD_THRESHOLD) {
-            window.speechSynthesis.cancel();
-            audioCtx.close();
-            onEnd();
-          } else if (window.speechSynthesis.speaking) {
-            requestAnimationFrame(detect);
-          } else {
-            audioCtx.close();
-          }
+        if (rms > VAD_THRESHOLD) {
+          window.speechSynthesis.cancel();
+          audioCtx.close();
+          onEnd();
+        } else if (window.speechSynthesis.speaking) {
+          requestAnimationFrame(detect);
+        } else {
+          audioCtx.close();
         }
+      }
 
-        detect();
-      });
-    }
+      detect();
+    });
   }, [stopRecognition]);
 
   // 음성 인식 시작
@@ -252,39 +235,14 @@ function ChatVoice({ onMessage = () => {} }) {
     const rec = new SR();
     rec.lang = 'ko-KR';
     rec.interimResults = true;
-    // 모바일에서는 continuous 모드를 비활성화
-    rec.continuous = !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    rec.continuous = true;
     rec.maxAlternatives = 7;
 
-    rec.onstart = () => {
-      console.log('음성 인식 시작');
-      setIsListening(true);
-    };
-
-    rec.onend = () => {
-      console.log('음성 인식 종료');
-      setIsListening(false);
-      // 모바일에서 음성 인식이 종료되면 자동으로 재시작
-      if (!window.speechSynthesis.speaking) {
-        setTimeout(() => {
-          if (!isListening) {
-            startRecognition();
-          }
-        }, 1000);
-      }
-    };
-
+    rec.onstart = () => setIsListening(true);
+    rec.onend   = () => setIsListening(false);
     rec.onerror = (e) => {
       console.error('Recognition error:', e.error);
       setIsListening(false);
-      // 오류 발생 시 재시도
-      if (e.error !== 'no-speech') {
-        setTimeout(() => {
-          if (!isListening) {
-            startRecognition();
-          }
-        }, 1000);
-      }
     };
 
     rec.onresult = async (e) => {
@@ -339,7 +297,7 @@ function ChatVoice({ onMessage = () => {} }) {
     return () => stopRecognition();
   }, [startRecognition, stopRecognition]);
 
-  // 버튼 클릭 시 "모드 n번을 선택함" 처리
+  // 버튼 클릭 시 “모드 n번을 선택함” 처리
   const handleModeSelect = useCallback(async (selectedMode) => {
     const prevMode = prevModeRef.current;
 
