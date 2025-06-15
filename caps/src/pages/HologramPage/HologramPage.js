@@ -8,7 +8,7 @@ import './HologramPage.css';
 function HologramPage() {
   const [user, setUser] = useState(null);
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
-  const [isChatVoiceVisible, setIsChatVoiceVisible] = useState(false);
+  const [isChatVoiceVisible, setIsChatVoiceVisible] = useState(true);
   const unityContainerRef = useRef(null);
 
   useEffect(() => {
@@ -269,11 +269,9 @@ function HologramPage() {
           id="unity-canvas"
           className="unity-canvas"
         />
-        {isChatVoiceVisible && (
-          <div className="chat-voice-container">
-            <ChatVoice onMessage={handleChatMessage} />
-          </div>
-        )}
+        <div className="chat-voice-container" style={{ opacity: isChatVoiceVisible ? 1 : 0, transition: 'opacity 0.3s ease' }}>
+          <ChatVoice onMessage={handleChatMessage} />
+        </div>
       </div>
     </div>
   );
