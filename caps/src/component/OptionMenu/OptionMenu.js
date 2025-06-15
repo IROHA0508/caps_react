@@ -22,7 +22,6 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
   const navigate = useNavigate();
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
-
   useEffect(() => {
     const paths = [
       routine_button,

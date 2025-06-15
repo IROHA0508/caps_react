@@ -1,5 +1,5 @@
 // component/Header/Header.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import OptionMenu from '../OptionMenu/OptionMenu';
@@ -17,6 +17,34 @@ function Header({ user, serverUser, onLogout }) {
 
   const isMain = location.pathname === '/main';
   const isNotMain = !isMain;
+
+  const mediaStreamRef = useRef(null);
+
+  useEffect(() => {
+    // 마이크 권한 요청
+    // navigator.mediaDevices.getUserMedia({ audio: true })
+    //   .then(stream => {
+    //     mediaStreamRef.current = stream;
+    //   })
+    //   .catch(console.error);
+
+    // 전역 이벤트 리스너 등록
+    function handleStopMic() {
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop());
+        mediaStreamRef.current = null;
+      }
+    }
+    window.addEventListener('stopMic', handleStopMic);
+
+    // 컴포넌트 언마운트 시에도 정리
+    return () => {
+      window.removeEventListener('stopMic', handleStopMic);
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   const getTitle = () => {
     if (location.pathname === '/main/routine') return '일정 / 루틴';
@@ -67,11 +95,10 @@ function Header({ user, serverUser, onLogout }) {
           <button
             className="back-button"
             onClick={() => {
-              // if (location.pathname.startsWith('/main/mypage/')) {
-              //   navigate('/main/mypage');
-              // } else {
-              //   navigate('/main');
-              // }
+              if (location.pathname === '/main') {
+              // 전역 이벤트로 "마이크 중지" 요청
+              window.dispatchEvent(new Event('stopMic'));
+              }
               navigate(-1);
             }}
             aria-label="뒤로가기"
