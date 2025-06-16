@@ -41,3 +41,4 @@ caps/api/venv/
 /caps/api/temp_data
 /structure.txt
 .vscode/
+/caps/backend/caps_tts.json

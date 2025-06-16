@@ -1,47 +1,57 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
+import os
+import requests
 
 from Crypto.Cipher import AES
 import base64
 
-from health_message_generator import generate_message
+NODE_SERVER_URL = os.getenv("REACT_APP_IP_PORT", "api.talktolia.org")
 
 health_bp = Blueprint('health', __name__)
 
 @health_bp.route('/health/from-node', methods=['POST', 'OPTIONS'])
-@cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"]) 
+@cross_origin(origins=["http://localhost:3000", "https://www.talktolia.org"], supports_credentials=True) 
 def receive_node_data():
     print(f"🔍 Method: {request.method}")
     if request.method == 'OPTIONS':
         return '', 200  # ✅ 명시적으로 OPTIONS 응답 처리 (보완적)
+
+    data = request.get_json() or {}
+    token = data.get("server_jwt_token")
+    days  = data.get("days", 1)
+
+    if not token:
+        return jsonify({"error": "Missing server_jwt_token"}), 400
     
-    data = request.get_json()
-    user_id = data.get("user_id")
-    health_data = data.get("data")
+    # 1) Node 서버에서 암호화된 헬스 데이터 가져오기
+    try:
+        node_res = requests.get(
+            f'https://{NODE_SERVER_URL}/data?days={days}',
+            headers={'Authorization': f'Bearer {token}'},
+            timeout=5
+        )
+        node_res.raise_for_status()
+    except Exception as e:
+        return jsonify({"error": f"Node 서버 요청 실패: {e}"}), 502
 
-    if not user_id or not health_data:
-        return jsonify({"error": "Missing user_id or data"}), 400
+    encrypted_data = node_res.json()
+    print("📥 Node 서버로부터 받은 암호화 데이터:", encrypted_data)
 
-    print(f"📥 Node에서 받은 데이터 (user: {user_id})", health_data)
+    # 2) AES-ECB 방식으로 복호화
+    try:
+      print("🔐 데이터 복호화 중...")
+      decrypted_data = decrypt_data(encrypted_data)
+      print("🔐 복호화 완료")
+    
+    except Exception as e:
+      return jsonify({"error": f"데이터 복호화 실패: {e}"}), 500
 
-    # # ✅ 데이터 복호화
-    # print("🔐 데이터 복호화 중...")
-    decrypted_data = decrypt_data(health_data)
-    # print("🔐 복호화 완료")
-
-    print("📊 복호화된 데이터:", decrypted_data)
     print_data(decrypted_data)
 
-    
-    # 💡 GPT 추천 메시지 생성
-    feedback_message = generate_message(decrypted_data)
-    print("💬 추천 메시지:", feedback_message)
-
-    return jsonify({
-        "status": "success",
-        "message": "데이터 수신 완료",
-        "feedback": feedback_message  # ✅ 프론트로 메시지 전달
-    }), 200
+    return jsonify({"status": "success", 
+                    "message": "데이터 수신 및 복호화 완료",
+                    "data": decrypted_data}), 200
 
 AES_KEY = b"MySecretKey12345"  # 그대로 사용
 IV = b'\x00' * 16  # CBC 모드용 IV
@@ -63,10 +73,11 @@ def decrypt_value(encrypted_base64: str) -> str:
 
 
 # 데이터 복호화 함수
-def decrypt_data(data: dict) -> dict:
+def decrypt_data(response: dict) -> dict:
     # ✅ 내부 data 필드에 접근
-    biometrics = data.get("data", {}).get("biometrics", [])
-
+    # biometrics = data.get("data", {}).get("biometrics", [])
+    biometrics = response.get("data", {}).get("biometrics", [])
+    
     grouped = {
         "step": [],
         "heart_rate": [],
@@ -125,20 +136,6 @@ def print_data(health_data):
     print(f"총 수면 시간: {total_sleep}분, 총 걸음 수: {total_steps}, 총 칼로리: {total_calories}, 평균 심박수: {avg_heart_rate}")
     print(f"렘수면: {rem_sleep}, 가벼운 수면: {light_sleep}, 깊은 수면: {deep_sleep}, 이동거리: {total_distance} m")
 
-    # # ✅ 추천 메시지 예시 (간단한 기준으로 작성)
-    # if total_sleep < 360:
-    #     messages.append("어제 수면이 부족했어. 오늘은 일찍 자는 걸 추천해!")
-    # elif total_sleep > 540:
-    #     messages.append("어제 푹 잘 잤구나! 오늘도 좋은 컨디션을 유지해봐.")
-
-    # if total_steps < 4000 or total_calories < 200:
-    #     messages.append("활동량이 적었네. 오늘은 산책 30분 어때?")
-    # elif total_steps > 9000:
-    #     messages.append("많이 걸었구나! 오늘은 가볍게 스트레칭 정도면 충분해.")
-
-    # if avg_heart_rate > 100:
-    #     messages.append("어제 심박수가 높았어. 오늘은 명상이나 휴식을 추천해.")
-
     return messages
 
 
@@ -194,3 +191,36 @@ dummy_data = {
     }
   ]
 }
+
+
+# def fetch_raw_health(days: int = 1, token: str = None) -> dict:
+#   print(f"📥 [fetch_raw_health...] days={days}, token={token}")
+#   url = f"https://{NODE_SERVER_URL}/data"
+#   headers = {}
+#   if token:
+#     headers["Authorization"] = f"Bearer {token}"
+
+#   print(f"📥 [fetch_raw_health] 요청 URL: {url}, 헤더: {headers}")
+#   resp = requests.get(
+#     url,
+#     params={"days": days},
+#     headers=headers,
+#     timeout=5
+#   )
+#   resp.raise_for_status()
+
+#   print(f"📥 [fetch_raw_health] 응답 상태: {resp.status_code}")
+#   return resp.json()
+
+# def get_decrypted_health(days: int = 1, token: str = None) -> dict:
+#   print(f"📥 [get_decrypted_health...] days={days}, token={token}")
+#   body = fetch_raw_health(days, token)
+#   raw_data = body.get("data")
+
+#   print(f"📥 [get_decrypted_health] raw_data: {raw_data}")
+#   if not raw_data:
+#     raise ValueError("Node 서버 응답에 data 필드가 없습니다.")
+#   # decrypt_data는 health.py에 정의된 함수
+#   decrypted = decrypt_data(raw_data)
+#   print(f"📥 [get_decrypted_health] decrypted: {decrypted}")
+#   return decrypted

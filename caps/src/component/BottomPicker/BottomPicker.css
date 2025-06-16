@@ -1,0 +1,92 @@
+/* 오버레이 */
+.bottom-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Picker 컨테이너 */
+.bottom-picker-container {
+  background-color: #fff;
+  width: 100%;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+
+  /* 🔽 애니메이션 기본 상태 */
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 🔼 애니메이션 보이기 상태 */
+.bottom-picker-container.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 상단 버튼 영역 */
+.picker-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.picker-close-btn,
+.picker-select-btn {
+  background: none;
+  border: none;
+  color: #007aff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* react-mobile-picker 기본 구조 */
+.picker-column {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 180px;
+}
+
+.picker-column-wheel {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.picker-column-item {
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  scroll-snap-align: center;
+  font-size: 18px;
+  color: #333;
+}
+
+.picker-column-item.selected {
+  font-weight: bold;
+  color: #007aff;
+}
+
+/* 선택된 영역 강조 라인 */
+.picker-highlight {
+  position: absolute;
+  top: 72px;
+  height: 36px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  pointer-events: none;
+  z-index: 2;
+}

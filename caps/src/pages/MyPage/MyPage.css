@@ -1,0 +1,105 @@
+.mypage-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.mypage-container {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.profile-image-wrapper {
+  margin-bottom: 2rem;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: #7c28b3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+}
+
+.info-wrapper {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f3f3f3;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+.info-label {
+  font-weight: bold;
+}
+
+.info-value {
+  color: gray;
+}
+
+.info-value.clickable {
+  cursor: pointer;
+  color: #888;
+}
+
+.info-value-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.info-select {
+  font-weight: bold;
+}
+
+.info-description {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+
+.apply-button-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.apply-button {
+  background-color: #1B687D;
+  color: white;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.apply-button:hover {
+  background-color: #1B687D;
+}
+
+.apply-button:active {
+  background-color: #1B687D;
+}

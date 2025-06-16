@@ -6,9 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import report_button from '../../pictures/report_button.svg';
 import routine_button from '../../pictures/routine_button.svg';
 import logout_button from '../../pictures/logout_button.svg';
+
+import mypage_button from '../../pictures/mypage_button.svg';
+
 import report_button_select from '../../pictures/report_button_select.svg';
 import routine_button_select from '../../pictures/routine_button_select.svg';
 import logout_button_select from '../../pictures/logout_button_select.svg';
+
+import mypage_button_select from '../../pictures/mypage_button.svg';
 
 import { openAuthPopup } from '../GoogleCalendarConnectButton/GoogleCalendarConnectButton';
 
@@ -17,14 +22,15 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
   const navigate = useNavigate();
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
-
   useEffect(() => {
     const paths = [
       routine_button,
       report_button,
+      mypage_button,
       logout_button,
       routine_button_select,
       report_button_select,
+      mypage_button_select,
       logout_button_select
     ];
 
@@ -51,7 +57,6 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
 
         <button className="menu-item" onClick={() => {
           onSelect('routine'); // 클릭 시 선택 상태 갱신
-          // navigate('/main/routine');
           onClose();
           openAuthPopup(() => navigate('/main/routine'));
         }}>
@@ -78,6 +83,22 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
           </span>
         </button>
 
+
+        <button className="menu-item" onClick={() => {
+          onSelect('mypage');
+          navigate('/main/mypage');
+          onClose();
+        }}>
+          <img
+            src={selectedMenu === 'report' ? mypage_button_select : mypage_button}
+            alt="마이페이지"
+          />
+          <span style={{ color: selectedMenu === 'report' ? '#000000' : '#83858A' }}>
+            마이페이지
+          </span>
+        </button>
+
+
         <button className="menu-item" onClick={() => {
           onSelect('logout');
           onLogout();
@@ -91,7 +112,6 @@ function OptionMenu({ visible, selectedMenu, onSelect, onClose, onLogout }) {
             로그아웃
           </span>
         </button>
-
 
       </div>
     </div>

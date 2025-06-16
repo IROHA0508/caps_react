@@ -19,7 +19,7 @@ html, body {
   position: relative;
   box-sizing: border-box;
   /* padding-top: 0; */
-  /* padding-bottom: 0; */
+  padding-bottom: 0;
 }
 
 /* gif + 문구 flex 정렬 */
@@ -29,6 +29,20 @@ html, body {
   justify-content: center;
   gap: 1rem;
   /* padding: 1rem; */
+
+  position: absolute;
+  bottom : -0.3rem;
+  width: 85%; 
+  left: 50%;            
+  transform: translateX(-50%); 
+}
+
+/* 슬라이드 영역 */
+.report-slider {
+  display: flex;
+  overflow-x: hidden; /* 터치 제어로만 넘김 */
+  padding: 1rem 0;
+  padding-top: 0;
 }
 
 .quote-img-wrapper {
@@ -52,12 +66,6 @@ html, body {
   text-align: left;
 }
 
-/* 슬라이드 영역 */
-.report-slider {
-  display: flex;
-  overflow-x: hidden; /* 터치 제어로만 넘김 */
-  padding: 1rem 0;
-}
 
 .report-card-wrapper {
   flex: 0 0 100vw;

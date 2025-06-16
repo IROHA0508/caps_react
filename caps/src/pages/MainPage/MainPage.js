@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,11 +10,17 @@ import './MainPage.css';
 function MainPage() {
   const [showTalkOptions, setShowTalkOptions] = useState(false);
 
+  // Chatvoice에서 사용할 mode 초기화
+  localStorage.setItem('lia_mode', 1);
+  console.log(`MainPage: 모드 1번으로 초기화`);
+  
   // ✅ user를 초기 렌더링 시 localStorage에서 바로 불러옴
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : null;
   });
+
+  const [serverUser, setServerUser] = useState(null); // ✅ 서버에서 받은 사용자 정보 상태
 
   const navigate = useNavigate();
 
@@ -32,6 +37,55 @@ function MainPage() {
     }
   }, [user, navigate]);
 
+  // ✅ 서버에서 사용자 nickname 등 정보를 불러옴
+  useEffect(() => {
+    const fetchServerUser = async () => {
+      const token = localStorage.getItem('server_jwt_token');
+      if (!token) return;
+
+      try {
+        const response = await fetch(`https://${process.env.REACT_APP_IP_PORT}/users/me`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error('❌ 서버 사용자 정보 요청 실패:', response.status);
+          return;
+        }
+
+        const data = await response.json();
+        console.log('🙋 서버에서 받은 사용자 정보:', data);
+        // downloadJSON(data); // ✅ 받은 JSON을 다운로드
+
+        const nickname = data.data?.nickname;
+        const genderRaw = data.data?.gender;
+        const gender =
+          genderRaw === 'male' ? '남성'
+          : genderRaw === 'female' ? '여성'
+          : genderRaw; 
+        const age = data.data?.age;
+
+
+        console.log("🙋 서버 사용자에 저장된 닉네임:", nickname);
+
+        setServerUser(nickname);
+
+        localStorage.setItem('node_serverUser_nickname', JSON.stringify(nickname));
+        localStorage.setItem('node_serverUser_gender', JSON.stringify(gender))
+        localStorage.setItem('node_serverUser_age', JSON.stringify(age));
+      } catch (error) {
+        console.error('❌ 서버 사용자 정보 요청 중 오류:', error);
+      }
+    };
+
+    if (user) {
+      fetchServerUser();
+    }
+  }, [user]);
+
   const [calendarLinked, setCalendarLinked] = useState(false);
 
   useEffect(() => {
@@ -46,105 +100,105 @@ function MainPage() {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchAndForwardHealthData = async () => {
-      const serverToken = localStorage.getItem("server_jwt_token");
-      const today = new Date().toISOString().slice(0, 10);
-      const lastExecuted = localStorage.getItem("last_health_sync");
+  // useEffect(() => {
+  //   const fetchAndForwardHealthData = async () => {
+  //     const serverToken = localStorage.getItem("server_jwt_token");
+  //     const today = new Date().toISOString().slice(0, 10);
+  //     const lastExecuted = localStorage.getItem("last_health_sync");
 
-      // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
-      // if (lastExecuted === today) {
-      //   console.log("📅 오늘 이미 건강 데이터를 전송했습니다.");
-      //   return;
-      // }
+  //     // ✅ 오늘 날짜와 마지막 실행 날짜 비교 -> 나중에 실제 배포할 때 주석 해제
+  //     // if (lastExecuted === today) {
+  //     //   console.log("📅 오늘 이미 건강 데이터를 전송했습니다.");
+  //     //   return;
+  //     // }
 
-      if (!serverToken) {
-        console.warn("❌ Google 토큰이 없습니다.");
-        return;
-      }
+  //     if (!serverToken) {
+  //       console.warn("❌ Google 토큰이 없습니다.");
+  //       return;
+  //     }
 
-      try {
-        const nodeRes = await fetch(`https://${process.env.REACT_APP_IP_PORT}/data?days=1`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${serverToken}`,
-          },
-        });
+  //     try {
+  //       const nodeRes = await fetch(`https://${process.env.REACT_APP_IP_PORT}/data?days=1`, {
+  //         method: "GET",
+  //         headers: {
+  //           Authorization: `Bearer ${serverToken}`,
+  //         },
+  //       });
 
-        if (!nodeRes.ok) {
-          console.error("❌ Node 서버 응답 실패:", nodeRes.status);
-          return;
-        }
+  //       if (!nodeRes.ok) {
+  //         console.error("❌ Node 서버 응답 실패:", nodeRes.status);
+  //         return;
+  //       }
 
-        const nodeData = await nodeRes.json();
-        console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
+  //       const nodeData = await nodeRes.json();
+  //       console.log("📦 Node 서버로부터 받은 건강 정보:", nodeData);
 
-        const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-        const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
-        // const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: JSON.parse(localStorage.getItem("user"))?.sub,
-            data: nodeData,
-          }),
-        });
+  //       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  //       // const flaskRes = await fetch(`${BACKEND_URL}/health/from-node`, {
+  //       const flaskRes = await fetch(`http://localhost:5000/health/from-node`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           user_id: JSON.parse(localStorage.getItem("user"))?.sub,
+  //           data: nodeData,
+  //         }),
+  //       });
 
-        if (!flaskRes.ok) {
-          console.error("❌ Flask 서버 전송 실패:", flaskRes.status);
-          return;
-        }
+  //       if (!flaskRes.ok) {
+  //         console.error("❌ Flask 서버 전송 실패:", flaskRes.status);
+  //         return;
+  //       }
 
-        const result = await flaskRes.json();
-        const feedback = result.feedback;
+  //       const result = await flaskRes.json();
+  //       const feedback = result.feedback;
 
-        if (feedback) {
-          console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
-          localStorage.setItem("today_feedback", feedback);
+  //       if (feedback) {
+  //         console.log("💬 Flask 서버로부터 받은 피드백:", feedback);
+  //         localStorage.setItem("today_feedback", feedback);
 
-          // ✅ 추천 저장 완료 후에 날짜 기록
-          localStorage.setItem("last_health_sync", today);
-          console.log("📅 오늘의 데이터 전송 완료");
-        }
-      } catch (error) {
-        console.error("❌ 데이터 요청 중 오류:", error);
-      }
-    };
+  //         // ✅ 추천 저장 완료 후에 날짜 기록
+  //         localStorage.setItem("last_health_sync", today);
+  //         console.log("📅 오늘의 데이터 전송 완료");
+  //       }
+  //     } catch (error) {
+  //       console.error("❌ 데이터 요청 중 오류:", error);
+  //     }
+  //   };
 
-    if (user) {
-      fetchAndForwardHealthData();
-    }
-  }, [user]);
+  //   if (user) {
+  //     fetchAndForwardHealthData();
+  //   }
+  // }, [user]);
 
+  // const downloadJSON = (data, filename = 'user_info.json') => {
+  //   const jsonStr = JSON.stringify(data, null, 2); // 보기 좋은 들여쓰기
+  //   const blob = new Blob([jsonStr], { type: 'application/json' });
+  //   const url = URL.createObjectURL(blob);
 
-// const downloadJSON = (data, filename = 'health_data.json') => {
-//   const jsonStr = JSON.stringify(data, null, 2);
-//   const blob = new Blob([jsonStr], { type: 'application/json' });
-//   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = filename;
+  //   a.click();
 
-//   const a = document.createElement('a');
-//   a.href = url;
-//   a.download = filename;
-//   a.click();
+  //   URL.revokeObjectURL(url);
+  // };
 
-//   URL.revokeObjectURL(url);
-// };
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <div className="main-page-container">
-        {/* ✅ Header는 항상 렌더링되며 user를 props로 전달 */}
-        <Header user={user} onLogout={handleLogout} />
+        {/* ✅ Header는 항상 렌더링되며 user와 서버 유저 정보를 props로 전달 */}
+        <Header user={user} serverUser={serverUser} onLogout={handleLogout} />
 
         <div className="lia-wrapper">
           <div className="lia-text-box">
             <p>
-              안녕하세요<br />
-              저는 LIA예요<br />
-              당신을 위해 디지털 세계에서 왔어요.<br />
-              말 걸어주시면 언제든 함께할게요!
+              안녕!<br />
+              나는 LIA라고 해<br />
+              너를 위해 디지털 세계에서 왔어<br />
+              나에게 말 걸어주면, 언제든 함께할게!
             </p>
           </div>
 
@@ -154,13 +208,12 @@ function MainPage() {
                 LIA와 이야기하기
               </button>
 
-              {/* ⬇️ 테스트 페이지로 이동하는 버튼 추가 */}
-              <button
+              {/* <button
                 className="button test-button"
                 onClick={() => navigate("/test")}
               >
                 테스트 페이지로 이동
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -170,14 +223,11 @@ function MainPage() {
           onClose={() => setShowTalkOptions(false)}
         />
 
-
-
         {calendarLinked && (
           <div className="calendar-status-message">
             📅 Google 캘린더 연동이 완료되었습니다!
           </div>
         )}
-        
       </div>
     </GoogleOAuthProvider>
   );

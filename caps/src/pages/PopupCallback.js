@@ -15,10 +15,10 @@ function PopupCallback() {
     }
 
     if (refreshToken) {
+      console.log('✅ 저장할 refresh_token:', refreshToken);
       localStorage.setItem('google_refresh_token', refreshToken);
-      console.log('✅ 팝업 콜백: refresh_token 저장 완료');
     } else {
-      console.warn('❌ 팝업 콜백: refresh_token 없음');
+      console.warn('❌ refresh_token 없음 — access_type=offline이 적용되지 않았을 수 있음');
     }
 
 

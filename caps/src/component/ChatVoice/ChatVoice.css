@@ -1,0 +1,33 @@
+/* src/components/ChatVoice/ChatVoice.css */
+.chat-voice { 
+  text-align: center; 
+  padding: 1rem;
+  background: transparent;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.messages { 
+  display: none; /* 메시지 영역 숨김 */
+}
+
+.user       { text-align:right; margin:0.5rem; color:#000000; }
+.assistant  { text-align:left;  margin:0.5rem; color:#145061; }
+.voice-button {
+  padding: 0.8rem 2rem; 
+  font-size: 1.1rem;
+  background: rgba(27, 104, 125, 0.8); /* 반투명 배경 */
+  color: #fff; 
+  border: none; 
+  border-radius: 8px;
+  cursor: pointer;
+  backdrop-filter: blur(5px); /* 버튼 배경 블러 효과 */
+}
+
+.end-button {
+  display: none; /* 종료 버튼 숨김 */
+}
+
